@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-navy-deep: #060a14;
+  --color-navy-base: #0a1122;
+  --color-navy-surface: #0f1830;
+  --color-indigo-layer: #172244;
+  --color-twilight: #2e264f;
+  --color-violet-muted: #5e548e;
+  --color-blue-cool: #6b8ffd;
+  --color-lavender-soft: #d3cbff;
+  --color-lavender-glow: #e8e3ff;
+  --color-warm-accent: #f8c076;
+  --border-dim: #1c274a;
+  --border-mid: #2d3e70;
+  --border-bright: #4e609c;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Permanent Cinematic Lo-Fi Nighttime Atmosphere */
+body {
+  background-color: #060a14;
+  background-image: 
+    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(59, 45, 107, 0.35), transparent),
+    radial-gradient(ellipse 60% 30% at 85% 20%, rgba(27, 39, 78, 0.4), transparent),
+    radial-gradient(ellipse 40% 25% at 10% 60%, rgba(46, 38, 79, 0.25), transparent);
+  background-attachment: fixed;
+  color: #e2dcff;
+}
+
+/* Custom Minimal Nighttime Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #253358;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475a8e;
+}
