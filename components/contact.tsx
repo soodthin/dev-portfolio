@@ -9,7 +9,6 @@ export function Contact({ profile, socials }: ContactProps) {
   return (
     <footer id="contact" className="pt-16 pb-12 border-t border-[#1c274a] mt-16">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-[#141f3d]">
-        {/* Col 1: Brand & Summary */}
         <div className="md:col-span-4 space-y-3">
           <div className="font-mono text-base font-bold text-[#f1edff] uppercase tracking-wider">
             {profile.name}
@@ -25,7 +24,6 @@ export function Contact({ profile, socials }: ContactProps) {
           </div>
         </div>
 
-        {/* Col 2: Navigation */}
         <div className="md:col-span-2 space-y-3 font-mono">
           <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest">
             NAVIGATION
@@ -54,7 +52,6 @@ export function Contact({ profile, socials }: ContactProps) {
           </ul>
         </div>
 
-        {/* Col 3: Direct Contact */}
         <div className="md:col-span-3 space-y-3 font-mono">
           <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest">
             CONTACT
@@ -82,7 +79,6 @@ export function Contact({ profile, socials }: ContactProps) {
           </ul>
         </div>
 
-        {/* Col 4: Verified Socials */}
         <div className="md:col-span-3 space-y-3 font-mono">
           <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest">
             CONNECT
@@ -106,7 +102,6 @@ export function Contact({ profile, socials }: ContactProps) {
         </div>
       </div>
 
-      {/* Bottom Copyright & Colophon */}
       <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#5b6f9f]">
         <div>
           © {new Date().getFullYear()} Thai Do Thinh. All rights reserved.

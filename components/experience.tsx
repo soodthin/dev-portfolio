@@ -7,7 +7,6 @@ interface ExperienceProps {
 export function Experience({ experiences }: ExperienceProps) {
   return (
     <section id="experience" className="py-14 sm:py-20 border-b border-[#1c274a]">
-      {/* Section Header */}
       <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">01 //</span>
         <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
@@ -22,7 +21,6 @@ export function Experience({ experiences }: ExperienceProps) {
             key={idx}
             className="rounded-2xl p-6 sm:p-8 border border-[#202e58] bg-[#091024]/85 shadow-[0_8px_30px_rgba(6,10,20,0.5)] hover:border-[#384c85] transition-all duration-300"
           >
-            {/* Top Bar: Period & Company */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-[#1c274a] mb-5">
               <div>
                 <span className="text-xs font-mono tracking-widest text-[#f8c076] uppercase">
@@ -44,7 +42,6 @@ export function Experience({ experiences }: ExperienceProps) {
               </div>
             </div>
 
-            {/* Project Subheading & Tech Stack placed right below */}
             <div className="mb-5 space-y-2.5">
               {exp.projectTitle && (
                 <div className="inline-block px-3 py-1 rounded-lg bg-[#131d3d] border border-[#293c72] text-xs font-mono text-[#d3cbff]">
@@ -67,15 +64,13 @@ export function Experience({ experiences }: ExperienceProps) {
               )}
             </div>
 
-            {/* General Description */}
             <p className="text-sm sm:text-base text-[#a9b9dc] font-sans leading-relaxed mb-6">
               {exp.description}
             </p>
 
-            {/* Structured Engineering Modules Grid */}
             <div className="space-y-3">
               <div className="text-[11px] font-mono uppercase tracking-widest text-[#7ea2f8]">
-                // KEY ARCHITECTURAL RESPONSIBILITIES & OUTCOMES:
+                KEY ARCHITECTURAL RESPONSIBILITIES & OUTCOMES:
               </div>
 
               <div className="grid grid-cols-1 gap-2.5">

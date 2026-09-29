@@ -7,7 +7,6 @@ interface ProjectsProps {
 export function Projects({ projects }: ProjectsProps) {
   return (
     <section id="projects" className="py-14 sm:py-20 border-b border-[#1c274a]">
-      {/* Section Header */}
       <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">02 //</span>
         <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
@@ -25,7 +24,6 @@ export function Projects({ projects }: ProjectsProps) {
               key={project.id}
               className="rounded-2xl p-6 sm:p-8 border border-[#202e58] bg-[#091024]/85 hover:border-[#384c85] transition-all duration-300 shadow-[0_8px_30px_rgba(6,10,20,0.5)] hover:shadow-[0_12px_40px_rgba(20,30,65,0.4)]"
             >
-              {/* Top Index & Tags */}
               <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#1c274a] mb-5">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs font-bold tracking-widest text-[#f8c076]">
@@ -44,7 +42,6 @@ export function Projects({ projects }: ProjectsProps) {
                 </div>
               </div>
 
-              {/* Title & Subtitle */}
               <div className="space-y-1 mb-4">
                 <h3 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-tight text-[#f1edff]">
                   {mainUrl ? (
@@ -68,12 +65,10 @@ export function Projects({ projects }: ProjectsProps) {
                 </p>
               </div>
 
-              {/* Overview */}
               <p className="text-sm sm:text-base text-[#a9b9dc] font-sans leading-relaxed mb-6">
                 {project.description}
               </p>
 
-              {/* Structured Engineering Modules */}
               {project.keyHighlights && project.keyHighlights.length > 0 && (
                 <div className="space-y-2">
                   <div className="text-[11px] font-mono uppercase tracking-widest text-[#d3cbff]">

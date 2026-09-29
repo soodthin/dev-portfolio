@@ -20,7 +20,6 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#1c274a] bg-[#070b18]/85 backdrop-blur-md transition-colors duration-200">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Brand / Logo */}
         <a 
           href="#" 
           className="font-mono text-xs sm:text-sm tracking-widest font-bold text-[#f1edff] uppercase hover:text-[#7ea2f8] transition-colors"
@@ -28,7 +27,6 @@ export function Navbar() {
           THAI DO THINH <span className="text-[#6479a8] font-normal">// SOODTHIN</span>
         </a>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-2 text-xs font-mono tracking-wider">
           {NAV_ITEMS.map((item) => (
             <a
@@ -41,7 +39,6 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
         <div className="flex items-center gap-2 md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -54,7 +51,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-[#1c274a] bg-[#090e1f] px-4 py-4 space-y-3">
           {NAV_ITEMS.map((item) => (

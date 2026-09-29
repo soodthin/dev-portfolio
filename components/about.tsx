@@ -9,7 +9,6 @@ interface AboutProps {
 export function About({ education, languages, skillGroups }: AboutProps) {
   return (
     <section id="about" className="py-14 sm:py-20 border-b border-[#1c274a]">
-      {/* Section Header */}
       <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">03 //</span>
         <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
@@ -19,9 +18,7 @@ export function About({ education, languages, skillGroups }: AboutProps) {
       </div>
 
       <div className="space-y-10">
-        {/* Education & Languages Bento Row */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-          {/* Education Box */}
           <div className="md:col-span-8 rounded-2xl p-6 border border-[#202e58] bg-[#091024]/85 shadow-[0_8px_30px_rgba(6,10,20,0.4)]">
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-2">
               <span className="text-xs font-mono tracking-widest text-[#f8c076] uppercase">
@@ -53,7 +50,6 @@ export function About({ education, languages, skillGroups }: AboutProps) {
             </div>
           </div>
 
-          {/* Languages & Working Focus Box */}
           <div className="md:col-span-4 rounded-2xl p-6 border border-[#202e58] bg-[#091024]/85 shadow-[0_8px_30px_rgba(6,10,20,0.4)] flex flex-col justify-between space-y-4">
             <div>
               <div className="text-xs font-mono tracking-widest text-[#f8c076] uppercase mb-3">
@@ -75,7 +71,6 @@ export function About({ education, languages, skillGroups }: AboutProps) {
           </div>
         </div>
 
-        {/* Technical Skills Bento Matrix */}
         <div className="space-y-4">
           <div className="text-xs font-mono uppercase tracking-widest text-[#7ea2f8]">
             // TECHNICAL PROFICIENCY MATRIX

@@ -24,7 +24,6 @@
   }
 }
 
-/* Permanent Cinematic Lo-Fi Nighttime Atmosphere */
 body {
   background-color: #060a14;
   background-image: 
@@ -35,7 +34,6 @@ body {
   color: #e2dcff;
 }
 
-/* Custom Minimal Nighttime Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;

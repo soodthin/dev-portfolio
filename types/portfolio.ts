@@ -1,8 +1,3 @@
-/**
- * Type definitions for Thai Do Thinh's Developer Portfolio
- * Pure typography design - 100% free of icons and emojis
- */
-
 export type SkillCategory = 
   | 'Languages' 
   | 'Frameworks & Platforms' 
@@ -23,7 +18,7 @@ export interface SkillGroup {
 
 export interface Project {
   id: string;
-  number: string; // e.g. "01", "02"
+  number: string;
   title: string;
   subtitle: string;
   description: string;
@@ -36,7 +31,7 @@ export interface Project {
 }
 
 export interface Experience {
-  period: string; // e.g. "Oct 2025 - Apr 2026"
+  period: string;
   role: string;
   company: string;
   companyUrl?: string;
