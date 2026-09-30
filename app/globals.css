@@ -3,35 +3,55 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --color-navy-deep: #060a14;
-  --color-navy-base: #0a1122;
-  --color-navy-surface: #0f1830;
-  --color-indigo-layer: #172244;
-  --color-twilight: #2e264f;
-  --color-violet-muted: #5e548e;
-  --color-blue-cool: #6b8ffd;
-  --color-lavender-soft: #d3cbff;
-  --color-lavender-glow: #e8e3ff;
+  --color-navy-deep: #090e1e;
+  --color-navy-base: #0f1833;
+  --color-navy-surface: #142145;
+  --color-indigo-layer: #1f305f;
+  --color-twilight: #3d3368;
+  --color-violet-muted: #7469ad;
+  --color-blue-cool: #7ea3fd;
+  --color-lavender-soft: #ddd7ff;
+  --color-lavender-glow: #f0ecff;
   --color-warm-accent: #f8c076;
-  --border-dim: #1c274a;
-  --border-mid: #2d3e70;
-  --border-bright: #4e609c;
+  --border-dim: #233463;
+  --border-mid: #354b86;
+  --border-bright: #586fb4;
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
+  html, body {
+    height: 100%;
+    overflow: hidden;
   }
 }
 
 body {
-  background-color: #060a14;
+  background-color: #0b1124;
   background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(59, 45, 107, 0.35), transparent),
-    radial-gradient(ellipse 60% 30% at 85% 20%, rgba(27, 39, 78, 0.4), transparent),
-    radial-gradient(ellipse 40% 25% at 10% 60%, rgba(46, 38, 79, 0.25), transparent);
+    radial-gradient(ellipse 95% 55% at 50% -10%, rgba(95, 75, 170, 0.45), transparent),
+    radial-gradient(ellipse 70% 40% at 85% 25%, rgba(48, 72, 148, 0.45), transparent),
+    radial-gradient(ellipse 55% 35% at 10% 65%, rgba(75, 60, 128, 0.35), transparent);
   background-attachment: fixed;
-  color: #e2dcff;
+  color: #ebe7ff;
+}
+
+.snap-deck-container {
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.snap-card {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 ::-webkit-scrollbar {
