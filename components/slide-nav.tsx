@@ -149,13 +149,13 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
         </svg>
       </button>
 
-      <div className="flex flex-col items-end gap-3 bg-[#070b18]/95 backdrop-blur-md p-2.5 rounded-2xl border border-[#1b2649] shadow-[0_12px_36px_rgba(6,10,20,0.7)]">
+      <div className="flex flex-col items-end gap-2.5 bg-[#070b18]/95 backdrop-blur-md p-2 rounded-2xl border border-[#1b2649] shadow-[0_12px_36px_rgba(6,10,20,0.7)] w-[155px]">
         {overviewSlide && (
           <button
             type="button"
             onClick={() => onSelectSlide(0)}
             aria-label={`Jump to slide ${overviewSlide.number}: ${overviewSlide.title}`}
-            className="group flex items-center justify-end gap-2.5 focus:outline-none"
+            className="w-full group flex items-center justify-end gap-2 focus:outline-none"
           >
             <div
               className={`hidden md:inline-block transition-all duration-200 text-right ${
@@ -163,18 +163,18 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
               }`}
             >
               <span
-                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
+                className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans ${
                   activeIndex === 0
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
                     : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{overviewSlide.number}</span>
+                <span className="font-mono mr-1 text-[9px] text-[#7ea2f8]">{overviewSlide.number}</span>
                 {overviewSlide.title}
               </span>
             </div>
 
-            <div className="w-4 h-4 flex items-center justify-center">
+            <div className="w-4 h-4 flex items-center justify-center shrink-0">
               <div
                 className={`transition-all duration-300 rounded-full ${
                   activeIndex === 0
@@ -191,7 +191,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             type="button"
             onClick={() => onSelectSlide(1)}
             aria-label={`Jump to slide ${experienceSlide.number}: ${experienceSlide.title}`}
-            className="group flex items-center justify-end gap-2.5 focus:outline-none"
+            className="w-full group flex items-center justify-end gap-2 focus:outline-none"
           >
             <div
               className={`hidden md:inline-block transition-all duration-200 text-right ${
@@ -199,18 +199,18 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
               }`}
             >
               <span
-                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
+                className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans ${
                   activeIndex === 1
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
                     : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{experienceSlide.number}</span>
+                <span className="font-mono mr-1 text-[9px] text-[#7ea2f8]">{experienceSlide.number}</span>
                 {experienceSlide.title}
               </span>
             </div>
 
-            <div className="w-4 h-4 flex items-center justify-center">
+            <div className="w-4 h-4 flex items-center justify-center shrink-0">
               <div
                 className={`transition-all duration-300 rounded-full ${
                   activeIndex === 1
@@ -223,16 +223,16 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
         )}
 
         <div
-          className={`relative flex items-center justify-end ${
+          className={`w-full relative flex items-center justify-end ${
             isAnyProjectActive
-              ? 'my-1 h-[72px] transition-all duration-200 ease-out'
+              ? 'my-1 h-[68px] transition-all duration-200 ease-out'
               : 'my-0 h-4 transition-all duration-150 ease-in'
           }`}
         >
           <div
-            className={`flex flex-col justify-between h-[72px] items-end ${
+            className={`flex flex-col justify-between h-[68px] items-end ${
               isAnyProjectActive
-                ? 'max-w-[200px] opacity-100 pointer-events-auto mr-1 transition-all duration-200 ease-out'
+                ? 'max-w-[95px] opacity-100 pointer-events-auto mr-0.5 transition-all duration-200 ease-out'
                 : 'max-w-0 opacity-0 pointer-events-none mr-0 overflow-hidden transition-all duration-120 ease-in'
             }`}
           >
@@ -248,7 +248,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                   onMouseEnter={() => setHoveredSubIndex(subSlide.globalIndex)}
                   onMouseLeave={() => setHoveredSubIndex(null)}
                   aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
-                  className="group/sub flex items-center justify-end focus:outline-none h-5"
+                  className="group/sub flex items-center justify-end focus:outline-none h-4"
                 >
                   <div
                     className={`transition-all duration-200 text-right whitespace-nowrap ${
@@ -258,7 +258,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                     }`}
                   >
                     <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans transition-all duration-200 shadow-sm ${
+                      className={`inline-flex items-center px-1.5 py-0.5 rounded-full border text-[9.5px] font-sans transition-all duration-200 shadow-sm ${
                         isSubActive
                           ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/50 shadow-[0_0_10px_rgba(248,192,118,0.3)]'
                           : 'text-[#8ba0cc] bg-[#0c142b]/95 border-[#1c274a] hover:text-[#c5d5f6]'
@@ -274,31 +274,25 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
           </div>
 
           <div
-            className={`relative ${
+            className={`relative shrink-0 ${
               isAnyProjectActive
-                ? 'w-7 h-[72px] opacity-100 pointer-events-auto transition-all duration-200 ease-out'
+                ? 'w-[24px] h-[68px] opacity-100 pointer-events-auto transition-all duration-200 ease-out'
                 : 'w-0 h-4 opacity-0 pointer-events-none overflow-hidden transition-all duration-120 ease-in'
             }`}
           >
             <svg
-              className={`w-full h-full pointer-events-none overflow-visible transition-opacity duration-150 ${
+              width="24"
+              height="68"
+              viewBox="0 0 24 68"
+              fill="none"
+              className={`pointer-events-none overflow-visible transition-opacity duration-150 ${
                 isAnyProjectActive ? 'opacity-100' : 'opacity-0'
               }`}
-              viewBox="0 0 28 72"
-              fill="none"
             >
-              <defs>
-                <linearGradient id="treeBranchGrad" x1="28" y1="36" x2="4" y2="36" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#f8c076" stopOpacity="0.4" />
-                  <stop offset="35%" stopColor="#f8c076" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#f8c076" stopOpacity="1" />
-                </linearGradient>
-              </defs>
-
               <path
-                d="M 28 36 L 18 36"
-                stroke="url(#treeBranchGrad)"
-                strokeWidth="1.75"
+                d="M 24 34 L 14 34"
+                stroke="#f8c076"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeDasharray="12"
                 style={{
@@ -308,37 +302,40 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
               />
 
               <path
-                d="M 18 36 C 13 36, 8 22, 4 10"
-                stroke="url(#treeBranchGrad)"
+                d="M 14 34 C 10 34, 6 20, 2 9"
+                stroke="#f8c076"
                 strokeWidth="1.25"
                 strokeLinecap="round"
-                strokeDasharray="30"
+                strokeOpacity="0.85"
+                strokeDasharray="28"
                 style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 30,
+                  strokeDashoffset: isAnyProjectActive ? 0 : 28,
                   transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 100ms' : '0ms'}`,
                 }}
               />
 
               <path
-                d="M 18 36 L 4 36"
-                stroke="url(#treeBranchGrad)"
+                d="M 14 34 L 2 34"
+                stroke="#f8c076"
                 strokeWidth="1.25"
                 strokeLinecap="round"
-                strokeDasharray="16"
+                strokeOpacity="0.85"
+                strokeDasharray="14"
                 style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 16,
+                  strokeDashoffset: isAnyProjectActive ? 0 : 14,
                   transition: `stroke-dashoffset ${isAnyProjectActive ? '150ms ease-out 80ms' : '0ms'}`,
                 }}
               />
 
               <path
-                d="M 18 36 C 13 36, 8 50, 4 62"
-                stroke="url(#treeBranchGrad)"
+                d="M 14 34 C 10 34, 6 48, 2 59"
+                stroke="#f8c076"
                 strokeWidth="1.25"
                 strokeLinecap="round"
-                strokeDasharray="30"
+                strokeOpacity="0.85"
+                strokeDasharray="28"
                 style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 30,
+                  strokeDashoffset: isAnyProjectActive ? 0 : 28,
                   transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 100ms' : '0ms'}`,
                 }}
               />
@@ -347,8 +344,8 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             {projectSlides.map((subSlide, idx) => {
               const isSubActive = activeIndex === subSlide.globalIndex;
               const isSubHovered = hoveredSubIndex === subSlide.globalIndex;
-              const topPos = idx === 0 ? 'top-[10px]' : idx === 1 ? 'top-[36px]' : 'top-[62px]';
-              const popDelay = idx === 0 ? '220ms' : idx === 1 ? '180ms' : '230ms';
+              const topPos = idx === 0 ? 'top-[9px]' : idx === 1 ? 'top-[34px]' : 'top-[59px]';
+              const popDelay = idx === 0 ? '200ms' : idx === 1 ? '160ms' : '220ms';
 
               return (
                 <button
@@ -358,13 +355,13 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                   onMouseEnter={() => setHoveredSubIndex(subSlide.globalIndex)}
                   onMouseLeave={() => setHoveredSubIndex(null)}
                   aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
-                  className={`absolute left-[4px] -translate-x-1/2 -translate-y-1/2 ${topPos} w-4 h-4 flex items-center justify-center focus:outline-none z-10`}
+                  className={`absolute left-[2px] -translate-x-1/2 -translate-y-1/2 ${topPos} w-3.5 h-3.5 flex items-center justify-center focus:outline-none z-10`}
                 >
                   <div
                     style={{
-                      transform: isAnyProjectActive ? (isSubHovered ? 'scale(1.25)' : 'scale(1)') : 'scale(0)',
+                      transform: isAnyProjectActive ? (isSubHovered ? 'scale(1.3)' : 'scale(1)') : 'scale(0)',
                       opacity: isAnyProjectActive ? 1 : 0,
-                      transition: `transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1) ${isAnyProjectActive ? popDelay : '0ms'}, opacity 120ms ease`,
+                      transition: `transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1) ${isAnyProjectActive ? popDelay : '0ms'}, opacity 120ms ease`,
                     }}
                     className={`rounded-full transition-colors duration-150 ${
                       isSubActive
@@ -383,12 +380,12 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             type="button"
             onClick={() => onSelectSlide(firstProjectIndex)}
             aria-label="Jump to Projects section"
-            className="group flex items-center justify-end gap-2.5 focus:outline-none"
+            className="group flex items-center justify-end shrink-0 focus:outline-none"
           >
             {!isAnyProjectActive && (
-              <div className="hidden md:inline-block transition-all duration-200 text-right opacity-0 group-hover:opacity-100">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]">
-                  <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">03-05</span>
+              <div className="hidden md:inline-block transition-all duration-200 text-right opacity-0 group-hover:opacity-100 mr-2">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]">
+                  <span className="font-mono mr-1 text-[9px] text-[#7ea2f8]">03-05</span>
                   PROJECTS
                 </span>
               </div>
@@ -411,7 +408,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             type="button"
             onClick={() => onSelectSlide(skillsIndex)}
             aria-label={`Jump to slide ${skillsSlide.number}: ${skillsSlide.title}`}
-            className="group flex items-center justify-end gap-2.5 focus:outline-none"
+            className="w-full group flex items-center justify-end gap-2 focus:outline-none"
           >
             <div
               className={`hidden md:inline-block transition-all duration-200 text-right ${
@@ -419,18 +416,18 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
               }`}
             >
               <span
-                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
+                className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans ${
                   activeIndex === skillsIndex
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
                     : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{skillsSlide.number}</span>
+                <span className="font-mono mr-1 text-[9px] text-[#7ea2f8]">{skillsSlide.number}</span>
                 {skillsSlide.title}
               </span>
             </div>
 
-            <div className="w-4 h-4 flex items-center justify-center">
+            <div className="w-4 h-4 flex items-center justify-center shrink-0">
               <div
                 className={`transition-all duration-300 rounded-full ${
                   activeIndex === skillsIndex
@@ -447,7 +444,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             type="button"
             onClick={() => onSelectSlide(educationIndex)}
             aria-label={`Jump to slide ${educationSlide.number}: ${educationSlide.title}`}
-            className="group flex items-center justify-end gap-2.5 focus:outline-none"
+            className="w-full group flex items-center justify-end gap-2 focus:outline-none"
           >
             <div
               className={`hidden md:inline-block transition-all duration-200 text-right ${
@@ -455,18 +452,18 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
               }`}
             >
               <span
-                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
+                className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans ${
                   activeIndex === educationIndex
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
                     : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{educationSlide.number}</span>
+                <span className="font-mono mr-1 text-[9px] text-[#7ea2f8]">{educationSlide.number}</span>
                 {educationSlide.title}
               </span>
             </div>
 
-            <div className="w-4 h-4 flex items-center justify-center">
+            <div className="w-4 h-4 flex items-center justify-center shrink-0">
               <div
                 className={`transition-all duration-300 rounded-full ${
                   activeIndex === educationIndex
@@ -483,7 +480,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             type="button"
             onClick={() => onSelectSlide(contactIndex)}
             aria-label={`Jump to slide ${contactSlide.number}: ${contactSlide.title}`}
-            className="group flex items-center justify-end gap-2.5 focus:outline-none"
+            className="w-full group flex items-center justify-end gap-2 focus:outline-none"
           >
             <div
               className={`hidden md:inline-block transition-all duration-200 text-right ${
@@ -491,18 +488,18 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
               }`}
             >
               <span
-                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
+                className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans ${
                   activeIndex === contactIndex
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
                     : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{contactSlide.number}</span>
+                <span className="font-mono mr-1 text-[9px] text-[#7ea2f8]">{contactSlide.number}</span>
                 {contactSlide.title}
               </span>
             </div>
 
-            <div className="w-4 h-4 flex items-center justify-center">
+            <div className="w-4 h-4 flex items-center justify-center shrink-0">
               <div
                 className={`transition-all duration-300 rounded-full ${
                   activeIndex === contactIndex
