@@ -53,9 +53,9 @@ function TechPopover({ tags }: { tags: string[] }) {
           onMouseLeave={handleClose}
         >
           <div className="p-3 rounded-xl border border-[#324982] bg-[#0c142b] shadow-[0_16px_40px_rgba(0,0,0,0.95)]">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[#8cb0fd] mb-2 pb-1.5 border-b border-[#1f2f5c] flex items-center justify-between">
-              <span>ALL TECHNOLOGIES ({tags.length})</span>
-              <span className="text-[#f8c076] font-bold">[ STACK ]</span>
+            <div className="text-[10px] font-mono tracking-wider text-[#8cb0fd] mb-2 pb-1.5 border-b border-[#1f2f5c] flex items-center justify-between">
+              <span>All Technologies ({tags.length})</span>
+              <span className="text-[#f8c076] font-semibold">Stack</span>
             </div>
 
             <div className="flex flex-wrap gap-1.5">
