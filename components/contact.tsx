@@ -26,7 +26,7 @@ export function Contact({ profile, socials, onSelectSlide }: ContactProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 p-4 sm:p-8 rounded-2xl border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.6)]">
         <div className="md:col-span-4 space-y-2.5">
-          <div className="font-mono text-base font-bold text-white uppercase tracking-wider">
+          <div className="font-sans text-base font-bold text-white uppercase tracking-wider">
             {profile.name}
           </div>
           <p className="text-xs font-mono text-[#8cb0fd]">

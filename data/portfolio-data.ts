@@ -108,6 +108,7 @@ export const portfolioData: PortfolioData = {
       location: "Ho Chi Minh City, Viet Nam",
       projectTitle: "Finance Data Processing Web",
       projectUrl: "https://bwid-automation.onrender.com/",
+      teamSize: "3",
       description: "Engineered an internal web application used by the finance and accounting team to process bank statements and generate automated cash reports, handling transaction extraction, classification, and reconciliation.",
       highlights: [
         "Bank Statement Parsing: Built REST APIs with FastAPI, including parsers for 10+ banks (VCB, TCB, BIDV, ACB, MBB...) to automatically extract transaction data from uploaded statements, with OCR fallback via Gemini for scanned files.",

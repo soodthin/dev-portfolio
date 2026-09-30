@@ -1,6 +1,19 @@
 import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { portfolioData } from '@/data/portfolio-data';
 import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: portfolioData.profile.meta.title,
@@ -15,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark h-full">
-      <body className="h-full overflow-hidden antialiased selection:bg-[#32235c] selection:text-[#f8c076] text-[#e2dcff]">
+    <html lang="en" className={`dark h-full ${inter.variable} ${jetbrainsMono.variable}`}>
+      <body className="h-full overflow-hidden antialiased selection:bg-[#32235c] selection:text-[#f8c076] text-[#e2dcff] font-sans">
         {children}
       </body>
     </html>

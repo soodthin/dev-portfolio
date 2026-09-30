@@ -39,7 +39,7 @@ export function Hero({ profile }: HeroProps) {
 
         <div className="space-y-3 sm:space-y-4 text-center lg:text-left flex-1">
           <div className="space-y-1 sm:space-y-1.5">
-            <h1 className="text-2xl sm:text-5xl font-mono font-bold tracking-tight text-white uppercase">
+            <h1 className="text-2xl sm:text-5xl font-sans font-bold tracking-tight text-white uppercase">
               {profile.name}
             </h1>
             <p className="text-xs sm:text-xl font-mono text-[#8cb0fd]">

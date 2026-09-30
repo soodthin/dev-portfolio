@@ -38,6 +38,7 @@ export interface Experience {
   location: string;
   projectTitle?: string;
   projectUrl?: string;
+  teamSize?: string;
   description: string;
   highlights: string[];
   technologies: string[];

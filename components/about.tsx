@@ -26,7 +26,7 @@ export function SkillsSlide({ skillGroups, slideNumber }: SkillsSlideProps) {
               <h3 className="font-mono text-sm font-bold tracking-wider text-[#f8c076] mb-1.5">
                 {group.category}
               </h3>
-              <p className="text-xs font-mono text-[#9fb2dd] mb-3 sm:mb-4 leading-relaxed">
+              <p className="text-xs font-sans text-[#9fb2dd] mb-3 sm:mb-4 leading-relaxed">
                 {group.description}
               </p>
             </div>
@@ -75,10 +75,10 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
               {education.period}
             </span>
           </div>
-          <h3 className="font-mono text-lg sm:text-xl font-bold text-white uppercase">
+          <h3 className="font-sans text-lg sm:text-xl font-bold text-white uppercase">
             {education.school}
           </h3>
-          <div className="text-sm font-mono text-[#8cb0fd]">
+          <div className="text-sm font-sans text-[#8cb0fd]">
             Major: {education.major}
           </div>
 
@@ -104,10 +104,10 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
             <div className="text-xs font-mono tracking-wider text-[#f8c076] mb-3 font-semibold">
               Languages
             </div>
-            <div className="space-y-3 text-xs sm:text-sm font-mono">
+            <div className="space-y-3 text-xs sm:text-sm">
               {languages.map((l) => (
-                <div key={l.language} className="flex items-center justify-between border-b border-[#213364] pb-2">
-                  <span className="text-white">{l.language}</span>
+                <div key={l.language} className="flex items-center justify-between border-b border-[#213364] pb-2 font-mono">
+                  <span className="text-white font-sans">{l.language}</span>
                   <span className="text-[#8cb0fd] text-xs font-semibold">{l.proficiency.includes('Native') ? 'Native' : 'Professional'}</span>
                 </div>
               ))}

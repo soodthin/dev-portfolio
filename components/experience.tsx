@@ -141,16 +141,16 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                   <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
                     {exp.role}
                   </h3>
-                  <div className="text-xs sm:text-sm font-mono text-[#8cb0fd] mt-0.5">
+                  <div className="text-xs sm:text-sm font-sans text-[#8cb0fd] mt-0.5">
                     {exp.company}
                   </div>
                 </div>
 
                 <div className="sm:text-right font-mono text-xs space-y-1">
                   <div className="inline-block px-3 py-0.5 rounded-full border border-[#344d8b] bg-[#121d3e] text-[#ddd7ff]">
-                    [ {exp.period} ]
+                    {exp.period}
                   </div>
-                  <div className="text-[#8299cd] hidden sm:block">{exp.location}</div>
+                  <div className="text-[#8299cd] font-sans hidden sm:block">{exp.location}</div>
                 </div>
               </div>
 
@@ -173,6 +173,12 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                     ) : (
                       <span className="text-[#f8c076] font-bold">{exp.projectTitle}</span>
                     )}
+                  </div>
+                )}
+
+                {exp.teamSize && (
+                  <div className="inline-block px-2.5 py-0.5 rounded-lg bg-[#15234c] border border-[#2f4684] text-xs font-mono text-[#8cb0fd]">
+                    Team Size: <span className="text-[#f8c076] font-bold">{exp.teamSize}</span>
                   </div>
                 )}
 
@@ -294,13 +300,13 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                   <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
                     Frontend &amp; Operations
                   </h3>
-                  <div className="text-xs sm:text-sm font-mono text-[#8cb0fd] mt-0.5">
+                  <div className="text-xs sm:text-sm font-sans text-[#8cb0fd] mt-0.5">
                     {exp.projectUrl ? (
                       <a
                         href={exp.projectUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-[#f8c076] transition-colors hover:underline inline-flex items-center gap-1"
+                        className="hover:text-[#f8c076] transition-colors hover:underline inline-flex items-center gap-1 font-mono"
                       >
                         <span>{exp.projectTitle}</span>
                         <span className="text-xs">↗</span>
@@ -309,12 +315,15 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                       exp.projectTitle
                     )}{' '}
                     • {exp.company}
+                    {exp.teamSize && (
+                      <span className="text-[#f8c076] font-mono"> • Team: {exp.teamSize}</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="sm:text-right font-mono text-xs">
                   <span className="px-3 py-0.5 rounded-full border border-[#344d8b] bg-[#121d3e] text-[#ddd7ff]">
-                    [ 02 / 02 ]
+                    02 / 02
                   </span>
                 </div>
               </div>
@@ -352,7 +361,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
 
               <div className="p-3 sm:p-4 rounded-xl border border-[#213364] bg-[#121c3b]/80 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 text-xs font-mono">
                 <span className="text-[#8cb0fd] tracking-wider text-[11px] sm:text-xs font-semibold">Impact:</span>
-                <span className="text-[#f8c076] font-bold text-xs sm:text-sm">Report turnaround time cut from 1 day to 2 hours</span>
+                <span className="text-[#f8c076] font-sans font-semibold text-xs sm:text-sm">Report turnaround time cut from 1 day to 2 hours</span>
               </div>
             </div>
           </div>

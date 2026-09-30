@@ -150,7 +150,7 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
             )}
           </h3>
 
-          <p className="text-xs sm:text-sm font-mono text-[#95abdc]">
+          <p className="text-xs sm:text-sm font-sans text-[#95abdc]">
             {project.subtitle}
           </p>
         </div>
