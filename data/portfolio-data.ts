@@ -175,22 +175,22 @@ export const portfolioData: PortfolioData = {
 
   socials: [
     {
-      label: "LINKEDIN",
+      label: "LinkedIn",
       handle: "in/thinhthai",
       url: "https://linkedin.com/in/thinhthai"
     },
     {
-      label: "GITHUB",
+      label: "GitHub",
       handle: "github.com/soodthin",
       url: "https://github.com/soodthin"
     },
     {
-      label: "EMAIL",
+      label: "Email",
       handle: "thinhthai963@gmail.com",
       url: "mailto:thinhthai963@gmail.com"
     },
     {
-      label: "PHONE",
+      label: "Phone",
       handle: "0869922096",
       url: "tel:0869922096"
     }
