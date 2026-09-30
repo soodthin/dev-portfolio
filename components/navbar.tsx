@@ -9,12 +9,12 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'SUMMARY', slideIndex: 0, matches: (idx) => idx === 0 },
-  { label: 'EXPERIENCE', slideIndex: 1, matches: (idx) => idx === 1 },
-  { label: 'PROJECTS', slideIndex: 2, matches: (idx) => idx >= 2 && idx <= 4 },
-  { label: 'SKILLS', slideIndex: 5, matches: (idx) => idx === 5 },
-  { label: 'EDUCATION', slideIndex: 6, matches: (idx) => idx === 6 },
-  { label: 'CONTACT', slideIndex: 7, matches: (idx) => idx === 7 },
+  { label: 'Summary', slideIndex: 0, matches: (idx) => idx === 0 },
+  { label: 'Experience', slideIndex: 1, matches: (idx) => idx === 1 },
+  { label: 'Projects', slideIndex: 2, matches: (idx) => idx >= 2 && idx <= 4 },
+  { label: 'Skills', slideIndex: 5, matches: (idx) => idx === 5 },
+  { label: 'Education', slideIndex: 6, matches: (idx) => idx === 6 },
+  { label: 'Contact', slideIndex: 7, matches: (idx) => idx === 7 },
 ];
 
 interface NavbarProps {
@@ -32,23 +32,10 @@ export function Navbar({ activeIndex = 0, onSelectSlide }: NavbarProps) {
 
   const navRef = useRef<HTMLElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const prevActiveNavRef = useRef(0);
-  const [isLeaping, setIsLeaping] = useState(false);
 
   const activeNavIdx = NAV_ITEMS.findIndex((item) =>
     item.matches ? item.matches(activeIndex) : activeIndex === item.slideIndex
   );
-
-  useEffect(() => {
-    if (prevActiveNavRef.current === NAV_ITEMS.length - 1 && activeNavIdx === 0) {
-      setIsLeaping(true);
-      const timer = setTimeout(() => setIsLeaping(false), 550);
-      return () => clearTimeout(timer);
-    } else {
-      setIsLeaping(false);
-    }
-    prevActiveNavRef.current = activeNavIdx;
-  }, [activeNavIdx]);
 
   useEffect(() => {
     const updatePosition = () => {
@@ -58,7 +45,7 @@ export function Navbar({ activeIndex = 0, onSelectSlide }: NavbarProps) {
         const navRect = navEl.getBoundingClientRect();
         const itemRect = currentEl.getBoundingClientRect();
         setIndicator({
-          left: itemRect.left - navRect.left,
+          left: itemRect.left - navRect.left - (navEl.clientLeft || 0),
           width: itemRect.width,
           ready: true,
         });
@@ -84,24 +71,22 @@ export function Navbar({ activeIndex = 0, onSelectSlide }: NavbarProps) {
         <a 
           href="#summary" 
           onClick={(e) => handleNavClick(e, 0)}
-          className="font-mono text-xs sm:text-sm tracking-widest font-bold text-[#f1edff] uppercase hover:text-[#7ea2f8] transition-colors shrink-0"
+          className="group flex items-center gap-2.5 font-mono text-sm sm:text-base tracking-wider font-bold text-white uppercase transition-colors shrink-0"
         >
-          THAI DO THINH <span className="text-[#6479a8] font-normal">// SOODTHIN</span>
+          <span className="group-hover:text-[#f8c076] transition-colors">THAI DO THINH</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#f8c076] animate-pulse" />
+          <span className="text-[#7e99cc] font-medium tracking-normal lowercase group-hover:text-[#8cb0fd] transition-colors">soodthin</span>
         </a>
 
         <nav 
           ref={navRef}
-          className="relative hidden md:flex items-center gap-1 lg:gap-1.5 text-[11px] lg:text-xs font-mono tracking-wider p-1 rounded-xl bg-[#090e21]/70 border border-[#1d2b56]/60 shadow-[inset_0_1px_4px_rgba(0,0,0,0.4)] shrink-0"
+          className="relative hidden md:flex items-center gap-1 font-sans p-1 rounded-full bg-[#0a1024]/90 border border-[#1e2e5c] shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)] shrink-0"
         >
           {indicator.ready && (
             <div
-              className={`absolute top-1 bottom-1 rounded-lg bg-[#14224a] border border-[#f8c076]/60 shadow-[0_0_16px_rgba(248,192,118,0.25)] pointer-events-none transition-all ${
-                isLeaping 
-                  ? 'duration-500 ease-[cubic-bezier(0.34,1.45,0.64,1)] scale-105' 
-                  : 'duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]'
-              }`}
+              className="absolute left-0 top-1 bottom-1 rounded-full bg-[#15234d] border border-[#f8c076]/45 shadow-[0_0_12px_rgba(248,192,118,0.18)] pointer-events-none transition-[transform,width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,width]"
               style={{
-                transform: `translateX(${indicator.left}px)`,
+                transform: `translate3d(${indicator.left}px, 0, 0)`,
                 width: `${indicator.width}px`,
               }}
             />
@@ -116,29 +101,29 @@ export function Navbar({ activeIndex = 0, onSelectSlide }: NavbarProps) {
                 ref={(el) => { itemRefs.current[idx] = el; }}
                 href="#"
                 onClick={(e) => handleNavClick(e, item.slideIndex)}
-                className={`relative z-10 px-2.5 lg:px-3 py-1.5 rounded-lg transition-colors duration-200 uppercase ${
+                className={`relative z-10 inline-flex items-center justify-center px-4 lg:px-4.5 py-1.5 rounded-full text-[13px] lg:text-sm font-medium transition-colors duration-150 ${
                   isActive
-                    ? 'text-[#f8c076] font-bold drop-shadow-[0_0_8px_rgba(248,192,118,0.4)]'
-                    : 'text-[#96a7d1] hover:text-[#f8c076]'
+                    ? 'text-[#f8c076] drop-shadow-[0_0_8px_rgba(248,192,118,0.4)]'
+                    : 'text-[#8cb0fd] hover:text-white'
                 }`}
               >
-                [ {item.label} ]
+                {item.label}
               </a>
             );
           })}
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
-          <span className="font-mono text-[11px] text-[#f8c076] font-bold px-2 py-1 rounded border border-[#233564] bg-[#0c142b]">
+          <span className="font-mono text-xs text-[#f8c076] font-bold px-2.5 py-1 rounded-full border border-[#233564] bg-[#0c142b]">
             {String(activeIndex + 1).padStart(2, '0')}/08
           </span>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             type="button"
-            className="px-3 py-1.5 rounded-lg text-xs font-mono uppercase border border-[#2d3e70] bg-[#0c142b] text-[#d3cbff]"
+            className="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-mono border border-[#2d3e70] bg-[#0c142b] text-[#d3cbff] hover:text-white transition-colors cursor-pointer"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? '[ CLOSE ]' : '[ MENU ]'}
+            {mobileMenuOpen ? 'Close' : 'Menu'}
           </button>
         </div>
       </div>
@@ -150,13 +135,13 @@ export function Navbar({ activeIndex = 0, onSelectSlide }: NavbarProps) {
               <a
                 href="#"
                 onClick={(e) => handleNavClick(e, item.slideIndex)}
-                className={`block text-xs font-mono tracking-wider py-2 px-3 rounded-lg transition-colors uppercase ${
+                className={`block text-sm font-medium py-2.5 px-3 rounded-lg transition-colors ${
                   (item.matches ? item.matches(activeIndex) : activeIndex === item.slideIndex)
-                    ? 'text-[#f8c076] bg-[#14224a] font-bold border border-[#f8c076]/40'
+                    ? 'text-[#f8c076] bg-[#14224a] font-medium border border-[#f8c076]/40'
                     : 'text-[#a9b9dc] hover:text-[#f8c076] hover:bg-[#121c3b]/50'
                 }`}
               >
-                [ {item.label} ]
+                {item.label}
               </a>
             </div>
           ))}
