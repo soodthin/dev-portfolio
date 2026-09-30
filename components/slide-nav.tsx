@@ -274,10 +274,10 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
           </div>
 
           <div
-            className={`relative shrink-0 ${
+            className={`relative shrink-0 overflow-hidden ${
               isAnyProjectActive
                 ? 'w-[24px] h-[68px] opacity-100 pointer-events-auto transition-all duration-200 ease-out'
-                : 'w-0 h-4 opacity-0 pointer-events-none overflow-hidden transition-all duration-120 ease-in'
+                : 'w-0 h-4 opacity-0 pointer-events-none'
             }`}
           >
             <svg
@@ -285,8 +285,8 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
               height="68"
               viewBox="0 0 24 68"
               fill="none"
-              className={`pointer-events-none overflow-visible transition-opacity duration-150 ${
-                isAnyProjectActive ? 'opacity-100' : 'opacity-0'
+              className={`pointer-events-none overflow-visible ${
+                isAnyProjectActive ? 'opacity-100 transition-opacity duration-150' : 'opacity-0'
               }`}
             >
               <path
@@ -297,7 +297,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                 strokeDasharray="12"
                 style={{
                   strokeDashoffset: isAnyProjectActive ? 0 : 12,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '140ms ease-out 20ms' : '0ms'}`,
+                  transition: isAnyProjectActive ? 'stroke-dashoffset 140ms ease-out 20ms' : 'none',
                 }}
               />
 
@@ -310,7 +310,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                 strokeDasharray="28"
                 style={{
                   strokeDashoffset: isAnyProjectActive ? 0 : 28,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 100ms' : '0ms'}`,
+                  transition: isAnyProjectActive ? 'stroke-dashoffset 180ms ease-out 100ms' : 'none',
                 }}
               />
 
@@ -323,7 +323,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                 strokeDasharray="14"
                 style={{
                   strokeDashoffset: isAnyProjectActive ? 0 : 14,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '150ms ease-out 80ms' : '0ms'}`,
+                  transition: isAnyProjectActive ? 'stroke-dashoffset 150ms ease-out 80ms' : 'none',
                 }}
               />
 
@@ -336,7 +336,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                 strokeDasharray="28"
                 style={{
                   strokeDashoffset: isAnyProjectActive ? 0 : 28,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 100ms' : '0ms'}`,
+                  transition: isAnyProjectActive ? 'stroke-dashoffset 180ms ease-out 100ms' : 'none',
                 }}
               />
             </svg>
@@ -351,17 +351,22 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                 <button
                   key={subSlide.id}
                   type="button"
+                  tabIndex={isAnyProjectActive ? 0 : -1}
                   onClick={() => onSelectSlide(subSlide.globalIndex)}
                   onMouseEnter={() => setHoveredSubIndex(subSlide.globalIndex)}
                   onMouseLeave={() => setHoveredSubIndex(null)}
                   aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
-                  className={`absolute left-[2px] -translate-x-1/2 -translate-y-1/2 ${topPos} w-3.5 h-3.5 flex items-center justify-center focus:outline-none z-10`}
+                  className={`absolute left-[2px] -translate-x-1/2 -translate-y-1/2 ${topPos} w-3.5 h-3.5 flex items-center justify-center focus:outline-none z-10 ${
+                    isAnyProjectActive ? 'pointer-events-auto' : 'pointer-events-none'
+                  }`}
                 >
                   <div
                     style={{
                       transform: isAnyProjectActive ? (isSubHovered ? 'scale(1.3)' : 'scale(1)') : 'scale(0)',
                       opacity: isAnyProjectActive ? 1 : 0,
-                      transition: `transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1) ${isAnyProjectActive ? popDelay : '0ms'}, opacity 120ms ease`,
+                      transition: isAnyProjectActive
+                        ? `transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1) ${popDelay}, opacity 120ms ease`
+                        : 'none',
                     }}
                     className={`rounded-full transition-colors duration-150 ${
                       isSubActive
