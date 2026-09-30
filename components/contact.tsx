@@ -40,14 +40,7 @@ function getSocialIcon(label: string) {
   return null;
 }
 
-export function Contact({ profile, socials, onSelectSlide }: ContactProps) {
-  const handleNavClick = (e: React.MouseEvent, index: number) => {
-    if (onSelectSlide) {
-      e.preventDefault();
-      onSelectSlide(index);
-    }
-  };
-
+export function Contact({ profile, socials }: ContactProps) {
   return (
     <footer id="contact" className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-6">
       <div className="flex items-center gap-3 mb-4">
@@ -58,125 +51,48 @@ export function Contact({ profile, socials, onSelectSlide }: ContactProps) {
         <div className="flex-1 border-b border-[#213364]" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 p-4 sm:p-8 rounded-2xl border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.6)]">
-        <div className="md:col-span-4 space-y-2.5">
-          <div className="font-sans text-base font-bold text-white uppercase tracking-wider">
-            {profile.name}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 p-5 sm:p-8 rounded-2xl border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.6)]">
+        <div className="space-y-3 font-mono">
+          <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest flex items-center gap-2">
+            <span>CONTACT</span>
+            <div className="flex-1 border-b border-[#213364]" />
           </div>
-          <p className="text-xs font-mono text-[#8cb0fd]">
-            {profile.title}
-          </p>
-          <p className="text-xs text-[#c5d5f6] font-sans leading-relaxed">
-            Building reliable full-stack web and mobile systems from database architecture to modern user interfaces.
-          </p>
-          <div className="text-xs font-mono text-[#8299cd] pt-1">
-            Location: <span className="text-[#c5d5f6]">{profile.location}</span>
-          </div>
-          <div className="pt-1.5 flex items-center gap-2 font-mono text-xs">
-            <span className="text-[#8299cd]">EDITION:</span>
-            <span className="px-2 py-0.5 rounded-md text-[11px] font-bold border border-[#f8c076]/40 bg-[#121c3b] text-[#f8c076]">
-              v2.0 (REFINED)
-            </span>
-            <span className="text-[11px] text-[#55699b]">
-              v1.0 (INITIAL)
-            </span>
-          </div>
-        </div>
-
-        <div className="md:col-span-2 space-y-2.5 font-mono">
-          <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest">
-            NAVIGATION
-          </div>
-          <ul className="space-y-2 text-xs">
-            <li>
-              <a 
-                href="#summary" 
-                onClick={(e) => handleNavClick(e, 0)}
-                className="text-[#9fb2dd] hover:text-[#f8c076] transition-colors"
-              >
-                Summary
-              </a>
-            </li>
-            <li>
-              <a 
-                href="#experience" 
-                onClick={(e) => handleNavClick(e, 1)}
-                className="text-[#9fb2dd] hover:text-[#f8c076] transition-colors"
-              >
-                Experience
-              </a>
-            </li>
-            <li>
-              <a 
-                href="#projects" 
-                onClick={(e) => handleNavClick(e, 2)}
-                className="text-[#9fb2dd] hover:text-[#f8c076] transition-colors"
-              >
-                Projects
-              </a>
-            </li>
-            <li>
-              <a 
-                href="#skills" 
-                onClick={(e) => handleNavClick(e, 5)}
-                className="text-[#9fb2dd] hover:text-[#f8c076] transition-colors"
-              >
-                Skills
-              </a>
-            </li>
-            <li>
-              <a 
-                href="#education" 
-                onClick={(e) => handleNavClick(e, 6)}
-                className="text-[#9fb2dd] hover:text-[#f8c076] transition-colors"
-              >
-                Education
-              </a>
-            </li>
-            <li className="pt-1">
-              <a 
-                href="#summary" 
-                onClick={(e) => handleNavClick(e, 0)}
-                className="text-[#f8c076] hover:text-[#ddd7ff] transition-colors font-bold"
-              >
-                Top // Loop ↑
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="md:col-span-3 space-y-2.5 font-mono">
-          <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest">
-            CONTACT
-          </div>
-          <ul className="space-y-2 text-xs">
+          <ul className="space-y-3 text-xs">
             <li>
               <a 
                 href={`mailto:${profile.email}`} 
-                className="text-[#9fb2dd] hover:text-[#f8c076] transition-colors block break-all"
+                className="group flex items-center gap-2.5 text-[#9fb2dd] hover:text-[#f8c076] transition-colors"
               >
-                {profile.email}
+                <span className="w-6 h-6 rounded-md bg-[#132047] border border-[#263a6f] group-hover:border-[#f8c076]/50 group-hover:bg-[#1a2b5e] flex items-center justify-center text-[#8cb0fd] group-hover:text-[#f8c076] transition-all shrink-0">
+                  {getSocialIcon('email')}
+                </span>
+                <span className="font-sans font-medium text-white group-hover:text-[#f8c076]">{profile.email}</span>
               </a>
             </li>
             <li>
               <a 
                 href={`tel:${profile.phone}`} 
-                className="text-[#9fb2dd] hover:text-[#f8c076] transition-colors block"
+                className="group flex items-center gap-2.5 text-[#9fb2dd] hover:text-[#f8c076] transition-colors"
               >
-                Tel: {profile.phone}
+                <span className="w-6 h-6 rounded-md bg-[#132047] border border-[#263a6f] group-hover:border-[#f8c076]/50 group-hover:bg-[#1a2b5e] flex items-center justify-center text-[#8cb0fd] group-hover:text-[#f8c076] transition-all shrink-0">
+                  {getSocialIcon('phone')}
+                </span>
+                <span className="font-sans font-medium text-white group-hover:text-[#f8c076]">{profile.phone}</span>
               </a>
             </li>
-            <li className="text-[11px] text-[#8299cd] pt-1">
-              Status: Open for Developer Roles
+            <li className="pt-1.5 flex items-center gap-2 text-xs text-[#8299cd]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Status: Open for Developer Roles</span>
             </li>
           </ul>
         </div>
 
-        <div className="md:col-span-3 space-y-2.5 font-mono">
-          <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest">
-            CONNECT
+        <div className="space-y-3 font-mono">
+          <div className="text-xs font-bold text-[#f8c076] uppercase tracking-widest flex items-center gap-2">
+            <span>CONNECT</span>
+            <div className="flex-1 border-b border-[#213364]" />
           </div>
-          <ul className="space-y-2 text-xs">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             {socials.map((social) => {
               const isExternal = social.url.startsWith('http');
               return (
@@ -185,14 +101,16 @@ export function Contact({ profile, socials, onSelectSlide }: ContactProps) {
                     href={social.url}
                     target={isExternal ? '_blank' : undefined}
                     rel={isExternal ? 'noopener noreferrer' : undefined}
-                    className="group text-[#9fb2dd] hover:text-[#f8c076] transition-colors inline-flex items-center gap-2"
+                    className="group p-2.5 rounded-xl border border-[#263a6f] bg-[#121f45]/70 hover:border-[#f8c076]/60 hover:bg-[#162756] transition-all flex items-center justify-between"
                   >
-                    <span className="w-5 h-5 rounded-md bg-[#132047] border border-[#263a6f] group-hover:border-[#f8c076]/50 group-hover:bg-[#1a2b5e] flex items-center justify-center text-[#8cb0fd] group-hover:text-[#f8c076] transition-all shrink-0">
-                      {getSocialIcon(social.label)}
-                    </span>
-                    <span className="font-sans font-medium text-white group-hover:text-[#f8c076] transition-colors">
-                      {social.label}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-md bg-[#132047] border border-[#263a6f] group-hover:border-[#f8c076]/50 group-hover:bg-[#1a2b5e] flex items-center justify-center text-[#8cb0fd] group-hover:text-[#f8c076] transition-all shrink-0">
+                        {getSocialIcon(social.label)}
+                      </span>
+                      <span className="font-sans font-medium text-white group-hover:text-[#f8c076] transition-colors">
+                        {social.label}
+                      </span>
+                    </div>
                     <span className="text-[#f8c076] text-xs group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
                       ↗
                     </span>
