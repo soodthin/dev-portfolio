@@ -128,7 +128,7 @@ export function Contact({ profile, socials }: ContactProps) {
           <span className="text-[#3b4f84]">/</span>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#283e74] bg-[#0c142e] text-[11px]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#f8c076] animate-pulse" />
-            <span className="text-[#f8c076] font-bold">VERSION 2.0</span>
+            <span className="text-[#f8c076] font-bold">VERSION 2.1</span>
             <span className="text-[#3b4f84]">|</span>
             <span className="text-[#889dcd]">v1.0 INITIAL</span>
           </div>

@@ -24,6 +24,7 @@ export interface Project {
   description: string;
   tags: string[];
   imageUrl?: string;
+  screenshots?: string[];
   demoUrl?: string;
   githubUrl?: string;
   featured: boolean;

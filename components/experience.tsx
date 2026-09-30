@@ -204,12 +204,15 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                 {exp.description}
               </p>
 
-              <div className="space-y-2 sm:space-y-2.5 pt-1">
-                <div className="text-xs font-mono tracking-wider text-[#8cb0fd] font-semibold">
-                  Responsibilities:
+              <div className="space-y-2.5 pt-1">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-mono tracking-wider text-[#8cb0fd] font-semibold uppercase">
+                    Responsibilities
+                  </span>
+                  <div className="flex-1 h-[1px] bg-gradient-to-r from-[#213364] to-transparent" />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                   {partOneHighlights.map((item, hIdx) => {
                     const [label, ...rest] = item.split(': ');
                     const detail = rest.join(': ');
@@ -217,14 +220,14 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                     return (
                       <div
                         key={hIdx}
-                        className="rounded-xl p-3 sm:p-5 border border-[#23376c] bg-[#121f45]/90 flex flex-col justify-between hover:border-[#385296] transition-colors min-h-0 sm:min-h-[140px]"
+                        className="group relative pl-4 pr-3 py-2.5 sm:py-3 border-l-2 border-[#2b417e] hover:border-[#f8c076] bg-[#111c3d]/40 hover:bg-[#16244f]/60 rounded-r-xl transition-all duration-300 flex flex-col justify-start"
                       >
-                        <span className="font-mono text-xs font-bold text-[#f8c076] mb-1 sm:mb-2">
+                        <div className="text-[#f8c076] font-mono text-xs font-bold mb-1 tracking-wide group-hover:translate-x-0.5 transition-transform duration-200">
                           [{String(hIdx + 1).padStart(2, '0')}] {detail ? label : ''}
-                        </span>
-                        <span className="text-xs text-[#c5d5f6] font-sans leading-relaxed">
+                        </div>
+                        <p className="text-[#c5d5f6] font-sans text-xs leading-relaxed group-hover:text-[#e2edff] transition-colors">
                           {detail || label}
-                        </span>
+                        </p>
                       </div>
                     );
                   })}
@@ -330,12 +333,15 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
 
               <div className="border-b border-[#213364]" />
 
-              <div className="space-y-2 sm:space-y-2.5">
-                <div className="text-xs font-mono tracking-wider text-[#8cb0fd] font-semibold">
-                  Frontend, Reliability &amp; Docs:
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-mono tracking-wider text-[#8cb0fd] font-semibold uppercase">
+                    Frontend, Reliability &amp; Docs
+                  </span>
+                  <div className="flex-1 h-[1px] bg-gradient-to-r from-[#213364] to-transparent" />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                   {partTwoHighlights.map((item, hIdx) => {
                     const [label, ...rest] = item.split(': ');
                     const detail = rest.join(': ');
@@ -343,16 +349,14 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                     return (
                       <div
                         key={hIdx}
-                        className="rounded-xl p-3 sm:p-5 border border-[#23376c] bg-[#121f45]/90 flex flex-col justify-between hover:border-[#385296] transition-colors min-h-0 sm:min-h-[140px]"
+                        className="group relative pl-4 pr-3 py-2.5 sm:py-3 border-l-2 border-[#2b417e] hover:border-[#f8c076] bg-[#111c3d]/40 hover:bg-[#16244f]/60 rounded-r-xl transition-all duration-300 flex flex-col justify-start"
                       >
-                        <div>
-                          <span className="font-mono text-xs font-bold text-[#f8c076] block mb-1 sm:mb-2">
-                            [{String(hIdx + 4).padStart(2, '0')}] {detail ? label : ''}
-                          </span>
-                          <span className="text-xs text-[#c5d5f6] font-sans leading-relaxed">
-                            {detail || label}
-                          </span>
+                        <div className="text-[#f8c076] font-mono text-xs font-bold mb-1 tracking-wide group-hover:translate-x-0.5 transition-transform duration-200">
+                          [{String(hIdx + 4).padStart(2, '0')}] {detail ? label : ''}
                         </div>
+                        <p className="text-[#c5d5f6] font-sans text-xs leading-relaxed group-hover:text-[#e2edff] transition-colors">
+                          {detail || label}
+                        </p>
                       </div>
                     );
                   })}
