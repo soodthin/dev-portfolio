@@ -223,14 +223,14 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
 
         <div
           className={`relative group/project flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isAnyProjectActive ? 'my-3.5' : 'my-0'
+            isAnyProjectActive ? 'my-3 h-[96px]' : 'my-0 h-4'
           }`}
         >
           <div
             className={`flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
               isAnyProjectActive
-                ? 'max-w-[240px] opacity-100 translate-x-0 pointer-events-auto mr-0.5'
-                : 'max-w-0 opacity-0 translate-x-4 pointer-events-none mr-0'
+                ? 'max-w-[240px] max-h-[96px] opacity-100 translate-x-0 pointer-events-auto mr-0.5'
+                : 'max-w-0 max-h-0 opacity-0 translate-x-4 pointer-events-none mr-0'
             }`}
           >
             <div className="flex flex-col justify-between h-[96px] py-0.5 items-end">
