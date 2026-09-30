@@ -99,15 +99,15 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
         className="absolute right-full top-1/2 -translate-y-1/2 focus:outline-none group/tab cursor-pointer"
       >
         <svg
-          width="36"
-          height="82"
-          viewBox="0 0 36 82"
+          width="22"
+          height="124"
+          viewBox="0 0 22 124"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="drop-shadow-[-6px_0_16px_rgba(4,7,17,0.7)] transition-all duration-300"
         >
           <path
-            d="M 36 1 L 6 15 L 6 67 L 36 81 Z"
+            d="M 22 1 L 3 18 L 3 106 L 22 123 Z"
             fill="#070b18"
             fillOpacity="0.95"
             stroke="#233463"
@@ -115,12 +115,12 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="transition-colors duration-300 group-hover/tab:stroke-[#f8c076] group-hover/tab:fill-[#0c142b]"
           />
           <line
-            x1="6"
-            y1="22"
-            x2="6"
-            y2="60"
+            x1="3"
+            y1="36"
+            x2="3"
+            y2="88"
             stroke="#f8c076"
-            strokeWidth="2.5"
+            strokeWidth="2"
             strokeLinecap="round"
             className={`transition-opacity duration-300 ${
               isExpanded ? 'opacity-40' : 'opacity-100'
@@ -128,18 +128,18 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
           />
           {isExpanded ? (
             <path
-              d="M 16 35 L 23 41 L 16 47"
+              d="M 9 57 L 15 62 L 9 67"
               stroke="#c5d5f6"
-              strokeWidth="2"
+              strokeWidth="1.75"
               strokeLinecap="round"
               strokeLinejoin="round"
               className="transition-colors duration-300 group-hover/tab:stroke-[#f8c076]"
             />
           ) : (
             <path
-              d="M 23 35 L 16 41 L 23 47"
+              d="M 14 57 L 8 62 L 14 67"
               stroke="#c5d5f6"
-              strokeWidth="2"
+              strokeWidth="1.75"
               strokeLinecap="round"
               strokeLinejoin="round"
               className="transition-colors duration-300 group-hover/tab:stroke-[#f8c076]"
@@ -157,18 +157,19 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
             <div
-              className={`hidden md:inline-block font-mono transition-all duration-200 text-right ${
+              className={`hidden md:inline-block transition-all duration-200 text-right ${
                 activeIndex === 0 ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
               <span
-                className={`inline-block px-2.5 py-1 rounded-full border text-[11px] ${
+                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
                   activeIndex === 0
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
-                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a]'
+                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                {overviewSlide.number} {overviewSlide.title}
+                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{overviewSlide.number}</span>
+                {overviewSlide.title}
               </span>
             </div>
 
@@ -192,18 +193,19 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
             <div
-              className={`hidden md:inline-block font-mono transition-all duration-200 text-right ${
+              className={`hidden md:inline-block transition-all duration-200 text-right ${
                 activeIndex === 1 ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
               <span
-                className={`inline-block px-2.5 py-1 rounded-full border text-[11px] ${
+                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
                   activeIndex === 1
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
-                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a]'
+                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                {experienceSlide.number} {experienceSlide.title}
+                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{experienceSlide.number}</span>
+                {experienceSlide.title}
               </span>
             </div>
 
@@ -219,109 +221,68 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
           </button>
         )}
 
-        <div className={`relative group/project flex items-center justify-end transition-all duration-500 ease-out ${
-          isAnyProjectActive ? 'my-5 sm:my-6' : 'my-0'
-        }`}>
-          <div
-            className={`absolute right-6 top-1/2 -translate-y-1/2 flex items-center transition-all duration-400 ease-out ${
-              isAnyProjectActive
-                ? 'opacity-100 translate-x-0 scale-100 pointer-events-auto'
-                : 'opacity-0 translate-x-3 scale-95 pointer-events-none group-hover/project:opacity-100 group-hover/project:translate-x-0 group-hover/project:scale-100 group-hover/project:pointer-events-auto'
-            }`}
-          >
-            <div className="relative w-8 h-[76px] flex items-center justify-center mr-1">
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                viewBox="0 0 32 76"
-                fill="none"
-              >
-                <path
-                  d="M 28 4 C 10 4, 8 16, 8 20 L 8 56 C 8 62, 10 72, 28 72"
-                  stroke={isAnyProjectActive ? '#f8c076' : '#3f5ea5'}
-                  strokeWidth="1.5"
-                  fill="none"
-                  strokeOpacity={isAnyProjectActive ? 0.8 : 0.4}
-                />
-              </svg>
+        {isAnyProjectActive ? (
+          <div className="flex flex-col items-end gap-2 my-1 py-1 pr-0.5 border-r border-[#263765]/60">
+            {projectSlides.map((subSlide) => {
+              const isSubActive = activeIndex === subSlide.globalIndex;
 
-              <div className="absolute inset-0 flex flex-col justify-between py-2 items-start pl-0.5">
-                {projectSlides.map((subSlide) => {
-                  const isSubActive = activeIndex === subSlide.globalIndex;
-
-                  return (
-                    <button
-                      key={subSlide.id}
-                      type="button"
-                      onClick={() => onSelectSlide(subSlide.globalIndex)}
-                      aria-label={`Jump to sub-project ${subSlide.number}: ${subSlide.title}`}
-                      className="group/sub flex items-center justify-end focus:outline-none h-4 w-full"
+              return (
+                <button
+                  key={subSlide.id}
+                  type="button"
+                  onClick={() => onSelectSlide(subSlide.globalIndex)}
+                  aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
+                  className="group/sub flex items-center justify-end gap-2 focus:outline-none"
+                >
+                  <div
+                    className={`hidden md:inline-block transition-all duration-200 text-right ${
+                      isSubActive ? 'opacity-100' : 'opacity-0 group-hover/sub:opacity-100'
+                    }`}
+                  >
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-sans transition-all duration-200 ${
+                        isSubActive
+                          ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40 shadow-[0_0_12px_rgba(248,192,118,0.2)]'
+                          : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover/sub:text-[#c5d5f6]'
+                      }`}
                     >
-                      <div
-                        className={`hidden md:inline-block font-mono transition-all duration-200 text-right absolute right-12 sm:right-14 ${
-                          isSubActive ? 'opacity-100' : 'opacity-0 group-hover/sub:opacity-100'
-                        }`}
-                      >
-                        <div
-                          className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border whitespace-nowrap leading-tight ${
-                            isSubActive
-                              ? 'bg-[#15234c] border-[#f8c076]/60 shadow-[0_0_12px_rgba(248,192,118,0.25)]'
-                              : 'bg-[#0c142b] border-[#1c274a]'
-                          }`}
-                        >
-                          <span className="text-[7.5px] uppercase tracking-wider text-[#7ea2f8] font-semibold">
-                            PROJECTS ❯
-                          </span>
-                          <span
-                            className={`text-[10px] ${
-                              isSubActive ? 'font-bold text-[#f8c076]' : 'text-[#96a7d1]'
-                            }`}
-                          >
-                            {subSlide.number} {subSlide.title}
-                          </span>
-                        </div>
-                      </div>
+                      <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{subSlide.number}</span>
+                      {subSlide.title}
+                    </span>
+                  </div>
 
-                      <div className="w-4 flex items-center justify-center">
-                        <div
-                          className={`transition-all duration-300 rounded-full ${
-                            isSubActive
-                              ? 'w-2 h-2 bg-[#f8c076] ring-3 ring-[#f8c076]/45'
-                              : 'w-1.5 h-1.5 bg-[#253562] hover:bg-[#8cb0fd] hover:scale-125'
-                          }`}
-                        />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                  <div className="w-4 h-4 flex items-center justify-center">
+                    <div
+                      className={`transition-all duration-300 rounded-full ${
+                        isSubActive
+                          ? 'w-2.5 h-2.5 bg-[#f8c076] ring-3 ring-[#f8c076]/35'
+                          : 'w-1.5 h-1.5 bg-[#263765] group-hover/sub:bg-[#7ea2f8] group-hover/sub:scale-125'
+                      }`}
+                    />
+                  </div>
+                </button>
+              );
+            })}
           </div>
-
+        ) : (
           <button
             type="button"
             onClick={() => onSelectSlide(firstProjectIndex)}
             aria-label="Jump to Projects section"
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
-            {!isAnyProjectActive && (
-              <div className="hidden md:inline-block font-mono transition-all duration-200 text-right opacity-0 group-hover:opacity-100">
-                <span className="inline-block px-2.5 py-1 rounded-full border text-[11px] text-[#768ab9] bg-[#0c142b] border-[#1c274a]">
-                  PROJECTS
-                </span>
-              </div>
-            )}
+            <div className="hidden md:inline-block transition-all duration-200 text-right opacity-0 group-hover:opacity-100">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]">
+                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">03-05</span>
+                PROJECTS
+              </span>
+            </div>
 
             <div className="w-4 h-4 flex items-center justify-center">
-              <div
-                className={`transition-all duration-300 rounded-full ${
-                  isAnyProjectActive
-                    ? 'w-3 h-3 bg-[#f8c076] ring-4 ring-[#f8c076]/25'
-                    : 'w-2.5 h-2.5 bg-[#263765] group-hover:bg-[#7ea2f8] group-hover:scale-125'
-                }`}
-              />
+              <div className="w-2.5 h-2.5 bg-[#263765] rounded-full transition-all duration-300 group-hover:bg-[#7ea2f8] group-hover:scale-125" />
             </div>
           </button>
-        </div>
+        )}
 
         {skillsSlide && (
           <button
@@ -331,18 +292,19 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
             <div
-              className={`hidden md:inline-block font-mono transition-all duration-200 text-right ${
+              className={`hidden md:inline-block transition-all duration-200 text-right ${
                 activeIndex === skillsIndex ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
               <span
-                className={`inline-block px-2.5 py-1 rounded-full border text-[11px] ${
+                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
                   activeIndex === skillsIndex
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
-                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a]'
+                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                {skillsSlide.number} {skillsSlide.title}
+                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{skillsSlide.number}</span>
+                {skillsSlide.title}
               </span>
             </div>
 
@@ -366,18 +328,19 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
             <div
-              className={`hidden md:inline-block font-mono transition-all duration-200 text-right ${
+              className={`hidden md:inline-block transition-all duration-200 text-right ${
                 activeIndex === educationIndex ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
               <span
-                className={`inline-block px-2.5 py-1 rounded-full border text-[11px] ${
+                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
                   activeIndex === educationIndex
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
-                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a]'
+                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                {educationSlide.number} {educationSlide.title}
+                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{educationSlide.number}</span>
+                {educationSlide.title}
               </span>
             </div>
 
@@ -401,18 +364,19 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
             <div
-              className={`hidden md:inline-block font-mono transition-all duration-200 text-right ${
+              className={`hidden md:inline-block transition-all duration-200 text-right ${
                 activeIndex === contactIndex ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
               <span
-                className={`inline-block px-2.5 py-1 rounded-full border text-[11px] ${
+                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans ${
                   activeIndex === contactIndex
                     ? 'font-bold text-[#f8c076] bg-[#121c3b] border-[#f8c076]/40'
-                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a]'
+                    : 'text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]'
                 }`}
               >
-                {contactSlide.number} {contactSlide.title}
+                <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{contactSlide.number}</span>
+                {contactSlide.title}
               </span>
             </div>
 
