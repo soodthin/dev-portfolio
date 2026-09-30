@@ -88,7 +88,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
-          <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
+          <h2 className="text-xl sm:text-2xl font-sans font-bold uppercase tracking-wider text-[#f1edff]">
             WORK EXPERIENCE
           </h2>
           <div className="w-12 border-b border-[#213364]" />
@@ -98,7 +98,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
           <button
             type="button"
             onClick={() => setActiveCard(0)}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs font-sans font-medium ${
               activeCard === 0
                 ? 'bg-[#f8c076] text-[#060a14] font-bold shadow-[0_0_15px_rgba(248,192,118,0.35)]'
                 : 'bg-[#121f45] text-[#8299cd] hover:text-white border border-[#283d78]'
@@ -109,7 +109,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
           <button
             type="button"
             onClick={() => setActiveCard(1)}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs font-sans font-medium ${
               activeCard === 1
                 ? 'bg-[#f8c076] text-[#060a14] font-bold shadow-[0_0_15px_rgba(248,192,118,0.35)]'
                 : 'bg-[#121f45] text-[#8299cd] hover:text-white border border-[#283d78]'
@@ -138,7 +138,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                   <span className="text-xs font-mono tracking-wider text-[#f8c076] font-semibold">
                     Internship
                   </span>
-                  <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
+                  <h3 className="text-lg sm:text-2xl font-sans font-bold text-white mt-0.5">
                     {exp.role}
                   </h3>
                   <div className="text-xs sm:text-sm font-sans text-[#8cb0fd] mt-0.5">
@@ -297,7 +297,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                   <span className="text-xs font-mono tracking-wider text-[#f8c076] font-semibold">
                     Continued
                   </span>
-                  <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
+                  <h3 className="text-lg sm:text-2xl font-sans font-bold text-white mt-0.5">
                     Frontend &amp; Operations
                   </h3>
                   <div className="text-xs sm:text-sm font-sans text-[#8cb0fd] mt-0.5">

@@ -45,7 +45,7 @@ export function Contact({ profile, socials }: ContactProps) {
     <footer id="contact" className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-6">
       <div className="flex items-center gap-3 mb-4">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">08</span>
-        <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
+        <h2 className="text-xl sm:text-2xl font-sans font-bold uppercase tracking-wider text-[#f1edff]">
           CONTACT &amp; NETWORK
         </h2>
         <div className="flex-1 border-b border-[#213364]" />

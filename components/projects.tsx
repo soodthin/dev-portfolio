@@ -82,7 +82,7 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
     <section id={`project-${project.number}`} className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-3">
       <div className="flex items-center gap-3 mb-3">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
-        <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
+        <h2 className="text-xl sm:text-2xl font-sans font-bold uppercase tracking-wider text-[#f1edff]">
           FEATURED PROJECT ({project.number}/{String(totalProjects).padStart(2, '0')})
         </h2>
         <div className="flex-1 border-b border-[#213364]" />
@@ -132,7 +132,7 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-3.5">
-          <h3 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-tight text-white shrink-0">
+          <h3 className="text-xl sm:text-2xl font-sans font-bold uppercase tracking-tight text-white shrink-0">
             {mainUrl ? (
               <a
                 href={mainUrl}

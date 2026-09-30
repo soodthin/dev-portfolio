@@ -10,7 +10,7 @@ export function SkillsSlide({ skillGroups, slideNumber }: SkillsSlideProps) {
     <section id="skills" className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-6">
       <div className="flex items-center gap-3 mb-3 sm:mb-4">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
-        <h2 className="text-lg sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
+        <h2 className="text-lg sm:text-2xl font-sans font-bold uppercase tracking-wider text-[#f1edff]">
           Skills
         </h2>
         <div className="flex-1 border-b border-[#213364]" />
@@ -23,7 +23,7 @@ export function SkillsSlide({ skillGroups, slideNumber }: SkillsSlideProps) {
             className="rounded-2xl p-4 sm:p-5 border border-[#283d78] bg-[#0f1938]/90 hover:border-[#4b66ae] transition-all duration-300 flex flex-col justify-between shadow-[0_12px_40px_rgba(10,18,42,0.5)]"
           >
             <div>
-              <h3 className="font-mono text-sm font-bold tracking-wider text-[#f8c076] mb-1.5">
+              <h3 className="font-sans text-sm font-bold tracking-wider text-[#f8c076] mb-1.5">
                 {group.category}
               </h3>
               <p className="text-xs font-sans text-[#9fb2dd] mb-3 sm:mb-4 leading-relaxed">
@@ -59,7 +59,7 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
     <section id="education" className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-6">
       <div className="flex items-center gap-3 mb-3 sm:mb-4">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
-        <h2 className="text-lg sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
+        <h2 className="text-lg sm:text-2xl font-sans font-bold uppercase tracking-wider text-[#f1edff]">
           Education
         </h2>
         <div className="flex-1 border-b border-[#213364]" />
