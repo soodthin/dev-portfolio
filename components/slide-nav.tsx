@@ -148,9 +148,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
         </svg>
       </button>
 
-      <div className={`flex flex-col items-end gap-3 bg-[#070b18]/95 backdrop-blur-md p-2.5 rounded-2xl border border-[#1b2649] shadow-[0_12px_36px_rgba(6,10,20,0.7)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        isAnyProjectActive ? 'min-w-[195px]' : 'min-w-0'
-      }`}>
+      <div className="flex flex-col items-end gap-3 bg-[#070b18]/95 backdrop-blur-md p-2.5 rounded-2xl border border-[#1b2649] shadow-[0_12px_36px_rgba(6,10,20,0.7)]">
         {overviewSlide && (
           <button
             type="button"
@@ -223,77 +221,71 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
           </button>
         )}
 
-        <div
-          className={`relative group/project flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isAnyProjectActive ? 'my-3' : 'my-0'
-          }`}
-        >
+        <div className="relative group/project flex items-center justify-end my-1">
           <div
-            className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-end ${
+            className={`flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
               isAnyProjectActive
-                ? 'opacity-100 translate-x-0 max-w-[220px] pointer-events-auto mr-1'
-                : 'opacity-0 translate-x-3 max-w-0 pointer-events-none mr-0 overflow-hidden'
+                ? 'max-w-[240px] opacity-100 translate-x-0 pointer-events-auto mr-0.5'
+                : 'max-w-0 opacity-0 translate-x-3 pointer-events-none mr-0'
             }`}
           >
-            <div className="relative w-8 h-[84px] flex items-center justify-center">
+            <div className="flex flex-col justify-between h-[96px] py-0.5 items-end">
+              {projectSlides.map((subSlide) => {
+                const isSubActive = activeIndex === subSlide.globalIndex;
+
+                return (
+                  <button
+                    key={subSlide.id}
+                    type="button"
+                    onClick={() => onSelectSlide(subSlide.globalIndex)}
+                    aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
+                    className="group/sub flex items-center justify-end gap-2 focus:outline-none h-6"
+                  >
+                    <div
+                      className={`hidden md:inline-block transition-all duration-200 text-right ${
+                        isSubActive ? 'opacity-100' : 'opacity-0 group-hover/sub:opacity-100'
+                      }`}
+                    >
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-sans transition-all duration-200 whitespace-nowrap shadow-sm ${
+                          isSubActive
+                            ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/50 shadow-[0_0_12px_rgba(248,192,118,0.25)]'
+                            : 'text-[#8ba0cc] bg-[#0c142b]/95 border-[#1c274a] group-hover/sub:text-[#c5d5f6]'
+                        }`}
+                      >
+                        <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{subSlide.number}</span>
+                        {subSlide.title}
+                      </span>
+                    </div>
+
+                    <div className="w-3 h-3 flex items-center justify-center">
+                      <div
+                        className={`transition-all duration-300 rounded-full ${
+                          isSubActive
+                            ? 'w-2.5 h-2.5 bg-[#f8c076] ring-3 ring-[#f8c076]/40'
+                            : 'w-1.5 h-1.5 bg-[#253562] group-hover/sub:bg-[#7ea2f8] group-hover/sub:scale-125'
+                        }`}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="relative w-5 h-[96px] flex items-center justify-center mx-0.5 pointer-events-none">
               <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                viewBox="0 0 32 84"
+                className="w-full h-full"
+                viewBox="0 0 20 96"
                 fill="none"
               >
                 <path
-                  d="M 28 4 C 10 4, 8 16, 8 20 L 8 64 C 8 68, 10 80, 28 80"
-                  stroke={isAnyProjectActive ? '#f8c076' : '#3f5ea5'}
+                  d="M 18 48 C 10 48, 4 30, 4 12 M 4 48 L 18 48 M 18 48 C 10 48, 4 66, 4 84"
+                  stroke="#f8c076"
                   strokeWidth="1.5"
-                  fill="none"
-                  strokeOpacity={isAnyProjectActive ? 0.85 : 0.4}
+                  strokeLinecap="round"
+                  strokeOpacity="0.75"
                 />
               </svg>
-
-              <div className="absolute inset-0 flex flex-col justify-between py-1.5 items-start pl-0.5">
-                {projectSlides.map((subSlide) => {
-                  const isSubActive = activeIndex === subSlide.globalIndex;
-
-                  return (
-                    <button
-                      key={subSlide.id}
-                      type="button"
-                      onClick={() => onSelectSlide(subSlide.globalIndex)}
-                      aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
-                      className="group/sub flex items-center justify-end focus:outline-none h-5 w-full relative"
-                    >
-                      <div
-                        className={`transition-all duration-300 ease-out text-right absolute right-6 whitespace-nowrap ${
-                          isSubActive
-                            ? 'opacity-100 translate-x-0'
-                            : 'opacity-0 translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0'
-                        }`}
-                      >
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-sans transition-all duration-200 shadow-sm ${
-                            isSubActive
-                              ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/50 shadow-[0_0_12px_rgba(248,192,118,0.25)]'
-                              : 'text-[#8ba0cc] bg-[#0c142b]/95 border-[#1c274a] group-hover/sub:text-[#c5d5f6]'
-                          }`}
-                        >
-                          <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{subSlide.number}</span>
-                          {subSlide.title}
-                        </span>
-                      </div>
-
-                      <div className="w-4 h-4 flex items-center justify-center">
-                        <div
-                          className={`transition-all duration-300 rounded-full ${
-                            isSubActive
-                              ? 'w-2.5 h-2.5 bg-[#f8c076] ring-3 ring-[#f8c076]/45'
-                              : 'w-1.5 h-1.5 bg-[#253562] group-hover/sub:bg-[#7ea2f8] group-hover/sub:scale-125'
-                          }`}
-                        />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
             </div>
           </div>
 
