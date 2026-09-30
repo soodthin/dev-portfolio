@@ -161,21 +161,21 @@ export function SlideDeck() {
       >
         <div
           ref={(el) => { slideRefs.current[0] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <Hero profile={portfolioData.profile} />
         </div>
 
         <div
           ref={(el) => { slideRefs.current[1] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <Experience experiences={portfolioData.experiences} slideNumber="02" />
         </div>
 
         <div
           ref={(el) => { slideRefs.current[2] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <ProjectSlide 
             project={portfolioData.projects[0]} 
@@ -186,7 +186,7 @@ export function SlideDeck() {
 
         <div
           ref={(el) => { slideRefs.current[3] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <ProjectSlide 
             project={portfolioData.projects[1]} 
@@ -197,7 +197,7 @@ export function SlideDeck() {
 
         <div
           ref={(el) => { slideRefs.current[4] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <ProjectSlide 
             project={portfolioData.projects[2]} 
@@ -208,14 +208,14 @@ export function SlideDeck() {
 
         <div
           ref={(el) => { slideRefs.current[5] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <SkillsSlide skillGroups={portfolioData.skills} slideNumber="06" />
         </div>
 
         <div
           ref={(el) => { slideRefs.current[6] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <EducationSlide 
             education={portfolioData.education} 
@@ -226,7 +226,7 @@ export function SlideDeck() {
 
         <div
           ref={(el) => { slideRefs.current[7] = el; }}
-          className="snap-card h-screen w-full flex items-center justify-center px-4 sm:px-8 pt-16 pb-6 overflow-y-auto sm:overflow-hidden"
+          className="snap-card h-screen w-full flex flex-col justify-start sm:justify-center items-center px-3.5 sm:px-8 pt-20 sm:pt-16 pb-8 sm:pb-6 overflow-y-auto sm:overflow-hidden"
         >
           <Contact
             profile={portfolioData.profile}

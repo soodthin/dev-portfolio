@@ -129,6 +129,9 @@ export function Navbar({ activeIndex = 0, onSelectSlide }: NavbarProps) {
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
+          <span className="font-mono text-[11px] text-[#f8c076] font-bold px-2 py-1 rounded border border-[#233564] bg-[#0c142b]">
+            {String(activeIndex + 1).padStart(2, '0')}/08
+          </span>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             type="button"
@@ -141,16 +144,16 @@ export function Navbar({ activeIndex = 0, onSelectSlide }: NavbarProps) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#1c274a] bg-[#090e1f] px-4 py-4 space-y-3">
+        <div className="md:hidden border-t border-[#1c274a] bg-[#090e1f]/95 backdrop-blur-xl px-4 py-4 space-y-2">
           {NAV_ITEMS.map((item) => (
             <div key={item.slideIndex}>
               <a
                 href="#"
                 onClick={(e) => handleNavClick(e, item.slideIndex)}
-                className={`block text-xs font-mono tracking-wider py-1 uppercase ${
+                className={`block text-xs font-mono tracking-wider py-2 px-3 rounded-lg transition-colors uppercase ${
                   (item.matches ? item.matches(activeIndex) : activeIndex === item.slideIndex)
-                    ? 'text-[#f8c076] font-bold'
-                    : 'text-[#a9b9dc]'
+                    ? 'text-[#f8c076] bg-[#14224a] font-bold border border-[#f8c076]/40'
+                    : 'text-[#a9b9dc] hover:text-[#f8c076] hover:bg-[#121c3b]/50'
                 }`}
               >
                 [ {item.label} ]

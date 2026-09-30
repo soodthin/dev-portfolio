@@ -78,7 +78,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
       aria-label="Slide navigation"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-end gap-3 pointer-events-auto transition-all duration-500 ${
+      className={`hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-50 flex-col items-end gap-3 pointer-events-auto transition-all duration-500 ${
         shouldBeBright ? 'opacity-100' : 'opacity-20 hover:opacity-100'
       }`}
     >

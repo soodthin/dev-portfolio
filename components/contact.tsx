@@ -15,7 +15,7 @@ export function Contact({ profile, socials, onSelectSlide }: ContactProps) {
   };
 
   return (
-    <footer id="contact" className="w-full max-w-5xl mx-auto flex flex-col justify-center py-4 sm:py-6">
+    <footer id="contact" className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-6">
       <div className="flex items-center gap-3 mb-4">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">08</span>
         <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
@@ -24,7 +24,7 @@ export function Contact({ profile, socials, onSelectSlide }: ContactProps) {
         <div className="flex-1 border-b border-[#213364]" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 sm:p-8 rounded-2xl border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.6)]">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 p-4 sm:p-8 rounded-2xl border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.6)]">
         <div className="md:col-span-4 space-y-2.5">
           <div className="font-mono text-base font-bold text-white uppercase tracking-wider">
             {profile.name}

@@ -84,7 +84,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
   const partTwoHighlights = exp.highlights.slice(3, 6);
 
   return (
-    <section id="experience" className="w-full max-w-5xl mx-auto flex flex-col justify-center py-2 sm:py-3">
+    <section id="experience" className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-3">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
@@ -98,29 +98,31 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
           <button
             type="button"
             onClick={() => setActiveCard(0)}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1 rounded-lg transition-all cursor-pointer text-[11px] sm:text-xs ${
               activeCard === 0
                 ? 'bg-[#f8c076] text-[#060a14] font-bold shadow-[0_0_15px_rgba(248,192,118,0.35)]'
                 : 'bg-[#121f45] text-[#8299cd] hover:text-white border border-[#283d78]'
             }`}
           >
-            [ CARD 01 : OVERVIEW ]
+            <span className="sm:hidden">[ 01 : OVERVIEW ]</span>
+            <span className="hidden sm:inline">[ CARD 01 : OVERVIEW ]</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveCard(1)}
-            className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            className={`px-2.5 sm:px-3 py-1 rounded-lg transition-all cursor-pointer text-[11px] sm:text-xs ${
               activeCard === 1
                 ? 'bg-[#f8c076] text-[#060a14] font-bold shadow-[0_0_15px_rgba(248,192,118,0.35)]'
                 : 'bg-[#121f45] text-[#8299cd] hover:text-white border border-[#283d78]'
             }`}
           >
-            [ CARD 02 : MODULES &amp; OPS ]
+            <span className="sm:hidden">[ 02 : MODULES ]</span>
+            <span className="hidden sm:inline">[ CARD 02 : MODULES &amp; OPS ]</span>
           </button>
         </div>
       </div>
 
-      <div className="relative w-full h-[520px] sm:h-[495px]">
+      <div className="relative w-full h-[540px] sm:h-[495px]">
         <div
           className={`absolute inset-0 rounded-2xl border border-[#283d78] bg-[#0d1633] transition-all duration-500 ease-out flex flex-row overflow-hidden ${
             activeCard === 0
@@ -131,17 +133,17 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
             if (activeCard === 1) setActiveCard(0);
           }}
         >
-          <div className="flex-1 p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+          <div className="flex-1 p-3.5 sm:p-7 flex flex-col justify-between overflow-y-auto sm:overflow-hidden no-scrollbar">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
                 <div>
                   <span className="text-xs font-mono tracking-widest text-[#f8c076] uppercase font-bold">
                     ENTERPRISE INTERNSHIP
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-mono font-bold text-white mt-0.5">
+                  <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
                     {exp.role}
                   </h3>
-                  <div className="text-sm font-mono text-[#8cb0fd] mt-0.5">
+                  <div className="text-xs sm:text-sm font-mono text-[#8cb0fd] mt-0.5">
                     {exp.company}
                   </div>
                 </div>
@@ -150,13 +152,13 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                   <div className="inline-block px-3 py-0.5 rounded-full border border-[#344d8b] bg-[#121d3e] text-[#ddd7ff]">
                     [ {exp.period} ]
                   </div>
-                  <div className="text-[#8299cd]">{exp.location}</div>
+                  <div className="text-[#8299cd] hidden sm:block">{exp.location}</div>
                 </div>
               </div>
 
               <div className="border-b border-[#213364]" />
 
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                 {exp.projectTitle && (
                   <div className="inline-block px-2.5 py-0.5 rounded-lg bg-[#15234c] border border-[#2f4684] text-xs font-mono text-[#ddd7ff]">
                     PROJECT: <span className="text-[#f8c076] font-bold">{exp.projectTitle}</span>
@@ -185,12 +187,12 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                 {exp.description}
               </p>
 
-              <div className="space-y-2.5 pt-1">
+              <div className="space-y-2 sm:space-y-2.5 pt-1">
                 <div className="text-xs font-mono uppercase tracking-widest text-[#8cb0fd]">
                   CORE PIPELINE &amp; AUTOMATION RESPONSIBILITIES:
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
                   {partOneHighlights.map((item, hIdx) => {
                     const [label, ...rest] = item.split(': ');
                     const detail = rest.join(': ');
@@ -198,9 +200,9 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                     return (
                       <div
                         key={hIdx}
-                        className="rounded-xl p-4 sm:p-5 border border-[#23376c] bg-[#121f45]/90 flex flex-col justify-between hover:border-[#385296] transition-colors min-h-[140px]"
+                        className="rounded-xl p-3 sm:p-5 border border-[#23376c] bg-[#121f45]/90 flex flex-col justify-between hover:border-[#385296] transition-colors min-h-0 sm:min-h-[140px]"
                       >
-                        <span className="font-mono text-xs font-bold text-[#f8c076] mb-2">
+                        <span className="font-mono text-xs font-bold text-[#f8c076] mb-1 sm:mb-2">
                           [{String(hIdx + 1).padStart(2, '0')}] {detail ? label : ''}
                         </span>
                         <span className="text-xs text-[#c5d5f6] font-sans leading-relaxed">
@@ -221,10 +223,10 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
               setActiveCard(1);
             }}
             aria-label="Open next card"
-            className="group/strip w-10 sm:w-12 border-l border-[#23366c] bg-[#0f193d] hover:bg-[#18295c] flex items-center justify-center transition-all duration-300 cursor-pointer shadow-[-4px_0_20px_rgba(0,0,0,0.35)] shrink-0"
+            className="group/strip w-9 sm:w-12 border-l border-[#23366c] bg-[#0f193d] hover:bg-[#18295c] flex items-center justify-center transition-all duration-300 cursor-pointer shadow-[-4px_0_20px_rgba(0,0,0,0.35)] shrink-0"
           >
             <svg
-              className="w-6 h-6 text-[#f8c076] transition-all duration-300 group-hover/strip:translate-x-1 group-hover/strip:scale-115 drop-shadow-[0_0_8px_rgba(248,192,118,0.5)]"
+              className="w-5 sm:w-6 h-5 sm:h-6 text-[#f8c076] transition-all duration-300 group-hover/strip:translate-x-1 group-hover/strip:scale-115 drop-shadow-[0_0_8px_rgba(248,192,118,0.5)]"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -255,10 +257,10 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
               setActiveCard(0);
             }}
             aria-label="Return to previous card"
-            className="group/strip w-10 sm:w-12 border-r border-[#23366c] bg-[#0f193d] hover:bg-[#18295c] flex items-center justify-center transition-all duration-300 cursor-pointer shadow-[4px_0_20px_rgba(0,0,0,0.35)] shrink-0"
+            className="group/strip w-9 sm:w-12 border-r border-[#23366c] bg-[#0f193d] hover:bg-[#18295c] flex items-center justify-center transition-all duration-300 cursor-pointer shadow-[4px_0_20px_rgba(0,0,0,0.35)] shrink-0"
           >
             <svg
-              className="w-6 h-6 text-[#8cb0fd] transition-all duration-300 group-hover/strip:-translate-x-1 group-hover/strip:scale-115 drop-shadow-[0_0_8px_rgba(140,176,253,0.5)]"
+              className="w-5 sm:w-6 h-5 sm:h-6 text-[#8cb0fd] transition-all duration-300 group-hover/strip:-translate-x-1 group-hover/strip:scale-115 drop-shadow-[0_0_8px_rgba(140,176,253,0.5)]"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -271,17 +273,17 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
             </svg>
           </button>
 
-          <div className="flex-1 p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+          <div className="flex-1 p-3.5 sm:p-7 flex flex-col justify-between overflow-y-auto sm:overflow-hidden no-scrollbar">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
                 <div>
                   <span className="text-xs font-mono tracking-widest text-[#f8c076] uppercase font-bold">
                     DEEP DIVE : PART 02
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-mono font-bold text-white mt-0.5">
+                  <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
                     SYSTEM INTEGRATION &amp; OPERATIONS
                   </h3>
-                  <div className="text-sm font-mono text-[#8cb0fd] mt-0.5">
+                  <div className="text-xs sm:text-sm font-mono text-[#8cb0fd] mt-0.5">
                     {exp.projectTitle} • {exp.company}
                   </div>
                 </div>
@@ -295,12 +297,12 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
 
               <div className="border-b border-[#213364]" />
 
-              <div className="space-y-2.5">
+              <div className="space-y-2 sm:space-y-2.5">
                 <div className="text-xs font-mono uppercase tracking-widest text-[#8cb0fd]">
                   INTEGRATION, RELIABILITY &amp; USER ENABLEMENT:
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
                   {partTwoHighlights.map((item, hIdx) => {
                     const [label, ...rest] = item.split(': ');
                     const detail = rest.join(': ');
@@ -308,10 +310,10 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                     return (
                       <div
                         key={hIdx}
-                        className="rounded-xl p-4 sm:p-5 border border-[#23376c] bg-[#121f45]/90 flex flex-col justify-between hover:border-[#385296] transition-colors min-h-[140px]"
+                        className="rounded-xl p-3 sm:p-5 border border-[#23376c] bg-[#121f45]/90 flex flex-col justify-between hover:border-[#385296] transition-colors min-h-0 sm:min-h-[140px]"
                       >
                         <div>
-                          <span className="font-mono text-xs font-bold text-[#f8c076] block mb-2">
+                          <span className="font-mono text-xs font-bold text-[#f8c076] block mb-1 sm:mb-2">
                             [{String(hIdx + 4).padStart(2, '0')}] {detail ? label : ''}
                           </span>
                           <span className="text-xs text-[#c5d5f6] font-sans leading-relaxed">
@@ -324,9 +326,9 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-[#213364] bg-[#121c3b]/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono">
-                <span className="text-[#8cb0fd] uppercase tracking-wider">PRODUCTION IMPACT &amp; METRICS:</span>
-                <span className="text-[#f8c076] font-bold text-sm">Report turnaround time cut from 1 day to 2 hours</span>
+              <div className="p-3 sm:p-4 rounded-xl border border-[#213364] bg-[#121c3b]/80 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 text-xs font-mono">
+                <span className="text-[#8cb0fd] uppercase tracking-wider text-[11px] sm:text-xs">PRODUCTION IMPACT &amp; METRICS:</span>
+                <span className="text-[#f8c076] font-bold text-xs sm:text-sm">Report turnaround time cut from 1 day to 2 hours</span>
               </div>
             </div>
           </div>

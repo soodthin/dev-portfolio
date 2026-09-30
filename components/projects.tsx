@@ -79,7 +79,7 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
   const mainUrl = project.demoUrl || project.githubUrl;
 
   return (
-    <section id={`project-${project.number}`} className="w-full max-w-5xl mx-auto flex flex-col justify-center py-2 sm:py-3">
+    <section id={`project-${project.number}`} className="w-full max-w-5xl my-auto flex flex-col justify-center py-2 sm:py-3">
       <div className="flex items-center gap-3 mb-3">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
         <h2 className="text-xl sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
@@ -88,7 +88,7 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
         <div className="flex-1 border-b border-[#213364]" />
       </div>
 
-      <article className="rounded-2xl p-5 sm:p-6 border border-[#283d78] bg-[#0d1633] shadow-[0_16px_45px_rgba(8,14,35,0.85)] space-y-3.5">
+      <article className="rounded-2xl p-4 sm:p-6 border border-[#283d78] bg-[#0d1633] shadow-[0_16px_45px_rgba(8,14,35,0.85)] space-y-3 sm:space-y-3.5">
         <div className="space-y-2">
           <span className="font-mono text-xs font-bold tracking-widest text-[#f8c076] uppercase block">
             PROJ. {project.number} // PRODUCTION SYSTEM
@@ -143,7 +143,7 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
             <div className="text-xs font-mono uppercase tracking-widest text-[#8cb0fd]">
               ARCHITECTURAL MODULES &amp; OUTCOMES:
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {project.keyHighlights.map((highlight, idx) => {
                 const [heading, ...rest] = highlight.split(': ');
                 const body = rest.join(': ');
@@ -151,7 +151,7 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
                 return (
                   <div
                     key={idx}
-                    className="rounded-xl p-3 sm:p-3.5 border border-[#23376c] bg-[#121f45]/90 hover:border-[#3d58a3] transition-colors"
+                    className="rounded-xl p-2.5 sm:p-3.5 border border-[#23376c] bg-[#121f45]/90 hover:border-[#3d58a3] transition-colors"
                   >
                     <div className="text-[#f8c076] font-mono text-xs font-bold mb-1">
                       - {body ? heading : 'FEATURE'}
