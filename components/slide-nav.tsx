@@ -18,6 +18,7 @@ interface SlideNavProps {
 export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) {
   const [isAwake, setIsAwake] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const [isPinnedOpen, setIsPinnedOpen] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const triggerWake = () => {
@@ -27,7 +28,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
     }
     timerRef.current = setTimeout(() => {
       setIsAwake(false);
-    }, 1800);
+    }, 2400);
   };
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
     };
   }, []);
 
-  const shouldBeBright = isAwake || isHovered;
+  const isExpanded = isPinnedOpen || isHovered || isAwake;
 
   const projectSlides = slides
     .map((s, idx) => ({ ...s, globalIndex: idx }))
@@ -78,11 +79,76 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
       aria-label="Slide navigation"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-50 flex-col items-end gap-3 pointer-events-auto transition-all duration-500 ${
-        shouldBeBright ? 'opacity-100' : 'opacity-20 hover:opacity-100'
+      className={`hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 z-50 items-center pointer-events-auto transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isExpanded ? '-translate-x-4' : 'translate-x-full'
       }`}
     >
-      <div className="flex flex-col items-end gap-3 bg-[#070b18]/90 backdrop-blur-md p-2.5 rounded-2xl border border-[#1b2649] shadow-[0_8px_30px_rgba(6,10,20,0.6)] transition-all duration-500">
+      <button
+        type="button"
+        onClick={() => {
+          if (isExpanded) {
+            setIsPinnedOpen(false);
+            setIsAwake(false);
+            setIsHovered(false);
+          } else {
+            setIsPinnedOpen(true);
+          }
+        }}
+        aria-label={isExpanded ? 'Collapse slide navigation' : 'Expand slide navigation'}
+        aria-expanded={isExpanded}
+        className="absolute right-full top-1/2 -translate-y-1/2 focus:outline-none group/tab cursor-pointer"
+      >
+        <svg
+          width="36"
+          height="82"
+          viewBox="0 0 36 82"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="drop-shadow-[-6px_0_16px_rgba(4,7,17,0.7)] transition-all duration-300"
+        >
+          <path
+            d="M 36 1 L 6 15 L 6 67 L 36 81 Z"
+            fill="#070b18"
+            fillOpacity="0.95"
+            stroke="#233463"
+            strokeWidth="1.5"
+            className="transition-colors duration-300 group-hover/tab:stroke-[#f8c076] group-hover/tab:fill-[#0c142b]"
+          />
+          <line
+            x1="6"
+            y1="22"
+            x2="6"
+            y2="60"
+            stroke="#f8c076"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            className={`transition-opacity duration-300 ${
+              isExpanded ? 'opacity-40' : 'opacity-100'
+            }`}
+          />
+          {isExpanded ? (
+            <path
+              d="M 16 35 L 23 41 L 16 47"
+              stroke="#c5d5f6"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="transition-colors duration-300 group-hover/tab:stroke-[#f8c076]"
+            />
+          ) : (
+            <path
+              d="M 23 35 L 16 41 L 23 47"
+              stroke="#c5d5f6"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="transition-colors duration-300 group-hover/tab:stroke-[#f8c076]"
+            />
+          )}
+        </svg>
+      </button>
+
+      <div className="flex flex-col items-end gap-3 bg-[#070b18]/95 backdrop-blur-md p-2.5 rounded-2xl border border-[#1b2649] shadow-[0_12px_36px_rgba(6,10,20,0.7)]">
         {overviewSlide && (
           <button
             type="button"
@@ -361,12 +427,12 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             </div>
           </button>
         )}
-      </div>
 
-      <div className="hidden lg:flex items-center gap-1 px-2 py-1 rounded-md bg-[#090f23]/60 border border-[#172344] text-[9px] font-mono text-[#5b6f9f]">
-        <span>↑</span>
-        <span>/</span>
-        <span>↓</span>
+        <div className="hidden lg:flex items-center self-center gap-1 px-2 py-0.5 rounded-md bg-[#090f23]/60 border border-[#172344] text-[9px] font-mono text-[#5b6f9f] mt-1">
+          <span>↑</span>
+          <span>/</span>
+          <span>↓</span>
+        </div>
       </div>
     </aside>
   );
