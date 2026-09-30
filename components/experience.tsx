@@ -98,26 +98,24 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
           <button
             type="button"
             onClick={() => setActiveCard(0)}
-            className={`px-2.5 sm:px-3 py-1 rounded-lg transition-all cursor-pointer text-[11px] sm:text-xs ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs ${
               activeCard === 0
                 ? 'bg-[#f8c076] text-[#060a14] font-bold shadow-[0_0_15px_rgba(248,192,118,0.35)]'
                 : 'bg-[#121f45] text-[#8299cd] hover:text-white border border-[#283d78]'
             }`}
           >
-            <span className="sm:hidden">[ 01 : OVERVIEW ]</span>
-            <span className="hidden sm:inline">[ CARD 01 : OVERVIEW ]</span>
+            Overview
           </button>
           <button
             type="button"
             onClick={() => setActiveCard(1)}
-            className={`px-2.5 sm:px-3 py-1 rounded-lg transition-all cursor-pointer text-[11px] sm:text-xs ${
+            className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs ${
               activeCard === 1
                 ? 'bg-[#f8c076] text-[#060a14] font-bold shadow-[0_0_15px_rgba(248,192,118,0.35)]'
                 : 'bg-[#121f45] text-[#8299cd] hover:text-white border border-[#283d78]'
             }`}
           >
-            <span className="sm:hidden">[ 02 : MODULES ]</span>
-            <span className="hidden sm:inline">[ CARD 02 : MODULES &amp; OPS ]</span>
+            Details
           </button>
         </div>
       </div>
@@ -137,8 +135,8 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
             <div className="space-y-3 sm:space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
                 <div>
-                  <span className="text-xs font-mono tracking-widest text-[#f8c076] uppercase font-bold">
-                    ENTERPRISE INTERNSHIP
+                  <span className="text-xs font-mono tracking-wider text-[#f8c076] font-semibold">
+                    Internship
                   </span>
                   <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
                     {exp.role}
@@ -201,8 +199,8 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
               </p>
 
               <div className="space-y-2 sm:space-y-2.5 pt-1">
-                <div className="text-xs font-mono uppercase tracking-widest text-[#8cb0fd]">
-                  CORE PIPELINE &amp; AUTOMATION RESPONSIBILITIES:
+                <div className="text-xs font-mono tracking-wider text-[#8cb0fd] font-semibold">
+                  Responsibilities:
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
@@ -290,11 +288,11 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
             <div className="space-y-3 sm:space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
                 <div>
-                  <span className="text-xs font-mono tracking-widest text-[#f8c076] uppercase font-bold">
-                    DEEP DIVE : PART 02
+                  <span className="text-xs font-mono tracking-wider text-[#f8c076] font-semibold">
+                    Continued
                   </span>
                   <h3 className="text-lg sm:text-2xl font-mono font-bold text-white mt-0.5">
-                    SYSTEM INTEGRATION &amp; OPERATIONS
+                    Frontend &amp; Operations
                   </h3>
                   <div className="text-xs sm:text-sm font-mono text-[#8cb0fd] mt-0.5">
                     {exp.projectUrl ? (
@@ -324,8 +322,8 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
               <div className="border-b border-[#213364]" />
 
               <div className="space-y-2 sm:space-y-2.5">
-                <div className="text-xs font-mono uppercase tracking-widest text-[#8cb0fd]">
-                  INTEGRATION, RELIABILITY &amp; USER ENABLEMENT:
+                <div className="text-xs font-mono tracking-wider text-[#8cb0fd] font-semibold">
+                  Frontend, Reliability &amp; Docs:
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
@@ -353,7 +351,7 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
               </div>
 
               <div className="p-3 sm:p-4 rounded-xl border border-[#213364] bg-[#121c3b]/80 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 text-xs font-mono">
-                <span className="text-[#8cb0fd] uppercase tracking-wider text-[11px] sm:text-xs">PRODUCTION IMPACT &amp; METRICS:</span>
+                <span className="text-[#8cb0fd] tracking-wider text-[11px] sm:text-xs font-semibold">Impact:</span>
                 <span className="text-[#f8c076] font-bold text-xs sm:text-sm">Report turnaround time cut from 1 day to 2 hours</span>
               </div>
             </div>

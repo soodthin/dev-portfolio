@@ -90,25 +90,19 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
 
       <article className="rounded-2xl p-4 sm:p-6 border border-[#283d78] bg-[#0d1633] shadow-[0_16px_45px_rgba(8,14,35,0.85)] space-y-3 sm:space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          <div className="space-y-2">
-            <span className="font-mono text-xs font-bold tracking-widest text-[#f8c076] uppercase block">
-              PROJ. {project.number} // PRODUCTION SYSTEM
-            </span>
+          <div className="relative inline-flex items-center gap-1.5 flex-wrap">
+            {project.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="px-2.5 py-0.5 rounded-full text-xs font-mono border border-[#2b417e] bg-[#132047] text-[#8cb0fd]"
+              >
+                [ {tag} ]
+              </span>
+            ))}
 
-            <div className="relative inline-flex items-center gap-1.5 flex-wrap">
-              {project.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2.5 py-0.5 rounded-full text-xs font-mono border border-[#2b417e] bg-[#132047] text-[#8cb0fd]"
-                >
-                  [ {tag} ]
-                </span>
-              ))}
-
-              {project.tags.length > 3 && (
-                <TechPopover tags={project.tags} />
-              )}
-            </div>
+            {project.tags.length > 3 && (
+              <TechPopover tags={project.tags} />
+            )}
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs shrink-0">
@@ -117,9 +111,9 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1 rounded-lg border border-[#f8c076]/60 bg-[#f8c076]/10 text-[#f8c076] hover:bg-[#f8c076] hover:text-[#060a14] transition-all font-bold inline-flex items-center gap-1.5"
+                className="px-3 py-1 rounded-lg border border-[#f8c076]/60 bg-[#f8c076]/10 text-[#f8c076] hover:bg-[#f8c076] hover:text-[#060a14] transition-all font-semibold inline-flex items-center gap-1.5"
               >
-                <span>[ LIVE DEMO ]</span>
+                <span>Live Demo</span>
                 <span className="text-xs">↗</span>
               </a>
             )}
@@ -128,9 +122,9 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1 rounded-lg border border-[#304886] bg-[#14234d] text-[#8cb0fd] hover:border-[#8cb0fd] hover:text-white transition-all font-bold inline-flex items-center gap-1.5"
+                className="px-3 py-1 rounded-lg border border-[#304886] bg-[#14234d] text-[#8cb0fd] hover:border-[#8cb0fd] hover:text-white transition-all font-semibold inline-flex items-center gap-1.5"
               >
-                <span>[ GITHUB REPO ]</span>
+                <span>GitHub Repo</span>
                 <span className="text-xs">↗</span>
               </a>
             )}
@@ -167,8 +161,8 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
 
         {project.keyHighlights && project.keyHighlights.length > 0 && (
           <div className="space-y-2 pt-1">
-            <div className="text-xs font-mono uppercase tracking-widest text-[#8cb0fd]">
-              ARCHITECTURAL MODULES &amp; OUTCOMES:
+            <div className="text-xs font-mono tracking-wider text-[#8cb0fd] font-semibold">
+              What I Built:
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {project.keyHighlights.map((highlight, idx) => {

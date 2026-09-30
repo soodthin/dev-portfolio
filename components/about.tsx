@@ -11,7 +11,7 @@ export function SkillsSlide({ skillGroups, slideNumber }: SkillsSlideProps) {
       <div className="flex items-center gap-3 mb-3 sm:mb-4">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
         <h2 className="text-lg sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
-          TECHNICAL PROFICIENCY MATRIX
+          Skills
         </h2>
         <div className="flex-1 border-b border-[#213364]" />
       </div>
@@ -23,8 +23,8 @@ export function SkillsSlide({ skillGroups, slideNumber }: SkillsSlideProps) {
             className="rounded-2xl p-4 sm:p-5 border border-[#283d78] bg-[#0f1938]/90 hover:border-[#4b66ae] transition-all duration-300 flex flex-col justify-between shadow-[0_12px_40px_rgba(10,18,42,0.5)]"
           >
             <div>
-              <h3 className="font-mono text-sm font-bold uppercase tracking-wider text-[#f8c076] mb-1.5">
-                [ {group.category} ]
+              <h3 className="font-mono text-sm font-bold tracking-wider text-[#f8c076] mb-1.5">
+                {group.category}
               </h3>
               <p className="text-xs font-mono text-[#9fb2dd] mb-3 sm:mb-4 leading-relaxed">
                 {group.description}
@@ -60,7 +60,7 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
       <div className="flex items-center gap-3 mb-3 sm:mb-4">
         <span className="font-mono text-xs text-[#f8c076] tracking-wider">{slideNumber}</span>
         <h2 className="text-lg sm:text-2xl font-mono font-bold uppercase tracking-wider text-[#f1edff]">
-          ACADEMIC CREDENTIALS &amp; BACKGROUND
+          Education
         </h2>
         <div className="flex-1 border-b border-[#213364]" />
       </div>
@@ -68,11 +68,11 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-5">
         <div className="md:col-span-8 rounded-2xl p-4 sm:p-8 border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.5)] space-y-3 sm:space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-            <span className="text-xs font-mono tracking-widest text-[#f8c076] uppercase font-bold">
-              UNIVERSITY DEGREE
+            <span className="text-xs font-mono tracking-wider text-[#f8c076] font-semibold">
+              Degree
             </span>
             <span className="text-xs font-mono text-[#8299cd]">
-              [ {education.period} ]
+              {education.period}
             </span>
           </div>
           <h3 className="font-mono text-lg sm:text-xl font-bold text-white uppercase">
@@ -83,8 +83,8 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
           </div>
 
           <div className="pt-2">
-            <div className="text-xs font-mono text-[#8299cd] uppercase mb-2">
-              Key Coursework:
+            <div className="text-xs font-mono text-[#8299cd] mb-2 font-semibold">
+              Coursework:
             </div>
             <div className="flex flex-wrap gap-2">
               {education.coursework.map((course) => (
@@ -92,17 +92,17 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
                   key={course}
                   className="px-3 py-1 rounded-full text-xs font-mono border border-[#2f4684] bg-[#14214a] text-[#c5d5f6]"
                 >
-                  [ {course} ]
+                  {course}
                 </span>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="md:col-span-4 rounded-2xl p-6 sm:p-7 border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.5)] flex flex-col justify-between space-y-6">
+        <div className="md:col-span-4 rounded-2xl p-6 sm:p-7 border border-[#283d78] bg-[#0f1938]/90 shadow-[0_12px_40px_rgba(10,18,42,0.5)] flex flex-col justify-center space-y-4">
           <div>
-            <div className="text-xs font-mono tracking-widest text-[#f8c076] uppercase mb-3 font-bold">
-              COMMUNICATION
+            <div className="text-xs font-mono tracking-wider text-[#f8c076] mb-3 font-semibold">
+              Languages
             </div>
             <div className="space-y-3 text-xs sm:text-sm font-mono">
               {languages.map((l) => (
@@ -112,11 +112,6 @@ export function EducationSlide({ education, languages, slideNumber }: EducationS
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="pt-3 border-t border-[#213364] text-xs font-mono text-[#8299cd]">
-            <div>CORE FOCUS:</div>
-            <div className="text-[#ddd7ff] font-bold mt-1">Full-Stack Systems & AI Engineering</div>
           </div>
         </div>
       </div>
