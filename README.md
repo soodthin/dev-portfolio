@@ -1,4 +1,4 @@
-# ⚡ Developer Portfolio — Pure Typographic Edition
+# Developer Portfolio — Pure Typographic Edition
 
 A minimalist, high-performance web developer portfolio built with **Next.js 16 (App Router)**, **TypeScript**, and **Tailwind CSS v4**.
 
@@ -10,7 +10,7 @@ Designed following the **Editorial / Pure Typographic** philosophy:
 
 ---
 
-## 🏗️ Architecture & Project Structure
+## Architecture & Project Structure
 
 ```
 dev-portfolio/
@@ -29,7 +29,7 @@ dev-portfolio/
 │   ├── about.tsx               # Academic background, languages & skills matrix
 │   └── contact.tsx             # Direct reachout and verified social channels
 ├── data/
-│   └── portfolio-data.ts       # ⭐️ Single Source of Truth for all content
+│   └── portfolio-data.ts       # Single Source of Truth for all content
 ├── types/
 │   └── portfolio.ts            # Strict TypeScript interfaces & models
 ├── public/
@@ -40,7 +40,7 @@ dev-portfolio/
 
 ---
 
-## 🚀 Getting Started Locally
+## Getting Started Locally
 
 ### Prerequisites
 * **Node.js** v20+ or v22+
@@ -69,10 +69,10 @@ This compiles the application and generates a standalone, static HTML export ins
 
 ---
 
-## ⚙️ How to Personalize Your Portfolio
+## How to Personalize Your Portfolio
 
 All personal information, links, projects, and skills are separated into **one single file**:
-👉 [`data/portfolio-data.ts`](data/portfolio-data.ts)
+[`data/portfolio-data.ts`](data/portfolio-data.ts)
 
 1. **Avatar Image**: Drop your portrait photo (e.g. `avatar.jpg`) into `public/images/avatar.jpg`, then update `avatarUrl: "/images/avatar.jpg"` in `data/portfolio-data.ts`.
 2. **Projects**: Add or edit projects in the `projects` array with your actual GitHub links and live demos.
@@ -80,7 +80,7 @@ All personal information, links, projects, and skills are separated into **one s
 
 ---
 
-## 🌐 Deploying to GitHub Pages
+## Deploying to GitHub Pages
 
 1. Push all changes to the `main` branch of your GitHub repository:
    ```bash
