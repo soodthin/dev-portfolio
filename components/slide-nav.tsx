@@ -223,15 +223,17 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
         )}
 
         <div
-          className={`relative flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
-            isAnyProjectActive ? 'my-2.5 h-[108px]' : 'my-0 h-4'
+          className={`relative flex items-center justify-end ${
+            isAnyProjectActive
+              ? 'my-1 h-[72px] transition-all duration-200 ease-out'
+              : 'my-0 h-4 transition-all duration-150 ease-in'
           }`}
         >
           <div
-            className={`flex flex-col justify-between h-[108px] py-1 items-end transition-all duration-400 ease-out ${
+            className={`flex flex-col justify-between h-[72px] items-end ${
               isAnyProjectActive
-                ? 'max-w-[220px] opacity-100 pointer-events-auto mr-1.5'
-                : 'max-w-0 opacity-0 pointer-events-none mr-0 overflow-hidden'
+                ? 'max-w-[200px] opacity-100 pointer-events-auto mr-1 transition-all duration-200 ease-out'
+                : 'max-w-0 opacity-0 pointer-events-none mr-0 overflow-hidden transition-all duration-120 ease-in'
             }`}
           >
             {projectSlides.map((subSlide) => {
@@ -246,23 +248,23 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                   onMouseEnter={() => setHoveredSubIndex(subSlide.globalIndex)}
                   onMouseLeave={() => setHoveredSubIndex(null)}
                   aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
-                  className="group/sub flex items-center justify-end focus:outline-none h-6"
+                  className="group/sub flex items-center justify-end focus:outline-none h-5"
                 >
                   <div
-                    className={`transition-all duration-300 text-right whitespace-nowrap ${
+                    className={`transition-all duration-200 text-right whitespace-nowrap ${
                       isSubActive || isSubHovered
                         ? 'opacity-100 translate-x-0'
                         : 'opacity-0 translate-x-2'
                     }`}
                   >
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-sans transition-all duration-200 shadow-sm ${
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-sans transition-all duration-200 shadow-sm ${
                         isSubActive
-                          ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/50 shadow-[0_0_12px_rgba(248,192,118,0.3)]'
+                          ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/50 shadow-[0_0_10px_rgba(248,192,118,0.3)]'
                           : 'text-[#8ba0cc] bg-[#0c142b]/95 border-[#1c274a] hover:text-[#c5d5f6]'
                       }`}
                     >
-                      <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{subSlide.number}</span>
+                      <span className="font-mono mr-1 text-[9px] text-[#7ea2f8]">{subSlide.number}</span>
                       {subSlide.title}
                     </span>
                   </div>
@@ -272,109 +274,72 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
           </div>
 
           <div
-            className={`relative transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+            className={`relative ${
               isAnyProjectActive
-                ? 'w-[68px] h-[108px] opacity-100 pointer-events-auto'
-                : 'w-0 h-4 opacity-0 pointer-events-none overflow-hidden'
+                ? 'w-7 h-[72px] opacity-100 pointer-events-auto transition-all duration-200 ease-out'
+                : 'w-0 h-4 opacity-0 pointer-events-none overflow-hidden transition-all duration-120 ease-in'
             }`}
           >
             <svg
-              className="w-full h-full pointer-events-none overflow-visible"
-              viewBox="0 0 68 108"
+              className={`w-full h-full pointer-events-none overflow-visible transition-opacity duration-150 ${
+                isAnyProjectActive ? 'opacity-100' : 'opacity-0'
+              }`}
+              viewBox="0 0 28 72"
               fill="none"
             >
               <defs>
-                <linearGradient id="treeBranchGrad" x1="68" y1="54" x2="10" y2="54" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#f8c076" stopOpacity="0.3" />
+                <linearGradient id="treeBranchGrad" x1="28" y1="36" x2="4" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#f8c076" stopOpacity="0.4" />
                   <stop offset="35%" stopColor="#f8c076" stopOpacity="0.8" />
                   <stop offset="100%" stopColor="#f8c076" stopOpacity="1" />
                 </linearGradient>
               </defs>
 
               <path
-                d="M 68 54 Q 56 53 44 54"
+                d="M 28 36 L 18 36"
                 stroke="url(#treeBranchGrad)"
-                strokeWidth="2.2"
+                strokeWidth="1.75"
                 strokeLinecap="round"
-                strokeDasharray="26"
-                style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 26,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '200ms cubic-bezier(0.2, 0.8, 0.2, 1) 40ms' : '140ms ease-in'}`,
-                }}
-              />
-
-              <path
-                d="M 44 54 C 36 50, 26 22, 10 16"
-                stroke="url(#treeBranchGrad)"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeDasharray="70"
-                style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 70,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '300ms cubic-bezier(0.2, 0.8, 0.2, 1) 160ms' : '160ms ease-in'}`,
-                }}
-              />
-
-              <path
-                d="M 32 38 C 28 35, 25 36, 23 37"
-                stroke="#f8c076"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeOpacity="0.75"
-                strokeDasharray="14"
-                style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 14,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 320ms' : '100ms ease-in'}`,
-                }}
-              />
-
-              <path
-                d="M 44 54 C 32 53, 22 55, 10 54"
-                stroke="url(#treeBranchGrad)"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeDasharray="42"
-                style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 42,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '240ms cubic-bezier(0.2, 0.8, 0.2, 1) 140ms' : '140ms ease-in'}`,
-                }}
-              />
-
-              <path
-                d="M 28 54 C 25 50, 22 51, 20 49"
-                stroke="#f8c076"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeOpacity="0.75"
                 strokeDasharray="12"
                 style={{
                   strokeDashoffset: isAnyProjectActive ? 0 : 12,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 300ms' : '100ms ease-in'}`,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '140ms ease-out 20ms' : '0ms'}`,
                 }}
               />
 
               <path
-                d="M 44 54 C 36 58, 26 86, 10 92"
+                d="M 18 36 C 13 36, 8 22, 4 10"
                 stroke="url(#treeBranchGrad)"
-                strokeWidth="1.6"
+                strokeWidth="1.25"
                 strokeLinecap="round"
-                strokeDasharray="70"
+                strokeDasharray="30"
                 style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 70,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '300ms cubic-bezier(0.2, 0.8, 0.2, 1) 160ms' : '160ms ease-in'}`,
+                  strokeDashoffset: isAnyProjectActive ? 0 : 30,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 100ms' : '0ms'}`,
                 }}
               />
 
               <path
-                d="M 32 70 C 28 73, 25 72, 23 71"
-                stroke="#f8c076"
-                strokeWidth="1.2"
+                d="M 18 36 L 4 36"
+                stroke="url(#treeBranchGrad)"
+                strokeWidth="1.25"
                 strokeLinecap="round"
-                strokeOpacity="0.75"
-                strokeDasharray="14"
+                strokeDasharray="16"
                 style={{
-                  strokeDashoffset: isAnyProjectActive ? 0 : 14,
-                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 320ms' : '100ms ease-in'}`,
+                  strokeDashoffset: isAnyProjectActive ? 0 : 16,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '150ms ease-out 80ms' : '0ms'}`,
+                }}
+              />
+
+              <path
+                d="M 18 36 C 13 36, 8 50, 4 62"
+                stroke="url(#treeBranchGrad)"
+                strokeWidth="1.25"
+                strokeLinecap="round"
+                strokeDasharray="30"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 30,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 100ms' : '0ms'}`,
                 }}
               />
             </svg>
@@ -382,8 +347,8 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             {projectSlides.map((subSlide, idx) => {
               const isSubActive = activeIndex === subSlide.globalIndex;
               const isSubHovered = hoveredSubIndex === subSlide.globalIndex;
-              const topPos = idx === 0 ? 'top-[16px]' : idx === 1 ? 'top-[54px]' : 'top-[92px]';
-              const popDelay = idx === 0 ? '360ms' : idx === 1 ? '300ms' : '380ms';
+              const topPos = idx === 0 ? 'top-[10px]' : idx === 1 ? 'top-[36px]' : 'top-[62px]';
+              const popDelay = idx === 0 ? '220ms' : idx === 1 ? '180ms' : '230ms';
 
               return (
                 <button
@@ -393,19 +358,19 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                   onMouseEnter={() => setHoveredSubIndex(subSlide.globalIndex)}
                   onMouseLeave={() => setHoveredSubIndex(null)}
                   aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
-                  className={`absolute left-[10px] -translate-x-1/2 -translate-y-1/2 ${topPos} w-5 h-5 flex items-center justify-center focus:outline-none z-10`}
+                  className={`absolute left-[4px] -translate-x-1/2 -translate-y-1/2 ${topPos} w-4 h-4 flex items-center justify-center focus:outline-none z-10`}
                 >
                   <div
                     style={{
-                      transform: isAnyProjectActive ? (isSubHovered ? 'scale(1.3)' : 'scale(1)') : 'scale(0)',
+                      transform: isAnyProjectActive ? (isSubHovered ? 'scale(1.25)' : 'scale(1)') : 'scale(0)',
                       opacity: isAnyProjectActive ? 1 : 0,
-                      transition: `transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1) ${isAnyProjectActive ? popDelay : '0ms'}, opacity 200ms ease`,
+                      transition: `transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1) ${isAnyProjectActive ? popDelay : '0ms'}, opacity 120ms ease`,
                     }}
-                    className={`rounded-full transition-colors duration-200 ${
+                    className={`rounded-full transition-colors duration-150 ${
                       isSubActive
-                        ? 'w-2.5 h-2.5 bg-[#f8c076] ring-4 ring-[#f8c076]/40 shadow-[0_0_12px_rgba(248,192,118,0.7)]'
+                        ? 'w-2 h-2 bg-[#f8c076] ring-3 ring-[#f8c076]/40 shadow-[0_0_8px_rgba(248,192,118,0.7)]'
                         : isSubHovered
-                        ? 'w-2 h-2 bg-[#7ea2f8] ring-2 ring-[#7ea2f8]/40'
+                        ? 'w-1.5 h-1.5 bg-[#7ea2f8] ring-2 ring-[#7ea2f8]/40'
                         : 'w-1.5 h-1.5 bg-[#253562]'
                     }`}
                   />
@@ -421,7 +386,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
             {!isAnyProjectActive && (
-              <div className="hidden md:inline-block transition-all duration-300 text-right opacity-0 group-hover:opacity-100">
+              <div className="hidden md:inline-block transition-all duration-200 text-right opacity-0 group-hover:opacity-100">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]">
                   <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">03-05</span>
                   PROJECTS
@@ -431,7 +396,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
 
             <div className="w-4 h-4 flex items-center justify-center">
               <div
-                className={`transition-all duration-400 rounded-full ${
+                className={`transition-all duration-200 rounded-full ${
                   isAnyProjectActive
                     ? 'w-3 h-3 bg-[#f8c076] ring-4 ring-[#f8c076]/30 shadow-[0_0_12px_rgba(248,192,118,0.4)]'
                     : 'w-2.5 h-2.5 bg-[#263765] group-hover:bg-[#7ea2f8] group-hover:scale-125'
