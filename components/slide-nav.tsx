@@ -221,17 +221,22 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
           </button>
         )}
 
-        <div className="relative group/project flex items-center justify-end my-1">
+        <div
+          className={`relative group/project flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isAnyProjectActive ? 'my-3.5' : 'my-0'
+          }`}
+        >
           <div
             className={`flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
               isAnyProjectActive
                 ? 'max-w-[240px] opacity-100 translate-x-0 pointer-events-auto mr-0.5'
-                : 'max-w-0 opacity-0 translate-x-3 pointer-events-none mr-0'
+                : 'max-w-0 opacity-0 translate-x-4 pointer-events-none mr-0'
             }`}
           >
             <div className="flex flex-col justify-between h-[96px] py-0.5 items-end">
-              {projectSlides.map((subSlide) => {
+              {projectSlides.map((subSlide, idx) => {
                 const isSubActive = activeIndex === subSlide.globalIndex;
+                const dotDelay = idx === 0 ? '120ms' : idx === 1 ? '70ms' : '170ms';
 
                 return (
                   <button
@@ -242,8 +247,10 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                     className="group/sub flex items-center justify-end gap-2 focus:outline-none h-6"
                   >
                     <div
-                      className={`hidden md:inline-block transition-all duration-200 text-right ${
-                        isSubActive ? 'opacity-100' : 'opacity-0 group-hover/sub:opacity-100'
+                      className={`hidden md:inline-block transition-all duration-300 text-right ${
+                        isSubActive
+                          ? 'opacity-100 translate-x-0'
+                          : 'opacity-0 translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0'
                       }`}
                     >
                       <span
@@ -260,9 +267,16 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
 
                     <div className="w-3 h-3 flex items-center justify-center">
                       <div
-                        className={`transition-all duration-300 rounded-full ${
+                        style={{
+                          transition: `transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1) ${
+                            isAnyProjectActive ? dotDelay : '0ms'
+                          }, background-color 300ms, box-shadow 300ms`,
+                        }}
+                        className={`rounded-full ${
+                          isAnyProjectActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                        } ${
                           isSubActive
-                            ? 'w-2.5 h-2.5 bg-[#f8c076] ring-3 ring-[#f8c076]/40'
+                            ? 'w-2.5 h-2.5 bg-[#f8c076] ring-3 ring-[#f8c076]/40 shadow-[0_0_8px_rgba(248,192,118,0.3)]'
                             : 'w-1.5 h-1.5 bg-[#253562] group-hover/sub:bg-[#7ea2f8] group-hover/sub:scale-125'
                         }`}
                       />
@@ -279,11 +293,40 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
                 fill="none"
               >
                 <path
-                  d="M 18 48 C 10 48, 4 30, 4 12 M 4 48 L 18 48 M 18 48 C 10 48, 4 66, 4 84"
+                  d="M 18 48 C 10 48, 4 30, 4 12"
                   stroke="#f8c076"
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeOpacity="0.75"
+                  strokeDasharray="60"
+                  style={{
+                    strokeDashoffset: isAnyProjectActive ? 0 : 60,
+                    transition: 'stroke-dashoffset 400ms cubic-bezier(0.16, 1, 0.3, 1) 50ms',
+                  }}
+                />
+                <path
+                  d="M 18 48 L 4 48"
+                  stroke="#f8c076"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeOpacity="0.75"
+                  strokeDasharray="25"
+                  style={{
+                    strokeDashoffset: isAnyProjectActive ? 0 : 25,
+                    transition: 'stroke-dashoffset 320ms cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                />
+                <path
+                  d="M 18 48 C 10 48, 4 66, 4 84"
+                  stroke="#f8c076"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeOpacity="0.75"
+                  strokeDasharray="60"
+                  style={{
+                    strokeDashoffset: isAnyProjectActive ? 0 : 60,
+                    transition: 'stroke-dashoffset 400ms cubic-bezier(0.16, 1, 0.3, 1) 50ms',
+                  }}
                 />
               </svg>
             </div>
@@ -296,7 +339,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
             className="group flex items-center justify-end gap-2.5 focus:outline-none"
           >
             {!isAnyProjectActive && (
-              <div className="hidden md:inline-block transition-all duration-200 text-right opacity-0 group-hover:opacity-100">
+              <div className="hidden md:inline-block transition-all duration-300 text-right opacity-0 group-hover:opacity-100">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-sans text-[#768ab9] bg-[#0c142b] border-[#1c274a] group-hover:text-[#c5d5f6]">
                   <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">03-05</span>
                   PROJECTS
@@ -306,9 +349,9 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
 
             <div className="w-4 h-4 flex items-center justify-center">
               <div
-                className={`transition-all duration-300 rounded-full ${
+                className={`transition-all duration-400 rounded-full ${
                   isAnyProjectActive
-                    ? 'w-3 h-3 bg-[#f8c076] ring-4 ring-[#f8c076]/25'
+                    ? 'w-3 h-3 bg-[#f8c076] ring-4 ring-[#f8c076]/30 shadow-[0_0_12px_rgba(248,192,118,0.4)]'
                     : 'w-2.5 h-2.5 bg-[#263765] group-hover:bg-[#7ea2f8] group-hover:scale-125'
                 }`}
               />
