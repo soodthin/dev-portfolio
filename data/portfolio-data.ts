@@ -107,6 +107,7 @@ export const portfolioData: PortfolioData = {
       company: "BW Industrial Development Joint Stock Company (Vietnam)",
       location: "Ho Chi Minh City, Viet Nam",
       projectTitle: "Finance Data Processing Web",
+      projectUrl: "https://bwid-automation.onrender.com/",
       description: "Engineered an internal web application used by the finance and accounting team to process bank statements and generate automated cash reports, handling transaction extraction, classification, and reconciliation.",
       highlights: [
         "Bank Statement Parsing: Built REST APIs with FastAPI, including parsers for 10+ banks (VCB, TCB, BIDV, ACB, MBB...) to automatically extract transaction data from uploaded statements, with OCR fallback via Gemini for scanned files.",
@@ -128,8 +129,7 @@ export const portfolioData: PortfolioData = {
       subtitle: "Job Portal & Application Tracker Platform",
       description: "Full-featured recruitment platform connecting candidates, employers, and administrators with comprehensive role-based access, job lifecycle management, and application workflows.",
       tags: ["Spring Boot", "ReactJS", "Vite", "Tailwind CSS", "MySQL", "Spring Security", "JWT", "Render"],
-      demoUrl: "https://github.com/soodthin",
-      githubUrl: "https://github.com/soodthin",
+      githubUrl: "https://github.com/soodthin/FlexiConnect",
       featured: true,
       keyHighlights: [
         "Backend & Database: Built REST APIs with Spring Boot and Spring Data JPA on a MySQL database, handling job listings, applications, and role-based access for candidates, employers, and admin.",
@@ -145,8 +145,7 @@ export const portfolioData: PortfolioData = {
       subtitle: "Fullstack Mobile Experience with Dual-Role Portals",
       description: "Cross-platform mobile application covering customer food delivery ordering, table reservations, restaurant menu management, and dedicated kitchen staff (chef) workflows.",
       tags: ["React Native", "Expo", "Django", "Django REST Framework", "MoMo", "Stripe", "Firebase"],
-      demoUrl: "https://github.com/soodthin",
-      githubUrl: "https://github.com/soodthin",
+      githubUrl: "https://github.com/soodthin/T-Restaurant-App",
       featured: true,
       keyHighlights: [
         "Backend & Database: Built REST APIs with Django REST Framework, covering menus, table bookings, orders, and reviews.",

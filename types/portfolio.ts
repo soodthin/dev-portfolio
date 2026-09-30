@@ -37,6 +37,7 @@ export interface Experience {
   companyUrl?: string;
   location: string;
   projectTitle?: string;
+  projectUrl?: string;
   description: string;
   highlights: string[];
   technologies: string[];

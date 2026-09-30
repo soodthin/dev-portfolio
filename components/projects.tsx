@@ -89,23 +89,50 @@ export function ProjectSlide({ project, slideNumber, totalProjects }: ProjectSli
       </div>
 
       <article className="rounded-2xl p-4 sm:p-6 border border-[#283d78] bg-[#0d1633] shadow-[0_16px_45px_rgba(8,14,35,0.85)] space-y-3 sm:space-y-3.5">
-        <div className="space-y-2">
-          <span className="font-mono text-xs font-bold tracking-widest text-[#f8c076] uppercase block">
-            PROJ. {project.number} // PRODUCTION SYSTEM
-          </span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="space-y-2">
+            <span className="font-mono text-xs font-bold tracking-widest text-[#f8c076] uppercase block">
+              PROJ. {project.number} // PRODUCTION SYSTEM
+            </span>
 
-          <div className="relative inline-flex items-center gap-1.5 flex-wrap">
-            {project.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="px-2.5 py-0.5 rounded-full text-xs font-mono border border-[#2b417e] bg-[#132047] text-[#8cb0fd]"
+            <div className="relative inline-flex items-center gap-1.5 flex-wrap">
+              {project.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2.5 py-0.5 rounded-full text-xs font-mono border border-[#2b417e] bg-[#132047] text-[#8cb0fd]"
+                >
+                  [ {tag} ]
+                </span>
+              ))}
+
+              {project.tags.length > 3 && (
+                <TechPopover tags={project.tags} />
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 font-mono text-xs shrink-0">
+            {project.demoUrl && (
+              <a
+                href={project.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1 rounded-lg border border-[#f8c076]/60 bg-[#f8c076]/10 text-[#f8c076] hover:bg-[#f8c076] hover:text-[#060a14] transition-all font-bold inline-flex items-center gap-1.5"
               >
-                [ {tag} ]
-              </span>
-            ))}
-
-            {project.tags.length > 3 && (
-              <TechPopover tags={project.tags} />
+                <span>[ LIVE DEMO ]</span>
+                <span className="text-xs">↗</span>
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1 rounded-lg border border-[#304886] bg-[#14234d] text-[#8cb0fd] hover:border-[#8cb0fd] hover:text-white transition-all font-bold inline-flex items-center gap-1.5"
+              >
+                <span>[ GITHUB REPO ]</span>
+                <span className="text-xs">↗</span>
+              </a>
             )}
           </div>
         </div>

@@ -161,7 +161,20 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
               <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                 {exp.projectTitle && (
                   <div className="inline-block px-2.5 py-0.5 rounded-lg bg-[#15234c] border border-[#2f4684] text-xs font-mono text-[#ddd7ff]">
-                    PROJECT: <span className="text-[#f8c076] font-bold">{exp.projectTitle}</span>
+                    PROJECT:{' '}
+                    {exp.projectUrl ? (
+                      <a
+                        href={exp.projectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#f8c076] font-bold hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>{exp.projectTitle}</span>
+                        <span className="text-xs">↗</span>
+                      </a>
+                    ) : (
+                      <span className="text-[#f8c076] font-bold">{exp.projectTitle}</span>
+                    )}
                   </div>
                 )}
 
@@ -284,7 +297,20 @@ export function Experience({ experiences, slideNumber = "02" }: ExperienceProps)
                     SYSTEM INTEGRATION &amp; OPERATIONS
                   </h3>
                   <div className="text-xs sm:text-sm font-mono text-[#8cb0fd] mt-0.5">
-                    {exp.projectTitle} • {exp.company}
+                    {exp.projectUrl ? (
+                      <a
+                        href={exp.projectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-[#f8c076] transition-colors hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>{exp.projectTitle}</span>
+                        <span className="text-xs">↗</span>
+                      </a>
+                    ) : (
+                      exp.projectTitle
+                    )}{' '}
+                    • {exp.company}
                   </div>
                 </div>
 
