@@ -19,6 +19,7 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
   const [isAwake, setIsAwake] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [isPinnedOpen, setIsPinnedOpen] = useState(false);
+  const [hoveredSubIndex, setHoveredSubIndex] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const triggerWake = () => {
@@ -222,114 +223,195 @@ export function SlideNav({ slides, activeIndex, onSelectSlide }: SlideNavProps) 
         )}
 
         <div
-          className={`relative group/project flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isAnyProjectActive ? 'my-3 h-[96px]' : 'my-0 h-4'
+          className={`relative flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+            isAnyProjectActive ? 'my-2.5 h-[108px]' : 'my-0 h-4'
           }`}
         >
           <div
-            className={`flex items-center justify-end transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
+            className={`flex flex-col justify-between h-[108px] py-1 items-end transition-all duration-400 ease-out ${
               isAnyProjectActive
-                ? 'max-w-[240px] max-h-[96px] opacity-100 translate-x-0 pointer-events-auto mr-0.5'
-                : 'max-w-0 max-h-0 opacity-0 translate-x-4 pointer-events-none mr-0'
+                ? 'max-w-[220px] opacity-100 pointer-events-auto mr-1.5'
+                : 'max-w-0 opacity-0 pointer-events-none mr-0 overflow-hidden'
             }`}
           >
-            <div className="flex flex-col justify-between h-[96px] py-0.5 items-end">
-              {projectSlides.map((subSlide, idx) => {
-                const isSubActive = activeIndex === subSlide.globalIndex;
-                const dotDelay = idx === 0 ? '120ms' : idx === 1 ? '70ms' : '170ms';
+            {projectSlides.map((subSlide) => {
+              const isSubActive = activeIndex === subSlide.globalIndex;
+              const isSubHovered = hoveredSubIndex === subSlide.globalIndex;
 
-                return (
-                  <button
-                    key={subSlide.id}
-                    type="button"
-                    onClick={() => onSelectSlide(subSlide.globalIndex)}
-                    aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
-                    className="group/sub flex items-center justify-end gap-2 focus:outline-none h-6"
+              return (
+                <button
+                  key={subSlide.id}
+                  type="button"
+                  onClick={() => onSelectSlide(subSlide.globalIndex)}
+                  onMouseEnter={() => setHoveredSubIndex(subSlide.globalIndex)}
+                  onMouseLeave={() => setHoveredSubIndex(null)}
+                  aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
+                  className="group/sub flex items-center justify-end focus:outline-none h-6"
+                >
+                  <div
+                    className={`transition-all duration-300 text-right whitespace-nowrap ${
+                      isSubActive || isSubHovered
+                        ? 'opacity-100 translate-x-0'
+                        : 'opacity-0 translate-x-2'
+                    }`}
                   >
-                    <div
-                      className={`hidden md:inline-block transition-all duration-300 text-right ${
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-sans transition-all duration-200 shadow-sm ${
                         isSubActive
-                          ? 'opacity-100 translate-x-0'
-                          : 'opacity-0 translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0'
+                          ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/50 shadow-[0_0_12px_rgba(248,192,118,0.3)]'
+                          : 'text-[#8ba0cc] bg-[#0c142b]/95 border-[#1c274a] hover:text-[#c5d5f6]'
                       }`}
                     >
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-sans transition-all duration-200 whitespace-nowrap shadow-sm ${
-                          isSubActive
-                            ? 'font-medium text-[#f8c076] bg-[#121c3b] border-[#f8c076]/50 shadow-[0_0_12px_rgba(248,192,118,0.25)]'
-                            : 'text-[#8ba0cc] bg-[#0c142b]/95 border-[#1c274a] group-hover/sub:text-[#c5d5f6]'
-                        }`}
-                      >
-                        <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{subSlide.number}</span>
-                        {subSlide.title}
-                      </span>
-                    </div>
+                      <span className="font-mono mr-1.5 text-[10px] text-[#7ea2f8]">{subSlide.number}</span>
+                      {subSlide.title}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-                    <div className="w-3 h-3 flex items-center justify-center">
-                      <div
-                        style={{
-                          transition: `transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1) ${
-                            isAnyProjectActive ? dotDelay : '0ms'
-                          }, background-color 300ms, box-shadow 300ms`,
-                        }}
-                        className={`rounded-full ${
-                          isAnyProjectActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-                        } ${
-                          isSubActive
-                            ? 'w-2.5 h-2.5 bg-[#f8c076] ring-3 ring-[#f8c076]/40 shadow-[0_0_8px_rgba(248,192,118,0.3)]'
-                            : 'w-1.5 h-1.5 bg-[#253562] group-hover/sub:bg-[#7ea2f8] group-hover/sub:scale-125'
-                        }`}
-                      />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+          <div
+            className={`relative transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+              isAnyProjectActive
+                ? 'w-[68px] h-[108px] opacity-100 pointer-events-auto'
+                : 'w-0 h-4 opacity-0 pointer-events-none overflow-hidden'
+            }`}
+          >
+            <svg
+              className="w-full h-full pointer-events-none overflow-visible"
+              viewBox="0 0 68 108"
+              fill="none"
+            >
+              <defs>
+                <linearGradient id="treeBranchGrad" x1="68" y1="54" x2="10" y2="54" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#f8c076" stopOpacity="0.3" />
+                  <stop offset="35%" stopColor="#f8c076" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#f8c076" stopOpacity="1" />
+                </linearGradient>
+              </defs>
 
-            <div className="relative w-5 h-[96px] flex items-center justify-center mx-0.5 pointer-events-none">
-              <svg
-                className="w-full h-full"
-                viewBox="0 0 20 96"
-                fill="none"
-              >
-                <path
-                  d="M 18 48 C 10 48, 4 30, 4 12"
-                  stroke="#f8c076"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeOpacity="0.75"
-                  strokeDasharray="60"
-                  style={{
-                    strokeDashoffset: isAnyProjectActive ? 0 : 60,
-                    transition: 'stroke-dashoffset 400ms cubic-bezier(0.16, 1, 0.3, 1) 50ms',
-                  }}
-                />
-                <path
-                  d="M 18 48 L 4 48"
-                  stroke="#f8c076"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeOpacity="0.75"
-                  strokeDasharray="25"
-                  style={{
-                    strokeDashoffset: isAnyProjectActive ? 0 : 25,
-                    transition: 'stroke-dashoffset 320ms cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                />
-                <path
-                  d="M 18 48 C 10 48, 4 66, 4 84"
-                  stroke="#f8c076"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeOpacity="0.75"
-                  strokeDasharray="60"
-                  style={{
-                    strokeDashoffset: isAnyProjectActive ? 0 : 60,
-                    transition: 'stroke-dashoffset 400ms cubic-bezier(0.16, 1, 0.3, 1) 50ms',
-                  }}
-                />
-              </svg>
-            </div>
+              <path
+                d="M 68 54 Q 56 53 44 54"
+                stroke="url(#treeBranchGrad)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeDasharray="26"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 26,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '200ms cubic-bezier(0.2, 0.8, 0.2, 1) 40ms' : '140ms ease-in'}`,
+                }}
+              />
+
+              <path
+                d="M 44 54 C 36 50, 26 22, 10 16"
+                stroke="url(#treeBranchGrad)"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeDasharray="70"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 70,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '300ms cubic-bezier(0.2, 0.8, 0.2, 1) 160ms' : '160ms ease-in'}`,
+                }}
+              />
+
+              <path
+                d="M 32 38 C 28 35, 25 36, 23 37"
+                stroke="#f8c076"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeOpacity="0.75"
+                strokeDasharray="14"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 14,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 320ms' : '100ms ease-in'}`,
+                }}
+              />
+
+              <path
+                d="M 44 54 C 32 53, 22 55, 10 54"
+                stroke="url(#treeBranchGrad)"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeDasharray="42"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 42,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '240ms cubic-bezier(0.2, 0.8, 0.2, 1) 140ms' : '140ms ease-in'}`,
+                }}
+              />
+
+              <path
+                d="M 28 54 C 25 50, 22 51, 20 49"
+                stroke="#f8c076"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeOpacity="0.75"
+                strokeDasharray="12"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 12,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 300ms' : '100ms ease-in'}`,
+                }}
+              />
+
+              <path
+                d="M 44 54 C 36 58, 26 86, 10 92"
+                stroke="url(#treeBranchGrad)"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeDasharray="70"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 70,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '300ms cubic-bezier(0.2, 0.8, 0.2, 1) 160ms' : '160ms ease-in'}`,
+                }}
+              />
+
+              <path
+                d="M 32 70 C 28 73, 25 72, 23 71"
+                stroke="#f8c076"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeOpacity="0.75"
+                strokeDasharray="14"
+                style={{
+                  strokeDashoffset: isAnyProjectActive ? 0 : 14,
+                  transition: `stroke-dashoffset ${isAnyProjectActive ? '180ms ease-out 320ms' : '100ms ease-in'}`,
+                }}
+              />
+            </svg>
+
+            {projectSlides.map((subSlide, idx) => {
+              const isSubActive = activeIndex === subSlide.globalIndex;
+              const isSubHovered = hoveredSubIndex === subSlide.globalIndex;
+              const topPos = idx === 0 ? 'top-[16px]' : idx === 1 ? 'top-[54px]' : 'top-[92px]';
+              const popDelay = idx === 0 ? '360ms' : idx === 1 ? '300ms' : '380ms';
+
+              return (
+                <button
+                  key={subSlide.id}
+                  type="button"
+                  onClick={() => onSelectSlide(subSlide.globalIndex)}
+                  onMouseEnter={() => setHoveredSubIndex(subSlide.globalIndex)}
+                  onMouseLeave={() => setHoveredSubIndex(null)}
+                  aria-label={`Jump to project ${subSlide.number}: ${subSlide.title}`}
+                  className={`absolute left-[10px] -translate-x-1/2 -translate-y-1/2 ${topPos} w-5 h-5 flex items-center justify-center focus:outline-none z-10`}
+                >
+                  <div
+                    style={{
+                      transform: isAnyProjectActive ? (isSubHovered ? 'scale(1.3)' : 'scale(1)') : 'scale(0)',
+                      opacity: isAnyProjectActive ? 1 : 0,
+                      transition: `transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1) ${isAnyProjectActive ? popDelay : '0ms'}, opacity 200ms ease`,
+                    }}
+                    className={`rounded-full transition-colors duration-200 ${
+                      isSubActive
+                        ? 'w-2.5 h-2.5 bg-[#f8c076] ring-4 ring-[#f8c076]/40 shadow-[0_0_12px_rgba(248,192,118,0.7)]'
+                        : isSubHovered
+                        ? 'w-2 h-2 bg-[#7ea2f8] ring-2 ring-[#7ea2f8]/40'
+                        : 'w-1.5 h-1.5 bg-[#253562]'
+                    }`}
+                  />
+                </button>
+              );
+            })}
           </div>
 
           <button
