@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import Image from 'next/image';
 import { ProjectImageStack } from '@/components/deck/ProjectImageStack';
 import { Locale, translations } from '@/lib/i18n';
+import { getAssetPath } from '@/lib/asset';
 import {
   Share2,
   Maximize2,
@@ -445,13 +446,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   };
 
   const directEmail = 'thinhthai963@gmail.com';
-  const userAvatar = data?.profile?.avatarUrl || data?.avatarUrl || '/images/avatar.jpg';
+  const userAvatar = getAssetPath(data?.profile?.avatarUrl || data?.avatarUrl || '/images/avatar.png');
   const userTitle = data?.profile?.name || data?.title || 'THAI DO THINH';
   const userTagline = data?.profile?.title || data?.tagline || 'Software Engineer // Full-Stack Developer';
   const userBio = data?.profile?.roleDescription || data?.bio || t.hero.bio;
 
   // Multi-image collections for Project Image Stacks (Ngan xep hinh)
-  const project1Images = data?.projects?.[0]?.screenshots || [
+  const rawProject1Images: string[] = data?.projects?.[0]?.screenshots || [
     '/images/flexiconnect/1-job-search.png',
     '/images/flexiconnect/2-job-detail-map.png',
     '/images/flexiconnect/3-candidate-profile.png',
@@ -461,6 +462,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     '/images/flexiconnect/7-post-job.png',
     '/images/flexiconnect/8-auth-portal.png',
   ];
+  const project1Images = useMemo(() => rawProject1Images.map(getAssetPath), [rawProject1Images]);
 
   const project1Captions = lang === 'vi' ? [
     'Tìm kiếm việc làm & Bộ lọc đa năng',
@@ -482,7 +484,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     'Role-Based JWT Authentication Portal',
   ];
 
-  const project2Images = data?.projects?.[1]?.screenshots || [
+  const rawProject2Images: string[] = data?.projects?.[1]?.screenshots || [
     '/images/restaurant/1-menu-home.jpg',
     '/images/restaurant/2-dish-detail.png',
     '/images/restaurant/3-cart-checkout.png',
@@ -490,6 +492,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     '/images/restaurant/5-reviews.png',
     '/images/restaurant/6-auth-login.png',
   ];
+  const project2Images = useMemo(() => rawProject2Images.map(getAssetPath), [rawProject2Images]);
 
   const project2Captions = lang === 'vi' ? [
     'Khám phá thực đơn món ngon Sài Gòn Savory',

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import {
   ChevronLeft,
@@ -9,6 +9,7 @@ import {
   X,
   ZoomIn,
 } from 'lucide-react';
+import { getAssetPath } from '@/lib/asset';
 
 interface ProjectImageStackProps {
   images: string[];
@@ -26,7 +27,12 @@ export function ProjectImageStack({
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  const total = images?.length || 0;
+  // Normalize image paths with basePath for GitHub Pages support
+  const normalizedImages = useMemo(() => {
+    return (images || []).map(getAssetPath);
+  }, [images]);
+
+  const total = normalizedImages.length;
 
   // Handle keyboard events when Lightbox modal is open
   useEffect(() => {
@@ -76,9 +82,9 @@ export function ProjectImageStack({
     setIsLightboxOpen(true);
   };
 
-  const currentImage = images[activeIndex];
-  const nextImageSrc = images[(activeIndex + 1) % total];
-  const thirdImageSrc = images[(activeIndex + 2) % total];
+  const currentImage = normalizedImages[activeIndex];
+  const nextImageSrc = normalizedImages[(activeIndex + 1) % total];
+  const thirdImageSrc = normalizedImages[(activeIndex + 2) % total];
 
   return (
     <>
@@ -333,7 +339,7 @@ export function ProjectImageStack({
               className="flex items-center gap-2 pt-4 overflow-x-auto max-w-full pb-1"
               onClick={(e) => e.stopPropagation()}
             >
-              {images.map((img, idx) => (
+              {normalizedImages.map((img, idx) => (
                 <button
                   key={idx}
                   type="button"
