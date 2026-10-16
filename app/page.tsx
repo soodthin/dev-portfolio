@@ -1,5 +1,6 @@
-import { SlideDeck } from '@/components/slide-deck';
+import { VerticalStackDeck } from '@/components/deck/VerticalStackDeck';
+import { portfolioData } from '@/data/portfolio-data';
 
 export default function HomePage() {
-  return <SlideDeck />;
+  return <VerticalStackDeck data={portfolioData} />;
 }
