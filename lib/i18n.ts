@@ -266,7 +266,7 @@ export const translations: Record<Locale, Translations> = {
     },
     works: {
       eyebrow: 'DỰ ÁN TIÊU BIỂU',
-      title: 'Hệ thống thực tế',
+      title: 'Dự án tiêu biểu',
       techStackLabel: 'CÔNG NGHỆ:',
       p1Tag: 'NỀN TẢNG TUYỂN DỤNG VIỆC LÀM',
       p1Role: 'Trưởng nhóm Fullstack Developer · Spring Boot + ReactJS',

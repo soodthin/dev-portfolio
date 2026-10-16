@@ -12,41 +12,41 @@ html {
 }
 
 :root {
-  /* Warm Paper & Charcoal System (Gentle, High-Contrast Light Mode) */
-  --surface-0: #f4f1ea;
-  --surface-1: #fbfaf7;
-  --surface-2: #ede8dd;
-  --surface-3: #e2dcd0;
+  /* Ruza Teal & Cyan System (Light Mode: Slate-50 Canvas, White Cards, Teal Accents) */
+  --surface-0: #f8fafc;
+  --surface-1: #ffffff;
+  --surface-2: #f1f5f9;
+  --surface-3: #e2e8f0;
   
-  --accent-gold: #92400e;
-  --accent-gold-light: #b45309;
-  --accent-gold-dim: rgba(146, 64, 14, 0.12);
+  --accent-primary: #14b8a6; /* Vibrant Teal */
+  --accent-secondary: #0d9488; /* Deep Jewel Teal */
+  --accent-tint: #f0fdfa; /* Seafoam Tint */
 
-  --border-subtle: rgba(50, 40, 30, 0.12);
-  --border-mid: rgba(50, 40, 30, 0.20);
-  --border-highlight: rgba(168, 121, 50, 0.35);
+  --border-subtle: #e2e8f0;
+  --border-mid: #cbd5e1;
+  --border-highlight: rgba(13, 148, 136, 0.35);
 
-  --bg-main: #f4f1ea;
-  --text-main: #202124;
+  --bg-main: #f8fafc;
+  --text-main: #020617;
 }
 
 html.dark {
-  /* Quiet Luxury Obsidian & Champagne Gold */
-  --surface-0: #0d0e12;
-  --surface-1: #121318;
-  --surface-2: #191a22;
-  --surface-3: #22242e;
+  /* Ruza Teal & Cyan System (Dark Mode: Deep Obsidian #080d12 Canvas, #0d131a Cards, Electric Cyan #2dd4bf) */
+  --surface-0: #080d12;
+  --surface-1: #0d131a;
+  --surface-2: #131a24;
+  --surface-3: #1a2330;
   
-  --accent-gold: #c5a073;
-  --accent-gold-light: #d8b488;
-  --accent-gold-dim: rgba(197, 160, 115, 0.15);
+  --accent-primary: #2dd4bf; /* Electric Cyan */
+  --accent-secondary: #14b8a6; /* Vibrant Teal */
+  --accent-tint: rgba(45, 212, 191, 0.10);
 
   --border-subtle: rgba(255, 255, 255, 0.07);
   --border-mid: rgba(255, 255, 255, 0.12);
-  --border-highlight: rgba(197, 160, 115, 0.45);
+  --border-highlight: rgba(45, 212, 191, 0.45);
 
-  --bg-main: #0d0e12;
-  --text-main: #f3f4f6;
+  --bg-main: #080d12;
+  --text-main: #ffffff;
 }
 
 body {

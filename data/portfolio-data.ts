@@ -131,7 +131,16 @@ export const portfolioData: PortfolioData = {
       description: "Full-featured recruitment platform connecting candidates, employers, and administrators with comprehensive role-based access, job lifecycle management, and application workflows.",
       tags: ["Spring Boot", "ReactJS", "Vite", "Tailwind CSS", "MySQL", "Spring Security", "JWT", "Render"],
       githubUrl: "https://github.com/soodthin/FlexiConnect",
-      screenshots: ["/images/flexiconnect1.png", "/images/flexiconnect2.png"],
+      screenshots: [
+        "/images/flexiconnect/1-job-search.png",
+        "/images/flexiconnect/2-job-detail-map.png",
+        "/images/flexiconnect/3-candidate-profile.png",
+        "/images/flexiconnect/4-ai-interview.png",
+        "/images/flexiconnect/5-ai-feedback.png",
+        "/images/flexiconnect/6-admin-dashboard.png",
+        "/images/flexiconnect/7-post-job.png",
+        "/images/flexiconnect/8-auth-portal.png",
+      ],
       featured: true,
       keyHighlights: [
         "Backend & Database: Built REST APIs with Spring Boot and Spring Data JPA on a MySQL database, handling job listings, applications, and role-based access for candidates, employers, and admin.",
@@ -148,7 +157,14 @@ export const portfolioData: PortfolioData = {
       description: "Cross-platform mobile application covering customer food delivery ordering, table reservations, restaurant menu management, and dedicated kitchen staff (chef) workflows.",
       tags: ["React Native", "Expo", "Django", "Django REST Framework", "MoMo", "Stripe", "Firebase"],
       githubUrl: "https://github.com/soodthin/T-Restaurant-App",
-      screenshots: ["/images/restaurant1.png", "/images/restaurant2.png"],
+      screenshots: [
+        "/images/restaurant/1-menu-home.jpg",
+        "/images/restaurant/2-dish-detail.png",
+        "/images/restaurant/3-cart-checkout.png",
+        "/images/restaurant/4-order-momo.png",
+        "/images/restaurant/5-reviews.png",
+        "/images/restaurant/6-auth-login.png",
+      ],
       featured: true,
       keyHighlights: [
         "Backend & Database: Built REST APIs with Django REST Framework, covering menus, table bookings, orders, and reviews.",

@@ -5,14 +5,6 @@ import Image from 'next/image';
 import { ProjectImageStack } from '@/components/deck/ProjectImageStack';
 import { Locale, translations } from '@/lib/i18n';
 import {
-  playSlideSwitchSound,
-  toggleMuteSound,
-  getMuteState,
-  playClickSound,
-} from '@/lib/sound';
-import {
-  Volume2,
-  VolumeX,
   Share2,
   Maximize2,
   Minimize2,
@@ -198,17 +190,17 @@ function SkillWithContext({ name }: { name: string }) {
   const contexts = SKILL_CONTEXTS[name] || [];
   return (
     <span className="relative group/skill inline-block cursor-pointer">
-      <span className="hover:text-[#92400e] dark:hover:text-[#c5a073] underline decoration-dotted decoration-slate-400/50 hover:decoration-[#92400e] dark:hover:decoration-[#c5a073] underline-offset-4 transition-colors">
+      <span className="hover:text-[#0d9488] dark:hover:text-[#2dd4bf] underline decoration-dotted decoration-slate-400/50 hover:decoration-[#0d9488] dark:hover:decoration-[#2dd4bf] underline-offset-4 transition-colors">
         {name}
       </span>
       {contexts.length > 0 && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/skill:flex flex-col gap-1 z-30 px-3 py-2 rounded-xl bg-slate-950/95 dark:bg-[#0c1020]/95 border border-slate-700/70 dark:border-white/15 text-xs font-mono shadow-2xl backdrop-blur-md pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-95 duration-100 text-left">
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/skill:flex flex-col gap-1 z-30 px-3 py-2 rounded-xl bg-slate-950/95 dark:bg-[#0d131a]/95 border border-slate-700/70 dark:border-white/15 text-xs font-mono shadow-2xl backdrop-blur-md pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-95 duration-100 text-left">
           <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
             APPLIED IN
           </span>
           {contexts.map((c) => (
             <span key={c.label} className="flex items-center gap-1.5 text-slate-200">
-              <span className="text-[#92400e] dark:text-[#c5a073] text-[10px] font-bold">
+              <span className="text-[#0d9488] dark:text-[#2dd4bf] text-[10px] font-bold">
                 [{c.type === 'exp' ? 'EXP' : c.type === 'project' ? 'PROJECT' : 'USAGE'}]
               </span>
               <span className="font-medium">{c.label}</span>
@@ -228,12 +220,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const handleScrollToTop = useCallback(() => {
-    playClickSound();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [lang, setLang] = useState<Locale>('en');
 
@@ -248,7 +238,6 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   }, []);
 
   const toggleLanguage = () => {
-    playClickSound();
     const nextLang = lang === 'en' ? 'vi' : 'en';
     setLang(nextLang);
     if (typeof window !== 'undefined') {
@@ -260,10 +249,8 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedShare, setCopiedShare] = useState(false);
 
-  // Initialize theme and sound preferences from localStorage
+  // Initialize theme preference from localStorage
   useEffect(() => {
-    setIsMuted(getMuteState());
-
     const savedTheme = localStorage.getItem('soodfolio-theme') as 'dark' | 'light' | null;
     if (savedTheme) {
       setTheme(savedTheme);
@@ -274,31 +261,27 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   }, []);
 
   const toggleTheme = () => {
-    playClickSound();
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     localStorage.setItem('soodfolio-theme', nextTheme);
     document.documentElement.classList.toggle('dark', nextTheme === 'dark');
   };
 
-  // Flow with 8 distinct slides: Summary -> Exp -> Proj 1 -> Proj 2 -> Proj 3 -> Skills -> Education -> Contact
+  // Flow with 6 consolidated sections: Summary -> Exp -> Selected Works -> Skills -> Education -> Contact
   const navItems = useMemo(
     () => [
       { id: 'summary', number: '01', label: t.nav.summary },
       { id: 'experience', number: '02', label: t.nav.experience },
-      { id: 'project-01', number: '03', label: lang === 'vi' ? 'DỰ ÁN: FLEXICONNECT' : 'PROJ: FLEXICONNECT' },
-      { id: 'project-02', number: '04', label: lang === 'vi' ? 'DỰ ÁN: RESTAURANT' : 'PROJ: RESTAURANT' },
-      { id: 'project-03', number: '05', label: lang === 'vi' ? 'DỰ ÁN: PORTFOLIO' : 'PROJ: PORTFOLIO' },
-      { id: 'skills', number: '06', label: t.nav.skills },
-      { id: 'education', number: '07', label: lang === 'vi' ? 'HỌC VẤN & NGÔN NGỮ' : 'EDUCATION & LANGS' },
-      { id: 'contact', number: '08', label: t.nav.contact },
+      { id: 'works', number: '03', label: lang === 'vi' ? 'DỰ ÁN TIÊU BIỂU' : 'SELECTED WORKS' },
+      { id: 'skills', number: '04', label: t.nav.skills },
+      { id: 'education', number: '05', label: lang === 'vi' ? 'HỌC VẤN & NGÔN NGỮ' : 'EDUCATION & LANGS' },
+      { id: 'contact', number: '06', label: t.nav.contact },
     ],
     [t.nav, lang]
   );
 
   const scrollToSection = useCallback((id: string) => {
-    playClickSound();
-    const targetId = id === 'works' ? 'project-01' : id === 'trajectory' ? 'experience' : id;
+    const targetId = id === 'trajectory' ? 'experience' : id;
     const el = document.getElementById(targetId);
     if (el) {
       const headerOffset = 70;
@@ -311,18 +294,16 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     }
   }, []);
 
-  // Global Keyboard Shortcuts: Numbers 1-8 for Quick Slide Jump
+  // Global Keyboard Shortcuts: Numbers 1-6 for Quick Slide Jump
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
-      if (e.key >= '1' && e.key <= '8' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.key >= '1' && e.key <= '6' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const idx = parseInt(e.key, 10) - 1;
         const targetSections = [
           'summary',
           'experience',
-          'project-01',
-          'project-02',
-          'project-03',
+          'works',
           'skills',
           'education',
           'contact',
@@ -337,27 +318,24 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [scrollToSection]);
 
-  // High-performance scroll tracking via IntersectionObserver (zero layout thrashing)
+  // High-performance, deterministic geometric scroll spy (frame-throttled via requestAnimationFrame)
   useEffect(() => {
-    const handleScrollState = () => {
-      const scrollY = window.scrollY || document.documentElement.scrollTop;
-      setShowScrollTop(scrollY > 400);
-
-      setIsScrolling(true);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 1200);
+    const sectionIndexMap: Record<string, number> = {
+      summary: 0,
+      experience: 1,
+      works: 2,
+      'project-01': 2,
+      'project-02': 2,
+      'project-03': 2,
+      skills: 3,
+      education: 4,
+      contact: 5,
     };
-
-    window.addEventListener('scroll', handleScrollState, { passive: true });
-    handleScrollState();
 
     const sectionIds = [
       'summary',
       'experience',
+      'works',
       'project-01',
       'project-02',
       'project-03',
@@ -366,45 +344,81 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
       'contact',
     ];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = sectionIds.indexOf(entry.target.id);
-            if (index !== -1) {
-              setActiveIdx(index);
-            }
-          }
-        });
-      },
-      {
-        rootMargin: '-20% 0px -55% 0px',
-        threshold: 0,
-      }
-    );
+    let ticking = false;
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+    const updateActiveSection = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const vh = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+
+      setShowScrollTop(scrollY > 400);
+
+      // Check if user has scrolled to the true bottom of the page
+      const isAtTrueBottom = scrollY + vh >= docHeight - 25 && scrollY > 200;
+      if (isAtTrueBottom) {
+        setActiveIdx(5);
+        ticking = false;
+        return;
+      }
+
+      // Check if near top
+      if (scrollY < 80) {
+        setActiveIdx(0);
+        ticking = false;
+        return;
+      }
+
+      // Focal reading line: 35% of viewport height (just below floating header)
+      const focalY = Math.min(Math.max(vh * 0.35, 140), 320);
+
+      let foundIdx = 0;
+      for (let i = 0; i < sectionIds.length; i++) {
+        const id = sectionIds[i];
+        const el = document.getElementById(id);
+        if (!el) continue;
+
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= focalY) {
+          const mapped = sectionIndexMap[id];
+          if (typeof mapped === 'number') {
+            foundIdx = mapped;
+          }
+        }
+      }
+
+      setActiveIdx(foundIdx);
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      setIsScrolling(true);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 1200);
+
+      if (!ticking) {
+        requestAnimationFrame(updateActiveSection);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    updateActiveSection();
 
     return () => {
-      window.removeEventListener('scroll', handleScrollState);
-      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
     };
   }, []);
 
-  const toggleSound = () => {
-    const muted = toggleMuteSound();
-    setIsMuted(muted);
-    if (!muted) playClickSound();
-  };
-
   const toggleFullscreen = () => {
-    playClickSound();
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
       setIsFullscreen(true);
@@ -415,7 +429,6 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   };
 
   const shareDeck = () => {
-    playClickSound();
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText(window.location.href);
       setCopiedShare(true);
@@ -424,7 +437,6 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   };
 
   const copyEmail = () => {
-    playClickSound();
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText('thinhthai963@gmail.com');
       setCopiedEmail(true);
@@ -439,35 +451,94 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   const userBio = data?.profile?.roleDescription || data?.bio || t.hero.bio;
 
   // Multi-image collections for Project Image Stacks (Ngan xep hinh)
-  const project1Images = ['/images/flexiconnect1.png', '/images/flexiconnect2.png'];
-  const project2Images = ['/images/restaurant1.png', '/images/restaurant2.png'];
+  const project1Images = data?.projects?.[0]?.screenshots || [
+    '/images/flexiconnect/1-job-search.png',
+    '/images/flexiconnect/2-job-detail-map.png',
+    '/images/flexiconnect/3-candidate-profile.png',
+    '/images/flexiconnect/4-ai-interview.png',
+    '/images/flexiconnect/5-ai-feedback.png',
+    '/images/flexiconnect/6-admin-dashboard.png',
+    '/images/flexiconnect/7-post-job.png',
+    '/images/flexiconnect/8-auth-portal.png',
+  ];
+
+  const project1Captions = lang === 'vi' ? [
+    'Tìm kiếm việc làm & Bộ lọc đa năng',
+    'Chi tiết tin tuyển dụng & Bản đồ tương tác',
+    'Hồ sơ cá nhân & Quản lý việc làm',
+    'Phỏng vấn giả lập trực tiếp với AI',
+    'Đánh giá & Báo cáo điểm số AI',
+    'Dashboard phân tích dành cho Admin',
+    'Modal đăng tin tuyển dụng (Employer)',
+    'Cổng đăng nhập phân quyền bảo mật JWT',
+  ] : [
+    'Job Search & Multi-criteria Filters',
+    'Job Post Details & Interactive Map',
+    'Candidate Profile & Application Tracker',
+    'Live AI Mock Interview in Session',
+    'AI Performance Scoring & Feedback',
+    'Admin System Analytics Dashboard',
+    'Employer Job Posting Modal',
+    'Role-Based JWT Authentication Portal',
+  ];
+
+  const project2Images = data?.projects?.[1]?.screenshots || [
+    '/images/restaurant/1-menu-home.jpg',
+    '/images/restaurant/2-dish-detail.png',
+    '/images/restaurant/3-cart-checkout.png',
+    '/images/restaurant/4-order-momo.png',
+    '/images/restaurant/5-reviews.png',
+    '/images/restaurant/6-auth-login.png',
+  ];
+
+  const project2Captions = lang === 'vi' ? [
+    'Khám phá thực đơn món ngon Sài Gòn Savory',
+    'Chi tiết món ăn, nguyên liệu & Bếp trưởng',
+    'Giỏ hàng & Đặt bàn / Nhận tại quầy',
+    'Xác nhận đơn hàng & Thanh toán MoMo',
+    'Đánh giá 5 sao & Phản hồi thực khách',
+    'Đăng nhập & Quản lý tài khoản',
+  ] : [
+    'Home & Saigon Savory Menu Discovery',
+    'Dish Details, Ingredients & Chef Assignment',
+    'Cart & Table Reservation / Counter Pickup',
+    'Order Tracking & Instant MoMo Payment',
+    '5-Star Customer Ratings & Reviews',
+    'User Authentication & Profile',
+  ];
 
   return (
-    <main className="relative min-h-screen bg-[#f4f1ea] dark:bg-[#0d0e12] text-slate-800 dark:text-slate-100 selection:bg-[#c5a073]/30 selection:text-white font-sans antialiased transition-colors duration-200">
+    <main className="relative min-h-screen bg-[#f8fafc] dark:bg-[#080d12] text-slate-800 dark:text-slate-100 selection:bg-[#2dd4bf]/30 selection:text-white font-sans antialiased transition-colors duration-200">
 
-      {/* Architectural Grid Background (Quiet Luxury Vignette & Soft Ambient Lighting) */}
+      {/* Architectural Grid Background (Teal Coordinate Lines & Ambient Backlight) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        {/* Light Mode Grid: Warm Paper Hairlines with Organic Vignette */}
+        {/* Light Mode Grid: Coordinates in soft teal */}
         <div
           className="absolute inset-0 dark:hidden [mask-image:radial-gradient(ellipse_80%_65%_at_50%_25%,black_45%,transparent_92%)]"
           style={{
-            backgroundImage: `linear-gradient(to right, rgba(60, 50, 40, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(60, 50, 40, 0.04) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(to right, rgba(13, 148, 136, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(13, 148, 136, 0.08) 1px, transparent 1px)`,
             backgroundSize: '48px 48px',
           }}
         />
-        {/* Dark Mode Grid: Champagne Gold Hairlines with Organic Vignette Mask */}
+        {/* Dark Mode Grid: Hairlines in subtle crisp white */}
         <div
           className="absolute inset-0 hidden dark:block [mask-image:radial-gradient(ellipse_80%_65%_at_50%_25%,black_40%,transparent_92%)]"
           style={{
-            backgroundImage: `linear-gradient(to right, rgba(197, 160, 115, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(197, 160, 115, 0.04) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px)`,
             backgroundSize: '48px 48px',
           }}
         />
-        {/* Ambient Top Champagne Gold Halo (Soft Studio Lighting for Quiet Luxury) */}
+        {/* Ambient Top Backlight Halo */}
         <div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[560px] pointer-events-none"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[560px] pointer-events-none dark:hidden"
           style={{
-            background: 'radial-gradient(circle at 50% 16%, rgba(197, 160, 115, 0.07) 0%, transparent 65%)',
+            background: 'radial-gradient(circle at 50% 16%, rgba(20, 184, 166, 0.12) 0%, transparent 65%)',
+          }}
+        />
+        <div 
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[560px] pointer-events-none hidden dark:block"
+          style={{
+            background: 'radial-gradient(circle at 50% 16%, rgba(45, 212, 191, 0.12) 0%, transparent 65%)',
           }}
         />
       </div>
@@ -475,10 +546,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
       {/* ========================================================================= */}
       {/* EDITORIAL FLOATING HEADER                                                 */}
       {/* ========================================================================= */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-12 py-3.5 flex items-center justify-between backdrop-blur-md bg-[#f4f1ea]/90 dark:bg-[#0d0e12]/85 border-b border-[#d6cfbe] dark:border-white/[0.07] shadow-[0_1px_8px_rgba(60,50,40,0.04)] transition-colors duration-200">
+      <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-12 py-3.5 flex items-center justify-between backdrop-blur-md bg-[#f8fafc]/90 dark:bg-[#080d12]/85 border-b border-[#e2e8f0] dark:border-white/[0.07] shadow-[0_1px_8px_rgba(0,0,0,0.04)] transition-colors duration-200">
         {/* Left: Identity Logo */}
         <div className="flex items-center gap-3">
-          <div className="h-2 w-2 rounded-full bg-[#92400e] dark:bg-[#c5a073] shadow-[0_0_8px_rgba(197,160,115,0.7)]" />
+          <div className="h-2 w-2 rounded-full bg-[#0d9488] dark:bg-[#2dd4bf] shadow-[0_0_8px_rgba(45,212,191,0.7)]" />
           <span className="font-mono text-xs uppercase tracking-wider text-slate-950 dark:text-white font-bold">
             {userTitle}
           </span>
@@ -495,10 +566,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <button
             type="button"
             onClick={toggleLanguage}
-            className="px-2.5 py-1.5 rounded-lg bg-[#ede8dd] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 font-mono text-xs font-bold"
+            className="px-2.5 py-1.5 rounded-lg bg-[#f1f5f9] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 font-mono text-xs font-bold"
             title={t.header.langTooltip}
           >
-            <Globe className="h-3.5 w-3.5 text-[#92400e] dark:text-[#c5a073]" />
+            <Globe className="h-3.5 w-3.5 text-[#0d9488] dark:text-[#2dd4bf]" />
             <span>{lang.toUpperCase()}</span>
           </button>
 
@@ -506,11 +577,11 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-lg bg-[#ede8dd] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-lg bg-[#f1f5f9] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
             title={theme === 'dark' ? t.header.lightTooltip : t.header.darkTooltip}
           >
             {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-[#c5a073]" />
+              <Sun className="h-4 w-4 text-[#2dd4bf]" />
             ) : (
               <Moon className="h-4 w-4 text-slate-700" />
             )}
@@ -520,7 +591,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <button
             type="button"
             onClick={shareDeck}
-            className="p-2 rounded-lg bg-[#ede8dd] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-lg bg-[#f1f5f9] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
             title={t.header.shareTooltip}
           >
             {copiedShare ? (
@@ -530,29 +601,16 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             )}
           </button>
 
-          {/* Sound Toggle */}
-          <button
-            type="button"
-            onClick={toggleSound}
-            className="p-2 rounded-lg bg-[#ede8dd] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
-            title={isMuted ? t.header.soundOnTooltip : t.header.soundOffTooltip}
-          >
-            {isMuted ? (
-              <VolumeX className="h-4 w-4 text-slate-400" />
-            ) : (
-              <Volume2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073]" />
-            )}
-          </button>
 
           {/* Fullscreen Toggle (Hidden on mobile phones) */}
           <button
             type="button"
             onClick={toggleFullscreen}
-            className="hidden sm:flex p-2 rounded-lg bg-[#ede8dd] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
+            className="hidden sm:flex p-2 rounded-lg bg-[#f1f5f9] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
             title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           >
             {isFullscreen ? (
-              <Minimize2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073]" />
+              <Minimize2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf]" />
             ) : (
               <Maximize2 className="h-4 w-4" />
             )}
@@ -562,16 +620,16 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <button
             type="button"
             onClick={() => scrollToSection('contact')}
-            className="ml-1 px-4 py-1.5 rounded-lg bg-[#92400e] dark:bg-[#c5a073] hover:bg-[#78350f] dark:hover:bg-[#d8b488] text-white dark:text-[#0d0e12] font-semibold text-xs font-mono tracking-wider transition-all cursor-pointer active:scale-95 shadow-[0_2px_12px_rgba(197,160,115,0.25)]"
+            className="ml-1 px-4 py-1.5 rounded-lg bg-[#0d9488] hover:bg-[#0f766e] dark:bg-[#2dd4bf] dark:hover:bg-[#14b8a6] text-white dark:text-[#080d12] font-semibold text-xs font-mono tracking-wider transition-all cursor-pointer active:scale-95 shadow-[0_2px_12px_rgba(13,148,136,0.25)] dark:shadow-[0_2px_12px_rgba(45,212,191,0.25)]"
           >
             {t.header.contactBtn}
           </button>
         </div>
       </header>
 
-      {/* Top Depth Edge Fade (Subtle dissolution at top edge to create depth without obscuring cards) */}
+      {/* Top Depth Edge Fade */}
       <div 
-        className="fixed top-[57px] left-0 right-0 h-16 pointer-events-none z-30 bg-gradient-to-b from-[#f4f1ea] dark:from-[#0d0e12] via-[#f4f1ea]/60 dark:via-[#0d0e12]/60 to-transparent [mask-image:linear-gradient(to_bottom,black_30%,transparent_100%)]" 
+        className="fixed top-[57px] left-0 right-0 h-16 pointer-events-none z-30 bg-gradient-to-b from-[#f8fafc] dark:from-[#080d12] via-[#f8fafc]/60 dark:via-[#080d12]/60 to-transparent [mask-image:linear-gradient(to_bottom,black_30%,transparent_100%)]" 
         aria-hidden="true"
       />
 
@@ -595,7 +653,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               <span
                 className={`font-mono text-[10px] tracking-wider transition-all duration-200 ${
                   isActive
-                    ? 'text-[#92400e] dark:text-[#c5a073] font-bold opacity-100 translate-x-0'
+                    ? 'text-[#0d9488] dark:text-[#2dd4bf] font-bold opacity-100 translate-x-0'
                     : 'text-slate-400 dark:text-slate-500 opacity-0 group-hover:opacity-100 group-hover:text-slate-700 dark:group-hover:text-slate-300 translate-x-1 group-hover:translate-x-0'
                 }`}
               >
@@ -604,7 +662,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               <span
                 className={`block rounded-full transition-all duration-200 ${
                   isActive
-                    ? 'w-2 h-2 bg-[#92400e] dark:bg-[#c5a073] shadow-[0_0_8px_rgba(197,160,115,0.7)]'
+                    ? 'w-2 h-2 bg-[#0d9488] dark:bg-[#2dd4bf] shadow-[0_0_8px_rgba(45,212,191,0.7)]'
                     : 'w-1.5 h-1.5 bg-slate-300 dark:bg-white/20 group-hover:bg-slate-400 dark:group-hover:bg-white/50'
                 }`}
               />
@@ -626,7 +684,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           {/* Eyebrow Status Ribbon */}
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-mono">
             <span className="inline-flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-              <span className="h-2 w-2 rounded-full bg-[#92400e] dark:bg-[#c5a073] shadow-[0_0_6px_rgba(197,160,115,0.5)]" />
+              <span className="h-2 w-2 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] shadow-[0_0_6px_rgba(45,212,191,0.5)]" />
               {t.hero.available}
             </span>
             <span className="text-slate-400 dark:text-slate-600">·</span>
@@ -648,14 +706,14 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               </h1>
 
               {/* Title Line */}
-              <p className="text-sm sm:text-base lg:text-lg font-mono text-[#92400e] dark:text-[#c5a073] font-semibold tracking-wide uppercase pt-1">
+              <p className="text-sm sm:text-base lg:text-lg font-mono text-[#0d9488] dark:text-[#2dd4bf] font-semibold tracking-wide uppercase pt-1">
                 {lang === 'vi' ? t.hero.tagline : userTagline.replace(/\s*\/\/\s*/g, ' · ')}
               </p>
             </div>
 
             {/* Right Column: Circular Avatar */}
             <div className="flex justify-center min-[820px]:justify-end items-center">
-              <div className="w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 aspect-square overflow-hidden rounded-full bg-[#ede8dd] dark:bg-[#121318] ring-1 ring-[#92400e]/25 dark:ring-[#c5a073]/35 border-2 border-[#d6cfbe] dark:border-white/10 shadow-[0_0_35px_rgba(197,160,115,0.08)]">
+              <div className="w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 aspect-square overflow-hidden rounded-full bg-[#f0fdfa] dark:bg-[#0d131a] ring-4 ring-[#14b8a6] dark:ring-[#2dd4bf]/40 border-2 border-[#14b8a6] dark:border-transparent shadow-[0_0_35px_rgba(13,148,136,0.25)] dark:shadow-[0_0_35px_rgba(45,212,191,0.30)]">
                 <img
                   src={userAvatar}
                   alt={userTitle}
@@ -674,9 +732,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           </div>
 
           {/* 4 Quick Stat Metric Cards */}
-          <div className="border-t border-[#d6cfbe] dark:border-white/10 pt-6 sm:pt-8 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="border-t border-[#e2e8f0] dark:border-white/[0.07] pt-6 sm:pt-8 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Stat 1 */}
-            <div className="p-4 rounded-2xl bg-white/60 dark:bg-[#121318]/60 border border-[#d6cfbe]/80 dark:border-white/10 flex flex-col justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0d131a] border border-[#e2e8f0] dark:border-white/[0.07] flex flex-col justify-between shadow-sm">
               <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-mono text-slate-950 dark:text-white tracking-tight tabular-nums">
                 10+
               </span>
@@ -686,7 +744,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Stat 2 */}
-            <div className="p-4 rounded-2xl bg-white/60 dark:bg-[#121318]/60 border border-[#d6cfbe]/80 dark:border-white/10 flex flex-col justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0d131a] border border-[#e2e8f0] dark:border-white/[0.07] flex flex-col justify-between shadow-sm">
               <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-mono text-slate-950 dark:text-white tracking-tight tabular-nums">
                 1d → 2h
               </span>
@@ -696,7 +754,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Stat 3 */}
-            <div className="p-4 rounded-2xl bg-white/60 dark:bg-[#121318]/60 border border-[#d6cfbe]/80 dark:border-white/10 flex flex-col justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0d131a] border border-[#e2e8f0] dark:border-white/[0.07] flex flex-col justify-between shadow-sm">
               <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-mono text-slate-950 dark:text-white tracking-tight tabular-nums">
                 75%
               </span>
@@ -706,7 +764,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Stat 4 */}
-            <div className="p-4 rounded-2xl bg-white/60 dark:bg-[#121318]/60 border border-[#d6cfbe]/80 dark:border-white/10 flex flex-col justify-between">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0d131a] border border-[#e2e8f0] dark:border-white/[0.07] flex flex-col justify-between shadow-sm">
               <span className="text-2xl sm:text-3xl lg:text-4xl font-black font-mono text-emerald-600 dark:text-emerald-400 tracking-tight tabular-nums">
                 100%
               </span>
@@ -720,16 +778,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         {/* ======================================================================= */}
         {/* SECTION 02: EXPERIENCE (MINIMALIST WORK HISTORY & EDUCATION)           */}
         {/* ======================================================================= */}
-        {/* ======================================================================= */}
-        {/* SECTION 02: EXPERIENCE (MINIMALIST WORK HISTORY & EDUCATION)           */}
-        {/* ======================================================================= */}
         <section id="experience" className="space-y-10 pt-6">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#d6cfbe] dark:border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
             <div>
-              <span className="text-[#92400e] dark:text-[#c5a073] font-mono text-xs tracking-wider uppercase block mb-1 font-bold">
-                {t.experience.eyebrow}
-              </span>
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
                 {t.experience.title}
               </h2>
@@ -740,7 +792,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <div className="relative pl-7 sm:pl-10 lg:pl-12 space-y-10 sm:space-y-12">
             {/* Continuous Vertical Career Lifecycle Spine */}
             <div 
-              className="absolute left-[11px] sm:left-[15px] lg:left-[19px] top-3 bottom-6 w-[2px] bg-gradient-to-b from-[#92400e] dark:from-[#c5a073] via-[#92400e]/40 dark:via-[#c5a073]/40 to-slate-300 dark:to-white/10 pointer-events-none" 
+              className="absolute left-[11px] sm:left-[15px] lg:left-[19px] top-3 bottom-6 w-[2px] bg-gradient-to-b from-[#0d9488] dark:from-[#2dd4bf] via-[#14b8a6]/40 dark:via-[#2dd4bf]/40 to-slate-200 dark:to-white/10 pointer-events-none" 
               aria-hidden="true"
             />
 
@@ -748,13 +800,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             <div className="relative space-y-3">
               {/* Timeline Node Marker 01 */}
               <div className="absolute -left-[26px] sm:-left-[34px] lg:-left-[38px] top-1 flex items-center justify-center pointer-events-none" aria-hidden="true">
-                <div className="w-5 h-5 rounded-full bg-[#fbfaf7] dark:bg-[#121318] border-2 border-[#92400e] dark:border-[#c5a073] flex items-center justify-center shadow-[0_0_10px_rgba(197,160,115,0.3)]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#92400e] dark:bg-[#c5a073] animate-pulse" />
+                <div className="w-5 h-5 rounded-full bg-white dark:bg-[#0d131a] border-2 border-[#14b8a6] dark:border-[#2dd4bf] flex items-center justify-center shadow-[0_0_10px_rgba(45,212,191,0.3)]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] animate-pulse" />
                 </div>
               </div>
 
               {/* Milestone Header */}
-              <div className="flex items-center gap-2 font-mono text-xs text-[#92400e] dark:text-[#c5a073] font-bold">
+              <div className="flex items-center gap-2 font-mono text-xs text-[#0d9488] dark:text-[#2dd4bf] font-bold">
                 <span>01</span>
                 <span className="text-slate-400 dark:text-slate-600">·</span>
                 <span>{t.experience.tag1}</span>
@@ -763,11 +815,11 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               </div>
 
               {/* Minimalist Corporate Experience Card */}
-              <div className="p-6 sm:p-8 rounded-2xl border border-[#d6cfbe] dark:border-white/[0.07] bg-white/95 dark:bg-[#121318]/90 dark:backdrop-blur-sm space-y-6 shadow-[0_2px_12px_rgba(60,50,40,0.06)] dark:shadow-xl">
+              <div className="p-6 sm:p-8 rounded-2xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] space-y-6 shadow-sm dark:shadow-xl">
             {/* Header: Role, Company, Period */}
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-6 border-b border-[#d6cfbe] dark:border-white/10">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#92400e]/10 dark:bg-[#c5a073]/12 text-[#92400e] dark:text-[#c5a073] border border-[#92400e]/20 dark:border-[#c5a073]/25">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25">
                   <Building2 className="h-3 w-3" />
                   <span>BW INDUSTRIAL DEVELOPMENT JSC</span>
                 </div>
@@ -780,7 +832,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               </div>
 
               <div className="sm:text-right shrink-0">
-                <span className="px-3 py-1 rounded-lg bg-[#ede8dd] dark:bg-white/5 border border-[#d6cfbe] dark:border-white/10 text-slate-800 dark:text-slate-200 font-mono text-xs font-bold">
+                <span className="px-3 py-1 rounded-lg bg-[#f1f5f9] dark:bg-white/5 border border-[#e2e8f0] dark:border-white/[0.07] text-slate-800 dark:text-slate-200 font-mono text-xs font-bold">
                   Oct 2025 — Apr 2026
                 </span>
                 <div className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 pt-1 font-semibold">
@@ -796,13 +848,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
             {/* 4 Clean High-Signal Engineering Accomplishments */}
             <div className="space-y-3 pt-1">
-              <div className="text-xs font-mono font-bold text-[#92400e] dark:text-[#c5a073] uppercase tracking-wider">
+              <div className="text-xs font-mono font-bold text-[#0d9488] dark:text-[#2dd4bf] uppercase tracking-wider">
                 {t.experience.deliverablesHeader}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 font-sans text-xs sm:text-sm">
-                <div className="p-4 rounded-xl bg-[#fbfaf7] dark:bg-white/[0.02] border border-[#d6cfbe]/80 dark:border-white/10 space-y-1.5">
+                <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
                     <span>Bank Statement Parsing (10+ Banks)</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
@@ -810,9 +862,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#fbfaf7] dark:bg-white/[0.02] border border-[#d6cfbe]/80 dark:border-white/10 space-y-1.5">
+                <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
                     <span>Cash Report Automation (1 Day → 2 Hrs)</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
@@ -820,9 +872,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#fbfaf7] dark:bg-white/[0.02] border border-[#d6cfbe]/80 dark:border-white/10 space-y-1.5">
+                <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
                     <span>Enterprise SSO & Session Tracking</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
@@ -830,9 +882,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#fbfaf7] dark:bg-white/[0.02] border border-[#d6cfbe]/80 dark:border-white/10 space-y-1.5">
+                <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
                     <span>SSE Real-time Tracker & AI Telemetry</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
@@ -843,10 +895,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Tech Stack Pills */}
-            <div className="pt-2 border-t border-[#d6cfbe] dark:border-white/10 flex flex-wrap items-center gap-1.5 font-mono text-xs">
+            <div className="pt-2 border-t border-[#e2e8f0] dark:border-white/[0.07] flex flex-wrap items-center gap-1.5 font-mono text-xs">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">TECH STACK:</span>
               {['FastAPI', 'Python', 'React', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Redis', 'Google OAuth2', 'SSE', 'Gemini AI'].map((t) => (
-                <span key={t} className="px-2.5 py-0.5 rounded-md bg-[#ede8dd] dark:bg-white/5 border border-[#d6cfbe] dark:border-white/10 text-slate-800 dark:text-slate-200 font-medium">
+                <span key={t} className="px-2.5 py-0.5 rounded-md bg-[#f1f5f9] dark:bg-white/5 border border-[#e2e8f0] dark:border-white/[0.07] text-slate-800 dark:text-slate-200 font-medium">
                   {t}
                 </span>
               ))}
@@ -861,11 +913,8 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         {/* ======================================================================= */}
         <section id="works" className="space-y-16 pt-6">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#d6cfbe] dark:border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
             <div>
-              <span className="text-[#92400e] dark:text-[#c5a073] font-mono text-xs tracking-wider uppercase block mb-1 font-bold">
-                {t.works.eyebrow}
-              </span>
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
                 {t.works.title}
               </h2>
@@ -876,7 +925,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <div className="relative pl-7 sm:pl-10 lg:pl-12 space-y-24 sm:space-y-32">
             {/* Continuous Vertical Architecture Spine */}
             <div 
-              className="absolute left-[11px] sm:left-[15px] lg:left-[19px] top-2 bottom-8 w-[2px] bg-gradient-to-b from-[#92400e] dark:from-[#c5a073] via-[#92400e]/40 dark:via-[#c5a073]/40 to-slate-300 dark:to-white/10 pointer-events-none" 
+              className="absolute left-[11px] sm:left-[15px] lg:left-[19px] top-2 bottom-8 w-[2px] bg-gradient-to-b from-[#0d9488] dark:from-[#2dd4bf] via-[#14b8a6]/40 dark:via-[#2dd4bf]/40 to-slate-200 dark:to-white/10 pointer-events-none" 
               aria-hidden="true"
             />
 
@@ -887,13 +936,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             >
               {/* Spine Node Marker 01 */}
               <div className="absolute -left-[26px] sm:-left-[34px] lg:-left-[38px] top-12 flex items-center justify-center pointer-events-none" aria-hidden="true">
-                <div className="w-5 h-5 rounded-full bg-[#fbfaf7] dark:bg-[#121318] border-2 border-[#92400e] dark:border-[#c5a073] flex items-center justify-center shadow-[0_0_10px_rgba(197,160,115,0.3)]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#92400e] dark:bg-[#c5a073] animate-pulse" />
+                <div className="w-5 h-5 rounded-full bg-white dark:bg-[#0d131a] border-2 border-[#14b8a6] dark:border-[#2dd4bf] flex items-center justify-center shadow-[0_0_10px_rgba(45,212,191,0.3)]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] animate-pulse" />
                 </div>
               </div>
               {/* LEFT: Content */}
               <div className="lg:col-span-7 flex flex-col justify-between space-y-5 h-full">
-                <div className="flex items-center gap-2 font-mono text-xs text-[#92400e] dark:text-[#c5a073] font-bold">
+                <div className="flex items-center gap-2 font-mono text-xs text-[#0d9488] dark:text-[#2dd4bf] font-bold">
                   <span>01</span>
                   <span className="text-slate-400 dark:text-slate-600">·</span>
                   <span>{t.works.p1Tag}</span>
@@ -907,10 +956,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                     href="https://github.com/soodthin/FlexiConnect"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group/title inline-flex items-center gap-2.5 text-2xl sm:text-4xl font-black text-slate-950 dark:text-white uppercase hover:text-[#92400e] dark:hover:text-[#c5a073] transition-colors"
+                    className="group/title inline-flex items-center gap-2.5 text-2xl sm:text-4xl font-black text-slate-950 dark:text-white uppercase hover:text-[#0d9488] dark:hover:text-[#2dd4bf] transition-colors"
                   >
                     <span>FlexiConnect Web</span>
-                    <ArrowUpRight className="h-6 w-6 sm:h-7 sm:w-7 text-[#92400e] dark:text-[#c5a073] group-hover/title:translate-x-1 group-hover/title:-translate-y-1 transition-transform" />
+                    <ArrowUpRight className="h-6 w-6 sm:h-7 sm:w-7 text-[#0d9488] dark:text-[#2dd4bf] group-hover/title:translate-x-1 group-hover/title:-translate-y-1 transition-transform" />
                   </a>
                   <div className="text-sm sm:text-base font-mono text-slate-600 dark:text-slate-300 font-medium pt-0.5">
                     {t.works.p1Role}
@@ -924,15 +973,15 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 {/* Exactly 3 Key Highlights */}
                 <div className="space-y-2 pt-1 font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">{t.works.p1H1Title}</strong> {t.works.p1H1Text}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">{t.works.p1H2Title}</strong> {t.works.p1H2Text}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">{t.works.p1H3Title}</strong> {t.works.p1H3Text}</span>
                   </div>
                 </div>
@@ -948,6 +997,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   <ProjectImageStack
                     images={project1Images}
                     title="FlexiConnect Web"
+                    captions={project1Captions}
                   />
                 </div>
               </div>
@@ -960,13 +1010,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             >
               {/* Spine Node Marker 02 */}
               <div className="absolute -left-[26px] sm:-left-[34px] lg:-left-[38px] top-12 flex items-center justify-center pointer-events-none" aria-hidden="true">
-                <div className="w-5 h-5 rounded-full bg-[#fbfaf7] dark:bg-[#121318] border-2 border-[#92400e] dark:border-[#c5a073] flex items-center justify-center shadow-[0_0_10px_rgba(197,160,115,0.3)]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#92400e] dark:bg-[#c5a073] animate-pulse" />
+                <div className="w-5 h-5 rounded-full bg-white dark:bg-[#0d131a] border-2 border-[#14b8a6] dark:border-[#2dd4bf] flex items-center justify-center shadow-[0_0_10px_rgba(45,212,191,0.3)]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] animate-pulse" />
                 </div>
               </div>
               {/* LEFT: Content */}
               <div className="lg:col-span-7 flex flex-col justify-between space-y-5 h-full">
-                <div className="flex items-center gap-2 font-mono text-xs text-[#92400e] dark:text-[#c5a073] font-bold">
+                <div className="flex items-center gap-2 font-mono text-xs text-[#0d9488] dark:text-[#2dd4bf] font-bold">
                   <span>02</span>
                   <span className="text-slate-400 dark:text-slate-600">·</span>
                   <span>{t.works.p2Tag}</span>
@@ -980,10 +1030,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                     href="https://github.com/soodthin/T-Restaurant-App"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group/title inline-flex items-center gap-2.5 text-2xl sm:text-4xl font-black text-slate-950 dark:text-white uppercase hover:text-[#92400e] dark:hover:text-[#c5a073] transition-colors"
+                    className="group/title inline-flex items-center gap-2.5 text-2xl sm:text-4xl font-black text-slate-950 dark:text-white uppercase hover:text-[#0d9488] dark:hover:text-[#2dd4bf] transition-colors"
                   >
                     <span>Food Delivery & Restaurant App</span>
-                    <ArrowUpRight className="h-6 w-6 sm:h-7 sm:w-7 text-[#92400e] dark:text-[#c5a073] group-hover/title:translate-x-1 group-hover/title:-translate-y-1 transition-transform" />
+                    <ArrowUpRight className="h-6 w-6 sm:h-7 sm:w-7 text-[#0d9488] dark:text-[#2dd4bf] group-hover/title:translate-x-1 group-hover/title:-translate-y-1 transition-transform" />
                   </a>
                   <div className="text-sm sm:text-base font-mono text-slate-600 dark:text-slate-300 font-medium pt-0.5">
                     {t.works.p2Role}
@@ -997,15 +1047,15 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 {/* Exactly 3 Key Highlights */}
                 <div className="space-y-2 pt-1 font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">Django REST Framework:</strong> Built complete REST APIs covering dynamic menus, table reservations, order lifecycle, and customer reviews.</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">{t.works.p2H2Title}</strong> {t.works.p2H2Text}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">React Native & Expo:</strong> Built mobile interfaces with dual-role flows for customers and chefs, plus real-time in-app chat via Firebase.</span>
                   </div>
                 </div>
@@ -1021,6 +1071,8 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   <ProjectImageStack
                     images={project2Images}
                     title="Food Delivery & Restaurant App"
+                    captions={project2Captions}
+                    isMobile={true}
                   />
                 </div>
               </div>
@@ -1033,13 +1085,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             >
               {/* Spine Node Marker 03 */}
               <div className="absolute -left-[26px] sm:-left-[34px] lg:-left-[38px] top-12 flex items-center justify-center pointer-events-none" aria-hidden="true">
-                <div className="w-5 h-5 rounded-full bg-[#fbfaf7] dark:bg-[#121318] border-2 border-[#92400e] dark:border-[#c5a073] flex items-center justify-center shadow-[0_0_10px_rgba(197,160,115,0.3)]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#92400e] dark:bg-[#c5a073] animate-pulse" />
+                <div className="w-5 h-5 rounded-full bg-white dark:bg-[#0d131a] border-2 border-[#14b8a6] dark:border-[#2dd4bf] flex items-center justify-center shadow-[0_0_10px_rgba(45,212,191,0.3)]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] animate-pulse" />
                 </div>
               </div>
               {/* LEFT: Content */}
               <div className="lg:col-span-7 flex flex-col justify-between space-y-5 h-full">
-                <div className="flex items-center gap-2 font-mono text-xs text-[#92400e] dark:text-[#c5a073] font-bold">
+                <div className="flex items-center gap-2 font-mono text-xs text-[#0d9488] dark:text-[#2dd4bf] font-bold">
                   <span>03</span>
                   <span className="text-slate-400 dark:text-slate-600">·</span>
                   <span>TYPOGRAPHIC STATIC ENGINE</span>
@@ -1054,18 +1106,18 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                       href="https://soodthin.github.io/dev-portfolio/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group/title inline-flex items-center gap-2.5 text-2xl sm:text-4xl font-black text-slate-950 dark:text-white uppercase hover:text-[#92400e] dark:hover:text-[#c5a073] transition-colors"
+                      className="group/title inline-flex items-center gap-2.5 text-2xl sm:text-4xl font-black text-slate-950 dark:text-white uppercase hover:text-[#0d9488] dark:hover:text-[#2dd4bf] transition-colors"
                     >
                       <span>Dev Portfolio Engine</span>
-                      <ArrowUpRight className="h-6 w-6 sm:h-7 sm:w-7 text-[#92400e] dark:text-[#c5a073] group-hover/title:translate-x-1 group-hover/title:-translate-y-1 transition-transform" />
+                      <ArrowUpRight className="h-6 w-6 sm:h-7 sm:w-7 text-[#0d9488] dark:text-[#2dd4bf] group-hover/title:translate-x-1 group-hover/title:-translate-y-1 transition-transform" />
                     </a>
                     <a
                       href="https://github.com/soodthin/dev-portfolio"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium border border-slate-300 dark:border-white/15 bg-[#ede8dd] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium border border-[#e2e8f0] dark:border-white/15 bg-[#f1f5f9] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
                     >
-                      <Code2 className="h-3.5 w-3.5 text-[#92400e] dark:text-[#c5a073]" />
+                      <Code2 className="h-3.5 w-3.5 text-[#0d9488] dark:text-[#2dd4bf]" />
                       <span>Source Code</span>
                       <ArrowUpRight className="h-3 w-3" />
                     </a>
@@ -1082,15 +1134,15 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 {/* Exactly 3 Key Highlights */}
                 <div className="space-y-2 pt-1 font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">100% Static Export (SSG):</strong> Automated GitHub Actions pipeline building static assets with sub-50ms TTFB worldwide.</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">Pure 2D Typographic Design:</strong> Flat-layered vector design system with zero icon or emoji dependencies.</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#92400e] dark:text-[#c5a073] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
                     <span><strong className="text-slate-950 dark:text-white">Strict TypeScript Safety:</strong> End-to-end typed data contracts ensuring resilience across all component hierarchies.</span>
                   </div>
                 </div>
@@ -1100,8 +1152,8 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               <div className="lg:col-span-5 flex flex-col justify-between items-start h-full space-y-6">
                 <div className="w-full space-y-4">
                   <div className="flex flex-wrap items-center gap-3">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#92400e]/10 dark:bg-[#c5a073]/12 text-[#92400e] dark:text-[#c5a073] border border-[#92400e]/20 dark:border-[#c5a073]/25">
-                      <span className="w-2 h-2 rounded-full bg-[#92400e] dark:bg-[#c5a073] animate-pulse" />
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25">
+                      <span className="w-2 h-2 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] animate-pulse" />
                       <span>{t.works.p3LiveBadge}</span>
                     </div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
@@ -1114,7 +1166,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                     <span>Next.js 16 · TypeScript · Tailwind CSS v4 · GitHub Pages · GitHub Actions CI/CD</span>
                   </div>
 
-                  <div className="p-4 rounded-xl border border-[#d6cfbe] dark:border-white/10 bg-[#fbfaf7] dark:bg-white/[0.02] space-y-2 text-xs font-mono text-slate-600 dark:text-slate-300">
+                  <div className="p-4 rounded-xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] space-y-2 text-xs font-mono text-slate-600 dark:text-slate-300">
                     <div className="flex justify-between">
                       <span className="text-slate-400">Hosting:</span>
                       <span className="text-slate-950 dark:text-white font-semibold">GitHub Pages Edge CDN</span>
@@ -1125,7 +1177,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400">Type Coverage:</span>
-                      <span className="text-[#92400e] dark:text-[#c5a073] font-semibold">100% Strict TypeScript</span>
+                      <span className="text-[#0d9488] dark:text-[#2dd4bf] font-semibold">100% Strict TypeScript</span>
                     </div>
                   </div>
                 </div>
@@ -1141,21 +1193,18 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           {/* Subtle Ambient Watermark SVGs in Background */}
           
           {/* Section Header */}
-          <div className="relative z-10 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-6 border-b border-[#d6cfbe] dark:border-white/10">
-            <span className="text-[#92400e] dark:text-[#c5a073] font-mono text-xs tracking-wider uppercase font-bold">
-              TECHNICAL CAPABILITIES
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase text-left sm:text-right">
-              Skills & Tooling
+          <div className="relative z-10 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
+              Skills &amp; Tooling
             </h2>
           </div>
 
           {/* Categorized Flowing Rows with Ambient Depth */}
           <div className="relative z-10 space-y-6 font-mono text-sm">
             {/* Row 1: Languages */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#d6cfbe] dark:border-white/10 items-baseline backdrop-blur-[1px]">
-              <div className="md:col-span-3 text-[#92400e] dark:text-[#c5a073] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
-                <div className="p-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#e2e8f0] dark:border-white/[0.07] items-baseline backdrop-blur-[1px]">
+              <div className="md:col-span-3 text-[#0d9488] dark:text-[#2dd4bf] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
+                <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Code2 className="h-3.5 w-3.5" />
                 </div>
                 <span>LANGUAGES</span>
@@ -1171,9 +1220,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Row 2: Frameworks */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#d6cfbe] dark:border-white/10 items-baseline backdrop-blur-[1px]">
-              <div className="md:col-span-3 text-[#92400e] dark:text-[#c5a073] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
-                <div className="p-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#e2e8f0] dark:border-white/[0.07] items-baseline backdrop-blur-[1px]">
+              <div className="md:col-span-3 text-[#0d9488] dark:text-[#2dd4bf] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
+                <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Layers className="h-3.5 w-3.5" />
                 </div>
                 <span>FRAMEWORKS & LIBS</span>
@@ -1189,9 +1238,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Row 3: Data & Cloud DevOps */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#d6cfbe] dark:border-white/10 items-baseline backdrop-blur-[1px]">
-              <div className="md:col-span-3 text-[#92400e] dark:text-[#c5a073] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
-                <div className="p-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#e2e8f0] dark:border-white/[0.07] items-baseline backdrop-blur-[1px]">
+              <div className="md:col-span-3 text-[#0d9488] dark:text-[#2dd4bf] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
+                <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Database className="h-3.5 w-3.5" />
                 </div>
                 <span>DATA & DEVOPS</span>
@@ -1207,9 +1256,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Row 4: AI Engineering */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#d6cfbe] dark:border-white/10 items-baseline backdrop-blur-[1px]">
-              <div className="md:col-span-3 text-[#92400e] dark:text-[#c5a073] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
-                <div className="p-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-[#e2e8f0] dark:border-white/[0.07] items-baseline backdrop-blur-[1px]">
+              <div className="md:col-span-3 text-[#0d9488] dark:text-[#2dd4bf] font-bold uppercase text-xs tracking-wider flex items-center gap-2.5">
+                <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Sparkles className="h-3.5 w-3.5" />
                 </div>
                 <span>AI TOOLING</span>
@@ -1230,13 +1279,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         {/* SECTION 07: EDUCATION & LANGUAGES (SLIDE 07)                            */}
         {/* ======================================================================= */}
         <section id="education" className="space-y-8 pt-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#d6cfbe] dark:border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
             <div>
-              <span className="text-[#92400e] dark:text-[#c5a073] font-mono text-xs tracking-wider uppercase block mb-1 font-bold">
-                07 // {lang === 'vi' ? 'HỌC VẤN & NGÔN NGỮ' : 'ACADEMIC FOUNDATION & LANGUAGES'}
-              </span>
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase font-sans">
-                {lang === 'vi' ? 'Nền tảng học thuật' : 'Academic Foundation'}
+                {lang === 'vi' ? 'Học vấn & Ngôn ngữ' : 'Academic Foundation'}
               </h2>
             </div>
             <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
@@ -1246,10 +1292,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Degree & Coursework Card */}
-            <div className="lg:col-span-8 p-6 sm:p-8 rounded-2xl border border-[#d6cfbe] dark:border-white/[0.08] bg-white/95 dark:bg-[#121318]/90 dark:backdrop-blur-sm space-y-6 shadow-[0_2px_12px_rgba(60,50,40,0.06)] dark:shadow-xl">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-[#d6cfbe] dark:border-white/10">
+            <div className="lg:col-span-8 p-6 sm:p-8 rounded-2xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] space-y-6 shadow-sm dark:shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-[#e2e8f0] dark:border-white/[0.07]">
                 <div className="space-y-1">
-                  <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#92400e]/10 dark:bg-[#c5a073]/12 text-[#92400e] dark:text-[#c5a073] border border-[#92400e]/20 dark:border-[#c5a073]/25">
+                  <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25">
                     <Award className="h-3 w-3" />
                     <span>HO CHI MINH CITY OPEN UNIVERSITY (HCMCOU)</span>
                   </div>
@@ -1262,7 +1308,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 </div>
 
                 <div className="sm:text-right shrink-0">
-                  <span className="px-3 py-1 rounded-lg bg-[#ede8dd] dark:bg-white/5 border border-[#d6cfbe] dark:border-white/10 text-slate-800 dark:text-slate-200 font-mono text-xs font-bold">
+                  <span className="px-3 py-1 rounded-lg bg-[#f1f5f9] dark:bg-white/5 border border-[#e2e8f0] dark:border-white/[0.07] text-slate-800 dark:text-slate-200 font-mono text-xs font-bold">
                     Oct 2022 — Present
                   </span>
                 </div>
@@ -1270,7 +1316,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
               {/* Core Coursework Grid */}
               <div className="space-y-3">
-                <div className="text-xs font-mono font-bold text-[#92400e] dark:text-[#c5a073] uppercase tracking-wider">
+                <div className="text-xs font-mono font-bold text-[#0d9488] dark:text-[#2dd4bf] uppercase tracking-wider">
                   {t.experience.eduCourseworkLabel}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs">
@@ -1285,9 +1331,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   ].map((course) => (
                     <div
                       key={course}
-                      className="p-3 rounded-xl bg-[#fbfaf7] dark:bg-white/[0.02] border border-[#d6cfbe]/80 dark:border-white/10 flex items-center gap-2.5 text-slate-800 dark:text-slate-200"
+                      className="p-3 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] flex items-center gap-2.5 text-slate-800 dark:text-slate-200"
                     >
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#92400e] dark:text-[#c5a073] shrink-0" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
                       <span>{course}</span>
                     </div>
                   ))}
@@ -1296,15 +1342,15 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Languages Card */}
-            <div className="lg:col-span-4 p-6 sm:p-8 rounded-2xl border border-[#d6cfbe] dark:border-white/[0.08] bg-white/95 dark:bg-[#121318]/90 dark:backdrop-blur-sm flex flex-col justify-between space-y-6 shadow-[0_2px_12px_rgba(60,50,40,0.06)] dark:shadow-xl">
+            <div className="lg:col-span-4 p-6 sm:p-8 rounded-2xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] flex flex-col justify-between space-y-6 shadow-sm dark:shadow-xl">
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#92400e] dark:text-[#c5a073] uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#0d9488] dark:text-[#2dd4bf] uppercase tracking-wider">
                   <Globe className="h-4 w-4" />
                   <span>{lang === 'vi' ? 'NGÔN NGỮ GIAO TIẾP' : 'LANGUAGES'}</span>
                 </div>
 
                 <div className="space-y-3 font-mono">
-                  <div className="p-3.5 rounded-xl bg-[#fbfaf7] dark:bg-white/[0.02] border border-[#d6cfbe]/80 dark:border-white/10 space-y-1">
+                  <div className="p-3.5 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-slate-900 dark:text-white text-sm">
                         {lang === 'vi' ? 'Tiếng Việt' : 'Vietnamese'}
@@ -1318,12 +1364,12 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-[#fbfaf7] dark:bg-white/[0.02] border border-[#d6cfbe]/80 dark:border-white/10 space-y-1">
+                  <div className="p-3.5 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-slate-900 dark:text-white text-sm">
                         {lang === 'vi' ? 'Tiếng Anh' : 'English'}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-[#92400e]/10 dark:bg-[#c5a073]/12 text-[#92400e] dark:text-[#c5a073] border border-[#92400e]/20 font-bold">
+                      <span className="px-2 py-0.5 rounded text-[10px] bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25 font-bold">
                         PROFESSIONAL
                       </span>
                     </div>
@@ -1334,8 +1380,8 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-[#d6cfbe]/60 dark:border-white/5 bg-[#ede8dd]/50 dark:bg-white/[0.01] text-xs font-mono text-slate-600 dark:text-slate-400">
-                <span className="text-[#92400e] dark:text-[#c5a073] font-bold block mb-1">
+              <div className="p-4 rounded-xl border border-[#e2e8f0] dark:border-white/[0.07] bg-[#f1f5f9]/50 dark:bg-white/[0.01] text-xs font-mono text-slate-600 dark:text-slate-400">
+                <span className="text-[#0d9488] dark:text-[#2dd4bf] font-bold block mb-1">
                   // READINESS
                 </span>
                 <span>
@@ -1353,11 +1399,8 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         {/* ======================================================================= */}
         <section id="contact" className="space-y-10 pt-6 pb-8">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#d6cfbe] dark:border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
             <div>
-              <span className="text-[#92400e] dark:text-[#c5a073] font-mono text-xs tracking-wider uppercase block mb-1 font-bold">
-                GET IN TOUCH
-              </span>
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
                 Let's Build Together.
               </h2>
@@ -1385,10 +1428,10 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               className="group inline-flex items-center gap-3 sm:gap-6 cursor-pointer select-none"
               title="Click to copy email address"
             >
-              <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-mono tracking-tight text-slate-950 dark:text-white group-hover:text-[#92400e] dark:group-hover:text-[#c5a073] transition-colors break-all">
+              <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-mono tracking-tight text-slate-950 dark:text-white group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf] transition-colors break-all">
                 thinhthai963@gmail.com
               </span>
-              <div className="p-3 rounded-2xl bg-[#ede8dd] dark:bg-white/5 border border-[#d6cfbe] dark:border-white/10 group-hover:border-[#92400e]/50 group-hover:bg-[#92400e]/10 dark:group-hover:bg-[#c5a073]/10 text-slate-500 group-hover:text-[#92400e] dark:group-hover:text-[#c5a073] transition-all shrink-0">
+              <div className="p-3 rounded-2xl bg-[#f1f5f9] dark:bg-white/5 border border-[#e2e8f0] dark:border-white/[0.07] group-hover:border-[#14b8a6]/50 group-hover:bg-[#f0fdfa] dark:group-hover:bg-[#2dd4bf]/10 text-slate-500 group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf] transition-all shrink-0">
                 <Copy className="h-5 w-5 sm:h-7 sm:w-7 group-hover:scale-110 transition-transform" />
               </div>
             </div>
@@ -1401,18 +1444,18 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           </div>
 
           {/* Quick Actions & Contact Channels (Clean Unboxed Grid) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-[#d6cfbe] dark:border-white/10 font-mono text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-[#e2e8f0] dark:border-white/[0.07] font-mono text-xs">
             {/* Phone */}
             <a
               href="tel:0869922096"
-              className="p-4 rounded-xl border border-[#d6cfbe] dark:border-white/10 bg-white dark:bg-white/[0.02] hover:border-[#92400e]/40 hover:bg-[#fbfaf7] dark:hover:bg-white/5 transition-all flex items-center gap-3 group"
+              className="p-4 rounded-xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] hover:border-[#14b8a6]/40 hover:bg-[#f8fafc] dark:hover:bg-white/5 transition-all flex items-center gap-3 group"
             >
-              <div className="p-2 rounded-lg bg-[#92400e]/10 dark:bg-[#c5a073]/12 text-[#92400e] dark:text-[#c5a073]">
+              <div className="p-2 rounded-lg bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf]">
                 <Phone className="h-4 w-4" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 block uppercase">{t.contact.phoneLabel}</span>
-                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#92400e] dark:group-hover:text-[#c5a073]">
+                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf]">
                   (+84) 869 922 096
                 </span>
               </div>
@@ -1423,14 +1466,14 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               href="https://github.com/soodthin"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-4 rounded-xl border border-[#d6cfbe] dark:border-white/10 bg-white dark:bg-white/[0.02] hover:border-[#92400e]/40 hover:bg-[#fbfaf7] dark:hover:bg-white/5 transition-all flex items-center gap-3 group"
+              className="p-4 rounded-xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] hover:border-[#14b8a6]/40 hover:bg-[#f8fafc] dark:hover:bg-white/5 transition-all flex items-center gap-3 group"
             >
-              <div className="p-2 rounded-lg bg-[#92400e]/10 dark:bg-[#c5a073]/12 text-[#92400e] dark:text-[#c5a073]">
+              <div className="p-2 rounded-lg bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf]">
                 <GithubIcon className="h-4 w-4" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 block uppercase">{t.contact.githubLabel}</span>
-                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#92400e] dark:group-hover:text-[#c5a073] flex items-center gap-1">
+                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf] flex items-center gap-1">
                   github.com/soodthin
                   <ArrowUpRight className="h-3 w-3" />
                 </span>
@@ -1442,14 +1485,14 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               href="https://www.linkedin.com/in/thinh-thai-dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-4 rounded-xl border border-[#d6cfbe] dark:border-white/10 bg-white dark:bg-white/[0.02] hover:border-[#92400e]/40 hover:bg-[#fbfaf7] dark:hover:bg-white/5 transition-all flex items-center gap-3 group"
+              className="p-4 rounded-xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] hover:border-[#14b8a6]/40 hover:bg-[#f8fafc] dark:hover:bg-white/5 transition-all flex items-center gap-3 group"
             >
-              <div className="p-2 rounded-lg bg-[#92400e]/10 dark:bg-[#c5a073]/12 text-[#92400e] dark:text-[#c5a073]">
+              <div className="p-2 rounded-lg bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf]">
                 <LinkedinIcon className="h-4 w-4" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 block uppercase">{t.contact.linkedinLabel}</span>
-                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#92400e] dark:group-hover:text-[#c5a073] flex items-center gap-1">
+                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf] flex items-center gap-1">
                   thinh-thai-dev
                   <ArrowUpRight className="h-3 w-3" />
                 </span>
@@ -1461,14 +1504,14 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               href="https://soodthin.github.io/dev-portfolio/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-4 rounded-xl border border-[#92400e]/30 dark:border-[#c5a073]/30 bg-[#92400e]/5 dark:bg-[#c5a073]/5 hover:bg-[#92400e]/10 dark:hover:bg-[#c5a073]/10 transition-all flex items-center gap-3 group"
+              className="p-4 rounded-xl border border-[#14b8a6]/30 dark:border-[#2dd4bf]/30 bg-[#f0fdfa] dark:bg-[#2dd4bf]/5 hover:bg-[#14b8a6]/10 dark:hover:bg-[#2dd4bf]/10 transition-all flex items-center gap-3 group"
             >
-              <div className="p-2 rounded-lg bg-[#92400e]/20 dark:bg-[#c5a073]/20 text-[#92400e] dark:text-[#c5a073]">
+              <div className="p-2 rounded-lg bg-[#14b8a6]/20 dark:bg-[#2dd4bf]/20 text-[#0d9488] dark:text-[#2dd4bf]">
                 <FileText className="h-4 w-4" />
               </div>
               <div>
-                <span className="text-[10px] text-[#92400e] dark:text-[#c5a073] block uppercase font-bold">{t.contact.cvLabel}</span>
-                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#92400e] dark:group-hover:text-[#c5a073] flex items-center gap-1">
+                <span className="text-[10px] text-[#0d9488] dark:text-[#2dd4bf] block uppercase font-bold">{t.contact.cvLabel}</span>
+                <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf] flex items-center gap-1">
                   {t.contact.cvAction}
                   <ArrowUpRight className="h-3 w-3" />
                 </span>
@@ -1478,13 +1521,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         </section>
 
         {/* Footer */}
-        <footer className="pt-16 pb-8 border-t border-[#d6cfbe] dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500 dark:text-slate-400">
+        <footer className="pt-16 pb-8 border-t border-[#e2e8f0] dark:border-white/[0.07] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500 dark:text-slate-400">
           <div className="flex flex-wrap items-center gap-2.5">
             <span>© 2026 THAI DO THINH. POWERED BY SOODFOLIO PLATFORM.</span>
             <span className="text-slate-400 dark:text-slate-600">/</span>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#92400e]/30 dark:border-[#c5a073]/40 bg-[#92400e]/10 dark:bg-[#c5a073]/10 text-[11px] font-mono">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#92400e] dark:bg-[#c5a073] animate-pulse" />
-              <span className="text-[#92400e] dark:text-[#c5a073] font-bold">VERSION 3.0</span>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#14b8a6]/30 dark:border-[#2dd4bf]/40 bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[11px] font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] animate-pulse" />
+              <span className="text-[#0d9488] dark:text-[#2dd4bf] font-bold">VERSION 3.0</span>
               <span className="text-slate-400 dark:text-slate-600">|</span>
               <span className="text-slate-500 dark:text-slate-400">LIVE DEMO DECK</span>
             </div>
@@ -1492,7 +1535,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <div className="flex items-center gap-2 text-slate-400">
             <span>Next.js 16 &amp; TypeScript</span>
             <span>•</span>
-            <span className="text-[#92400e] dark:text-[#c5a073]">Hosted on GitHub Pages</span>
+            <span className="text-[#0d9488] dark:text-[#2dd4bf]">Hosted on GitHub Pages</span>
           </div>
         </footer>
       </div>
@@ -1502,13 +1545,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         onClick={handleScrollToTop}
         aria-label={t.contact.backToTop}
         title={t.contact.backToTop}
-        className={`fixed bottom-6 right-6 z-40 p-3 rounded-full bg-[#fbfaf7]/90 dark:bg-[#121318]/90 backdrop-blur-md border border-[#d6cfbe] dark:border-white/10 shadow-lg hover:shadow-xl text-slate-700 dark:text-slate-200 hover:text-[#92400e] dark:hover:text-[#c5a073] hover:border-[#92400e]/40 transition-all duration-300 cursor-pointer group active:scale-95 ${
+        className={`fixed bottom-6 right-6 z-40 p-3 rounded-full bg-white/90 dark:bg-[#0d131a]/90 backdrop-blur-md border border-[#e2e8f0] dark:border-white/[0.07] shadow-lg hover:shadow-xl text-slate-700 dark:text-slate-200 hover:text-[#0d9488] dark:hover:text-[#2dd4bf] hover:border-[#14b8a6]/40 transition-all duration-300 cursor-pointer group active:scale-95 ${
           showScrollTop
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
-        <ArrowUp className="h-5 w-5 transition-transform duration-200 group-hover:-translate-y-0.5 text-slate-700 dark:text-slate-200 group-hover:text-[#92400e] dark:group-hover:text-[#c5a073] dark:group-hover:text-[#c5a073]" />
+        <ArrowUp className="h-5 w-5 transition-transform duration-200 group-hover:-translate-y-0.5 text-slate-700 dark:text-slate-200 group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf]" />
       </button>
     </main>
   );
