@@ -187,7 +187,7 @@ const SKILL_CONTEXTS: Record<string, { type: 'exp' | 'project' | 'edu' | 'tool';
   ],
 };
 
-function SkillWithContext({ name }: { name: string }) {
+function SkillWithContext({ name, lang = 'en' }: { name: string; lang?: Locale }) {
   const contexts = SKILL_CONTEXTS[name] || [];
   return (
     <span className="relative group/skill inline-block cursor-pointer">
@@ -197,12 +197,22 @@ function SkillWithContext({ name }: { name: string }) {
       {contexts.length > 0 && (
         <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/skill:flex flex-col gap-1 z-30 px-3 py-2 rounded-xl bg-slate-950/95 dark:bg-[#0d131a]/95 border border-slate-700/70 dark:border-white/15 text-xs font-mono shadow-2xl backdrop-blur-md pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-95 duration-100 text-left">
           <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
-            APPLIED IN
+            {lang === 'vi' ? 'ỨNG DỤNG TRONG' : 'APPLIED IN'}
           </span>
           {contexts.map((c) => (
             <span key={c.label} className="flex items-center gap-1.5 text-slate-200">
               <span className="text-[#0d9488] dark:text-[#2dd4bf] text-[10px] font-bold">
-                [{c.type === 'exp' ? 'EXP' : c.type === 'project' ? 'PROJECT' : 'USAGE'}]
+                [{lang === 'vi'
+                  ? c.type === 'exp'
+                    ? 'KINH NGHIỆM'
+                    : c.type === 'project'
+                    ? 'DỰ ÁN'
+                    : 'SỬ DỤNG'
+                  : c.type === 'exp'
+                  ? 'EXP'
+                  : c.type === 'project'
+                  ? 'PROJECT'
+                  : 'USAGE'}]
               </span>
               <span className="font-medium">{c.label}</span>
             </span>
@@ -273,12 +283,12 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     () => [
       { id: 'summary', number: '01', label: t.nav.summary },
       { id: 'experience', number: '02', label: t.nav.experience },
-      { id: 'works', number: '03', label: lang === 'vi' ? 'DỰ ÁN TIÊU BIỂU' : 'SELECTED WORKS' },
+      { id: 'works', number: '03', label: t.nav.works },
       { id: 'skills', number: '04', label: t.nav.skills },
-      { id: 'education', number: '05', label: lang === 'vi' ? 'HỌC VẤN & NGÔN NGỮ' : 'EDUCATION & LANGS' },
+      { id: 'education', number: '05', label: t.nav.education },
       { id: 'contact', number: '06', label: t.nav.contact },
     ],
-    [t.nav, lang]
+    [t.nav]
   );
 
   const scrollToSection = useCallback((id: string) => {
@@ -610,7 +620,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             type="button"
             onClick={toggleFullscreen}
             className="hidden sm:flex p-2 rounded-lg bg-[#f1f5f9] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
-            title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+            title={isFullscreen ? t.header.exitFullscreenTooltip : t.header.fullscreenTooltip}
           >
             {isFullscreen ? (
               <Minimize2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf]" />
@@ -772,7 +782,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 100%
               </span>
               <span className="text-xs text-slate-700 dark:text-slate-400 mt-1 font-sans">
-                {lang === 'vi' ? 'Bảo mật doanh nghiệp & CI/CD' : 'Production Security & CI/CD'}
+                {t.hero.stat4Label}
               </span>
             </div>
           </div>
@@ -824,7 +834,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               <div className="space-y-1">
                 <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25">
                   <Building2 className="h-3 w-3" />
-                  <span>BW INDUSTRIAL DEVELOPMENT JSC</span>
+                  <span>{t.experience.company1}</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white uppercase tracking-tight pt-1">
                   {t.experience.role1}
@@ -836,7 +846,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
               <div className="sm:text-right shrink-0">
                 <span className="px-3 py-1 rounded-lg bg-[#f1f5f9] dark:bg-white/5 border border-[#e2e8f0] dark:border-white/[0.07] text-slate-800 dark:text-slate-200 font-mono text-xs font-bold">
-                  Oct 2025 — Apr 2026
+                  {t.experience.periodBadge1}
                 </span>
                 <div className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 pt-1 font-semibold">
                   {t.experience.badge1}
@@ -858,40 +868,40 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
-                    <span>Bank Statement Parsing (10+ Banks)</span>
+                    <span>{t.experience.deliverable1Title}</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
-                    Built FastAPI REST parsers for Vietcombank, Techcombank, BIDV, ACB, MBBank, with Gemini OCR fallback for scanned receipts.
+                    {t.experience.deliverable1Text}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
-                    <span>Cash Report Automation (1 Day → 2 Hrs)</span>
+                    <span>{t.experience.deliverable2Title}</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
-                    Engineered session-based reconciliation matching multi-file cash reports based on finance rule feedback, cutting processing time by 75%.
+                    {t.experience.deliverable2Text}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
-                    <span>Enterprise SSO & Session Tracking</span>
+                    <span>{t.experience.deliverable3Title}</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
-                    Implemented domain-locked Google OAuth2 SSO, JWT access tokens with device session tracking via Redis, and granular RBAC.
+                    {t.experience.deliverable3Text}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-slate-950 dark:text-white font-mono text-xs">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0" />
-                    <span>SSE Real-time Tracker & AI Telemetry</span>
+                    <span>{t.experience.deliverable4Title}</span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
-                    Built React UI with SSE progress tracking for long-running batch jobs, centralized logging, and internal AI cost usage tracking.
+                    {t.experience.deliverable4Text}
                   </p>
                 </div>
               </div>
@@ -899,7 +909,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
             {/* Tech Stack Pills */}
             <div className="pt-2 border-t border-[#e2e8f0] dark:border-white/[0.07] flex flex-wrap items-center gap-1.5 font-mono text-xs">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">TECH STACK:</span>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider mr-1">{t.experience.techStackHeader}</span>
               {['FastAPI', 'Python', 'React', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Redis', 'Google OAuth2', 'SSE', 'Gemini AI'].map((t) => (
                 <span key={t} className="px-2.5 py-0.5 rounded-md bg-[#f1f5f9] dark:bg-white/5 border border-[#e2e8f0] dark:border-white/[0.07] text-slate-800 dark:text-slate-200 font-medium">
                   {t}
@@ -1001,6 +1011,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                     images={project1Images}
                     title="FlexiConnect Web"
                     captions={project1Captions}
+                    lang={lang}
                   />
                 </div>
               </div>
@@ -1051,7 +1062,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="space-y-2 pt-1 font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-950 dark:text-white">Django REST Framework:</strong> Built complete REST APIs covering dynamic menus, table reservations, order lifecycle, and customer reviews.</span>
+                    <span><strong className="text-slate-950 dark:text-white">{t.works.p2H1Title}</strong> {t.works.p2H1Text}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
@@ -1059,7 +1070,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-950 dark:text-white">React Native & Expo:</strong> Built mobile interfaces with dual-role flows for customers and chefs, plus real-time in-app chat via Firebase.</span>
+                    <span><strong className="text-slate-950 dark:text-white">{t.works.p2H3Title}</strong> {t.works.p2H3Text}</span>
                   </div>
                 </div>
               </div>
@@ -1076,6 +1087,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                     title="Food Delivery & Restaurant App"
                     captions={project2Captions}
                     isMobile={true}
+                    lang={lang}
                   />
                 </div>
               </div>
@@ -1097,7 +1109,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="flex items-center gap-2 font-mono text-xs text-[#0d9488] dark:text-[#2dd4bf] font-bold">
                   <span>03</span>
                   <span className="text-slate-400 dark:text-slate-600">·</span>
-                  <span>TYPOGRAPHIC STATIC ENGINE</span>
+                  <span>{t.works.p3Tag}</span>
                   <span className="text-slate-400 dark:text-slate-600">·</span>
                   <span className="text-slate-500 dark:text-slate-400 font-normal">2026</span>
                 </div>
@@ -1121,12 +1133,12 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                       className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium border border-[#e2e8f0] dark:border-white/15 bg-[#f1f5f9] hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
                     >
                       <Code2 className="h-3.5 w-3.5 text-[#0d9488] dark:text-[#2dd4bf]" />
-                      <span>Source Code</span>
+                      <span>{t.works.sourceCodeBtn}</span>
                       <ArrowUpRight className="h-3 w-3" />
                     </a>
                   </div>
                   <div className="text-sm sm:text-base font-mono text-slate-600 dark:text-slate-300 font-medium pt-0.5">
-                    Creator & Frontend Architect · Next.js 16 + TypeScript
+                    {t.works.p3Role}
                   </div>
                 </div>
 
@@ -1138,15 +1150,15 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="space-y-2 pt-1 font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-950 dark:text-white">100% Static Export (SSG):</strong> Automated GitHub Actions pipeline building static assets with sub-50ms TTFB worldwide.</span>
+                    <span><strong className="text-slate-950 dark:text-white">{t.works.p3H1Title}</strong> {t.works.p3H1Text}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-950 dark:text-white">Pure 2D Typographic Design:</strong> Flat-layered vector design system with zero icon or emoji dependencies.</span>
+                    <span><strong className="text-slate-950 dark:text-white">{t.works.p3H2Title}</strong> {t.works.p3H2Text}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 text-[#0d9488] dark:text-[#2dd4bf] shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-950 dark:text-white">Strict TypeScript Safety:</strong> End-to-end typed data contracts ensuring resilience across all component hierarchies.</span>
+                    <span><strong className="text-slate-950 dark:text-white">{t.works.p3H3Title}</strong> {t.works.p3H3Text}</span>
                   </div>
                 </div>
               </div>
@@ -1171,16 +1183,16 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
                   <div className="p-4 rounded-xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] space-y-2 text-xs font-mono text-slate-600 dark:text-slate-300">
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Hosting:</span>
-                      <span className="text-slate-950 dark:text-white font-semibold">GitHub Pages Edge CDN</span>
+                      <span className="text-slate-400">{t.works.p3HostingLabel}</span>
+                      <span className="text-slate-950 dark:text-white font-semibold">{t.works.p3HostingValue}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Deployment:</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Automated CI/CD Pipeline</span>
+                      <span className="text-slate-400">{t.works.p3DeploymentLabel}</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{t.works.p3DeploymentValue}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Type Coverage:</span>
-                      <span className="text-[#0d9488] dark:text-[#2dd4bf] font-semibold">100% Strict TypeScript</span>
+                      <span className="text-slate-400">{t.works.p3TypeCoverageLabel}</span>
+                      <span className="text-[#0d9488] dark:text-[#2dd4bf] font-semibold">{t.works.p3TypeCoverageValue}</span>
                     </div>
                   </div>
                 </div>
@@ -1198,7 +1210,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           {/* Section Header */}
           <div className="relative z-10 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
-              Skills &amp; Tooling
+              {t.capabilities.title}
             </h2>
           </div>
 
@@ -1210,13 +1222,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Code2 className="h-3.5 w-3.5" />
                 </div>
-                <span>LANGUAGES</span>
+                <span>{t.capabilities.catLanguages}</span>
               </div>
               <div className="md:col-span-9 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed flex flex-wrap items-center gap-y-2">
                 {['JavaScript', 'TypeScript', 'Java', 'Python', 'C++'].map((skill, idx) => (
                   <React.Fragment key={skill}>
                     {idx > 0 && <span className="text-slate-400 dark:text-slate-600 px-1.5 select-none">·</span>}
-                    <SkillWithContext name={skill} />
+                    <SkillWithContext name={skill} lang={lang} />
                   </React.Fragment>
                 ))}
               </div>
@@ -1228,13 +1240,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Layers className="h-3.5 w-3.5" />
                 </div>
-                <span>FRAMEWORKS & LIBS</span>
+                <span>{t.capabilities.catFrameworks}</span>
               </div>
               <div className="md:col-span-9 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed flex flex-wrap items-center gap-y-2">
                 {['ReactJS', 'Next.js', 'Spring Boot', 'FastAPI', 'Django', 'Tailwind CSS', 'RESTful API'].map((skill, idx) => (
                   <React.Fragment key={skill}>
                     {idx > 0 && <span className="text-slate-400 dark:text-slate-600 px-1.5 select-none">·</span>}
-                    <SkillWithContext name={skill} />
+                    <SkillWithContext name={skill} lang={lang} />
                   </React.Fragment>
                 ))}
               </div>
@@ -1246,13 +1258,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Database className="h-3.5 w-3.5" />
                 </div>
-                <span>DATA & DEVOPS</span>
+                <span>{t.capabilities.catDatabases}</span>
               </div>
               <div className="md:col-span-9 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed flex flex-wrap items-center gap-y-2">
                 {['PostgreSQL', 'MySQL', 'Redis', 'Git', 'GitHub Actions', 'Postman', 'Render'].map((skill, idx) => (
                   <React.Fragment key={skill}>
                     {idx > 0 && <span className="text-slate-400 dark:text-slate-600 px-1.5 select-none">·</span>}
-                    <SkillWithContext name={skill} />
+                    <SkillWithContext name={skill} lang={lang} />
                   </React.Fragment>
                 ))}
               </div>
@@ -1264,13 +1276,13 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                 <div className="p-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-[#0d9488] dark:text-[#2dd4bf] flex items-center justify-center shrink-0">
                   <Sparkles className="h-3.5 w-3.5" />
                 </div>
-                <span>AI TOOLING</span>
+                <span>{t.capabilities.catDevopsAi}</span>
               </div>
               <div className="md:col-span-9 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed flex flex-wrap items-center gap-y-2">
                 {['Claude Code', 'Codex', 'Antigravity (IDE)', 'Prompt Engineering', 'Code Verification'].map((skill, idx) => (
                   <React.Fragment key={skill}>
                     {idx > 0 && <span className="text-slate-400 dark:text-slate-600 px-1.5 select-none">·</span>}
-                    <SkillWithContext name={skill} />
+                    <SkillWithContext name={skill} lang={lang} />
                   </React.Fragment>
                 ))}
               </div>
@@ -1289,7 +1301,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               </h2>
             </div>
             <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
-              HCMCOU · OCT 2022 — PRESENT
+              HCMCOU · {t.experience.eduPeriod}
             </div>
           </div>
 
@@ -1298,11 +1310,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             <div className="lg:col-span-8 p-6 sm:p-8 rounded-2xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] space-y-6 shadow-sm dark:shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-[#e2e8f0] dark:border-white/[0.07]">
                 <div className="space-y-1">
-                  <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25">
-                    <Award className="h-3 w-3" />
-                    <span>HO CHI MINH CITY OPEN UNIVERSITY (HCMCOU)</span>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white uppercase tracking-tight pt-1">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white uppercase tracking-tight">
                     {t.experience.eduDegree}
                   </h3>
                   <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
@@ -1312,7 +1320,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
                 <div className="sm:text-right shrink-0">
                   <span className="px-3 py-1 rounded-lg bg-[#f1f5f9] dark:bg-white/5 border border-[#e2e8f0] dark:border-white/[0.07] text-slate-800 dark:text-slate-200 font-mono text-xs font-bold">
-                    Oct 2022 — Present
+                    {t.experience.eduPeriodBadge}
                   </span>
                 </div>
               </div>
@@ -1323,15 +1331,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   {t.experience.eduCourseworkLabel}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs">
-                  {[
-                    'Software Engineering',
-                    'Web System Development',
-                    'Object-Oriented Programming (OOP)',
-                    'Data Structures & Algorithms',
-                    'Modern Programming Technologies',
-                    'Database Management Systems',
-                    'Cloud Computing',
-                  ].map((course) => (
+                  {t.experience.eduCourseworkList.map((course) => (
                     <div
                       key={course}
                       className="p-3 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] flex items-center gap-2.5 text-slate-800 dark:text-slate-200"
@@ -1345,53 +1345,42 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             </div>
 
             {/* Languages Card */}
-            <div className="lg:col-span-4 p-6 sm:p-8 rounded-2xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] flex flex-col justify-between space-y-6 shadow-sm dark:shadow-xl">
+            <div className="lg:col-span-4 p-6 sm:p-8 rounded-2xl border border-[#e2e8f0] dark:border-white/[0.07] bg-white dark:bg-[#0d131a] flex flex-col space-y-6 shadow-sm dark:shadow-xl">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#0d9488] dark:text-[#2dd4bf] uppercase tracking-wider">
                   <Globe className="h-4 w-4" />
-                  <span>{lang === 'vi' ? 'NGÔN NGỮ GIAO TIẾP' : 'LANGUAGES'}</span>
+                  <span>{t.experience.languagesTitle}</span>
                 </div>
 
                 <div className="space-y-3 font-mono">
                   <div className="p-3.5 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-slate-900 dark:text-white text-sm">
-                        {lang === 'vi' ? 'Tiếng Việt' : 'Vietnamese'}
+                        {t.experience.nativeLabel}
                       </span>
                       <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold">
-                        NATIVE
+                        {t.experience.nativeBadge}
                       </span>
                     </div>
                     <p className="text-slate-500 dark:text-slate-400 text-xs">
-                      {lang === 'vi' ? 'Tiếng mẹ đẻ' : 'Native proficiency'}
+                      {t.experience.nativeDesc}
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-[#f8fafc] dark:bg-white/[0.02] border border-[#e2e8f0] dark:border-white/[0.07] space-y-1">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-slate-900 dark:text-white text-sm">
-                        {lang === 'vi' ? 'Tiếng Anh' : 'English'}
+                        {t.experience.englishLabel}
                       </span>
                       <span className="px-2 py-0.5 rounded text-[10px] bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25 font-bold">
-                        PROFESSIONAL
+                        {t.experience.englishBadge}
                       </span>
                     </div>
                     <p className="text-slate-500 dark:text-slate-400 text-xs">
-                      {lang === 'vi' ? 'Làm việc & đọc tài liệu kỹ thuật chuyên sâu' : 'Professional working proficiency'}
+                      {t.experience.englishDesc}
                     </p>
                   </div>
                 </div>
-              </div>
-
-              <div className="p-4 rounded-xl border border-[#e2e8f0] dark:border-white/[0.07] bg-[#f1f5f9]/50 dark:bg-white/[0.01] text-xs font-mono text-slate-600 dark:text-slate-400">
-                <span className="text-[#0d9488] dark:text-[#2dd4bf] font-bold block mb-1">
-                  // READINESS
-                </span>
-                <span>
-                  {lang === 'vi'
-                    ? 'Sẵn sàng gia nhập các dự án phát triển quy chuẩn quốc tế và môi trường đa văn hóa.'
-                    : 'Ready for international engineering standards and multi-timezone teamwork.'}
-                </span>
               </div>
             </div>
           </div>
@@ -1405,7 +1394,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
             <div>
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
-                Let's Build Together.
+                {t.contact.title}
               </h2>
             </div>
             {/* Live Clock & Response Commitment */}
@@ -1429,7 +1418,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               onClick={copyEmail}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') copyEmail(); }}
               className="group inline-flex items-center gap-3 sm:gap-6 cursor-pointer select-none"
-              title="Click to copy email address"
+              title={lang === 'vi' ? 'Nhấp để sao chép địa chỉ email' : 'Click to copy email address'}
             >
               <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-mono tracking-tight text-slate-950 dark:text-white group-hover:text-[#0d9488] dark:group-hover:text-[#2dd4bf] transition-colors break-all">
                 thinhthai963@gmail.com
@@ -1526,19 +1515,19 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         {/* Footer */}
         <footer className="pt-16 pb-8 border-t border-[#e2e8f0] dark:border-white/[0.07] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500 dark:text-slate-400">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span>© 2026 THAI DO THINH. POWERED BY SOODFOLIO PLATFORM.</span>
+            <span>{t.contact.copyright}</span>
             <span className="text-slate-400 dark:text-slate-600">/</span>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#14b8a6]/30 dark:border-[#2dd4bf]/40 bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[11px] font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-[#14b8a6] dark:bg-[#2dd4bf] animate-pulse" />
-              <span className="text-[#0d9488] dark:text-[#2dd4bf] font-bold">VERSION 3.0</span>
+              <span className="text-[#0d9488] dark:text-[#2dd4bf] font-bold">{t.contact.versionBadge}</span>
               <span className="text-slate-400 dark:text-slate-600">|</span>
-              <span className="text-slate-500 dark:text-slate-400">LIVE DEMO DECK</span>
+              <span className="text-slate-500 dark:text-slate-400">{t.contact.demoBadge}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 text-slate-400">
             <span>Next.js 16 &amp; TypeScript</span>
             <span>•</span>
-            <span className="text-[#0d9488] dark:text-[#2dd4bf]">Hosted on GitHub Pages</span>
+            <span className="text-[#0d9488] dark:text-[#2dd4bf]">{t.contact.hostingBadge}</span>
           </div>
         </footer>
       </div>

@@ -25,7 +25,7 @@ export const portfolioData: PortfolioData = {
   education: {
     school: "Ho Chi Minh City Open University",
     major: "Computer Science",
-    period: "Oct 2022 — Present",
+    period: "Oct 2022 — Dec 2026 (Expected)",
     coursework: [
       "Software Engineering",
       "Web System Development",

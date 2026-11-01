@@ -16,6 +16,7 @@ interface ProjectImageStackProps {
   title: string;
   captions?: string[];
   isMobile?: boolean;
+  lang?: 'en' | 'vi';
 }
 
 export function ProjectImageStack({
@@ -23,6 +24,7 @@ export function ProjectImageStack({
   title,
   captions,
   isMobile = false,
+  lang = 'en',
 }: ProjectImageStackProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -186,7 +188,7 @@ export function ProjectImageStack({
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs backdrop-blur-[1px]">
               <div className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/20 flex items-center gap-2 shadow-lg scale-95 group-hover/card:scale-100 transition-transform">
                 <ZoomIn className="h-4 w-4 text-[#2dd4bf]" />
-                <span>Click to Expand</span>
+                <span>{lang === 'vi' ? 'Nhấp để phóng to' : 'Click to Expand'}</span>
               </div>
             </div>
 
@@ -203,7 +205,7 @@ export function ProjectImageStack({
                     type="button"
                     onClick={prevImage}
                     className="p-1 rounded bg-white/10 hover:bg-white/25 text-white transition-colors cursor-pointer"
-                    title="Previous"
+                    title={lang === 'vi' ? 'Ảnh trước' : 'Previous'}
                   >
                     <ChevronLeft className="h-3.5 w-3.5" />
                   </button>
@@ -214,7 +216,7 @@ export function ProjectImageStack({
                     type="button"
                     onClick={nextImage}
                     className="p-1 rounded bg-white/10 hover:bg-white/25 text-white transition-colors cursor-pointer"
-                    title="Next"
+                    title={lang === 'vi' ? 'Ảnh kế tiếp' : 'Next'}
                   >
                     <ChevronRight className="h-3.5 w-3.5" />
                   </button>
@@ -244,7 +246,7 @@ export function ProjectImageStack({
               </span>
               <span className="text-white/40">/</span>
               <span className="text-[#2dd4bf] font-bold">
-                SCREEN {String(activeIndex + 1).padStart(2, '0')} OF {String(total).padStart(2, '0')}
+                SCREEN {String(activeIndex + 1).padStart(2, '0')} {lang === 'vi' ? 'TRÊN' : 'OF'} {String(total).padStart(2, '0')}
               </span>
               {captions?.[activeIndex] && (
                 <>
@@ -262,16 +264,16 @@ export function ProjectImageStack({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center gap-1.5 text-xs"
-                title="Open raw image"
+                title={lang === 'vi' ? 'Xem ảnh gốc' : 'Open raw image'}
               >
                 <Maximize2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Raw File</span>
+                <span className="hidden sm:inline">{lang === 'vi' ? 'Ảnh gốc' : 'Raw File'}</span>
               </a>
               <button
                 type="button"
                 onClick={() => setIsLightboxOpen(false)}
                 className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                title="Close (Esc)"
+                title={lang === 'vi' ? 'Đóng (Esc)' : 'Close (Esc)'}
               >
                 <X className="h-5 w-5" />
               </button>

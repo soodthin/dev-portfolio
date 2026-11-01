@@ -6,6 +6,7 @@ export interface Translations {
     experience: string;
     works: string;
     skills: string;
+    education: string;
     contact: string;
   };
   header: {
@@ -17,6 +18,8 @@ export interface Translations {
     lightTooltip: string;
     darkTooltip: string;
     langTooltip: string;
+    fullscreenTooltip: string;
+    exitFullscreenTooltip: string;
   };
   hero: {
     available: string;
@@ -27,13 +30,16 @@ export interface Translations {
     stat1Label: string;
     stat2Label: string;
     stat3Label: string;
+    stat4Label: string;
   };
   experience: {
     eyebrow: string;
     title: string;
     tag1: string;
     period1: string;
+    periodBadge1: string;
     role1: string;
+    company1: string;
     location1: string;
     badge1: string;
     desc1: string;
@@ -46,18 +52,29 @@ export interface Translations {
     deliverable3Text: string;
     deliverable4Title: string;
     deliverable4Text: string;
+    techStackHeader: string;
     eduTag: string;
     eduPeriod: string;
+    eduPeriodBadge: string;
     eduDegree: string;
     eduSchool: string;
     eduCourseworkLabel: string;
     eduCourseworkText: string;
+    eduCourseworkList: string[];
     eduStatus: string;
+    languagesTitle: string;
+    nativeLabel: string;
+    nativeBadge: string;
+    nativeDesc: string;
+    englishLabel: string;
+    englishBadge: string;
+    englishDesc: string;
   };
   works: {
     eyebrow: string;
     title: string;
     techStackLabel: string;
+    sourceCodeBtn: string;
     p1Tag: string;
     p1Role: string;
     p1Desc: string;
@@ -79,7 +96,19 @@ export interface Translations {
     p3Tag: string;
     p3Role: string;
     p3Desc: string;
+    p3H1Title: string;
+    p3H1Text: string;
+    p3H2Title: string;
+    p3H2Text: string;
+    p3H3Title: string;
+    p3H3Text: string;
     p3LiveBadge: string;
+    p3HostingLabel: string;
+    p3HostingValue: string;
+    p3DeploymentLabel: string;
+    p3DeploymentValue: string;
+    p3TypeCoverageLabel: string;
+    p3TypeCoverageValue: string;
   };
   capabilities: {
     eyebrow: string;
@@ -89,6 +118,10 @@ export interface Translations {
     catFrameworks: string;
     catDatabases: string;
     catDevopsAi: string;
+    appliedIn: string;
+    expBadge: string;
+    projectBadge: string;
+    usageBadge: string;
   };
   contact: {
     eyebrow: string;
@@ -102,6 +135,10 @@ export interface Translations {
     cvLabel: string;
     cvAction: string;
     backToTop: string;
+    copyright: string;
+    versionBadge: string;
+    demoBadge: string;
+    hostingBadge: string;
   };
 }
 
@@ -112,6 +149,7 @@ export const translations: Record<Locale, Translations> = {
       experience: 'WORK HISTORY',
       works: 'SELECTED WORKS',
       skills: 'CAPABILITIES',
+      education: 'EDUCATION & LANGS',
       contact: 'CONTACT',
     },
     header: {
@@ -123,6 +161,8 @@ export const translations: Record<Locale, Translations> = {
       lightTooltip: 'Switch to Light mode',
       darkTooltip: 'Switch to Dark mode',
       langTooltip: 'Chuyển sang tiếng Việt (Switch to Vietnamese)',
+      fullscreenTooltip: 'Fullscreen',
+      exitFullscreenTooltip: 'Exit Fullscreen',
     },
     hero: {
       available: 'AVAILABLE FOR DEVELOPER ROLES',
@@ -133,37 +173,59 @@ export const translations: Record<Locale, Translations> = {
       stat1Label: 'Integrated Banking APIs (OCR Pipeline)',
       stat2Label: 'Cash Reconciliation Cycle (BW Industrial)',
       stat3Label: 'Reduction in Manual Processing',
+      stat4Label: 'Production Security & CI/CD',
     },
     experience: {
       eyebrow: 'WORK HISTORY',
       title: 'Work History',
       tag1: 'FINTECH AUTOMATION & AI PLATFORM',
       period1: 'OCT 2025 — APR 2026',
+      periodBadge1: 'Oct 2025 — Apr 2026',
       role1: 'Full-stack Software Engineer Intern',
+      company1: 'BW INDUSTRIAL DEVELOPMENT JSC',
       location1: 'Ho Chi Minh City, Viet Nam · Fintech Automation Web Platform',
       badge1: '6-Month Internship Completed',
       desc1: 'Engineered an internal web application used by the finance and accounting team to process bank statements and generate automated cash reports, handling transaction extraction, classification, and reconciliation.',
       deliverablesHeader: 'CORE DELIVERABLES & IMPACT:',
-      deliverable1Title: 'Bank Statement Parsing (10+ Banks):',
+      deliverable1Title: 'Bank Statement Parsing (10+ Banks)',
       deliverable1Text: 'Built FastAPI REST parsers for Vietcombank, Techcombank, BIDV, ACB, MBBank, with Gemini OCR fallback for scanned receipts.',
-      deliverable2Title: 'Cash Report Automation (1 Day → 2 Hrs):',
+      deliverable2Title: 'Cash Report Automation (1 Day → 2 Hrs)',
       deliverable2Text: 'Engineered session-based reconciliation matching multi-file cash reports based on finance rule feedback, cutting processing time by 75%.',
-      deliverable3Title: 'Enterprise SSO & Session Tracking:',
+      deliverable3Title: 'Enterprise SSO & Session Tracking',
       deliverable3Text: 'Implemented domain-locked Google OAuth2 SSO, JWT access tokens with device session tracking via Redis, and granular RBAC.',
-      deliverable4Title: 'SSE Real-time Tracker & AI Telemetry:',
+      deliverable4Title: 'SSE Real-time Tracker & AI Telemetry',
       deliverable4Text: 'Built React UI with SSE progress tracking for long-running batch jobs, centralized logging, and internal AI cost usage tracking.',
+      techStackHeader: 'TECH STACK:',
       eduTag: 'COMPUTER SCIENCE FOUNDATION',
-      eduPeriod: 'OCT 2022 — PRESENT',
+      eduPeriod: 'OCT 2022 — DEC 2026 (EXPECTED)',
+      eduPeriodBadge: 'Oct 2022 — Dec 2026 (Expected)',
       eduDegree: 'Bachelor of Science in Computer Science',
       eduSchool: 'Ho Chi Minh City Open University (HCMCOU)',
       eduCourseworkLabel: 'Core Coursework:',
       eduCourseworkText: 'Software Engineering, Web System Development, Object-Oriented Programming (OOP), Data Structures & Algorithms, Modern Programming Technologies, Database Management Systems, Cloud Computing.',
-      eduStatus: 'Undergraduate · Expected Graduation: Oct 2026',
+      eduCourseworkList: [
+        'Software Engineering',
+        'Web System Development',
+        'Object-Oriented Programming (OOP)',
+        'Data Structures & Algorithms',
+        'Modern Programming Technologies',
+        'Database Management Systems',
+        'Cloud Computing',
+      ],
+      eduStatus: 'Undergraduate · Expected Graduation: Dec 2026',
+      languagesTitle: 'LANGUAGES',
+      nativeLabel: 'Vietnamese',
+      nativeBadge: 'NATIVE',
+      nativeDesc: 'Native proficiency',
+      englishLabel: 'English',
+      englishBadge: 'PROFESSIONAL',
+      englishDesc: 'Professional working proficiency',
     },
     works: {
       eyebrow: 'SELECTED WORKS',
       title: 'Production Systems',
       techStackLabel: 'TECH STACK:',
+      sourceCodeBtn: 'Source Code',
       p1Tag: 'JOB RECRUITMENT PLATFORM',
       p1Role: 'Lead Fullstack Developer · Spring Boot + ReactJS',
       p1Desc: 'Full-featured recruitment platform connecting candidates, employers, and administrators with comprehensive role-based access, job lifecycle management, and application tracking workflows.',
@@ -177,28 +239,44 @@ export const translations: Record<Locale, Translations> = {
       p2Role: 'Fullstack Mobile Engineer · React Native + Django REST',
       p2Desc: 'Cross-platform mobile application covering customer food delivery ordering, table reservations, restaurant menu management, and dedicated kitchen staff (chef) workflows.',
       p2H1Title: 'Django REST Framework:',
-      p2H1Text: 'Built REST APIs covering menus, table reservations, order lifecycle, and customer reviews.',
+      p2H1Text: 'Built complete REST APIs covering dynamic menus, table reservations, order lifecycle, and customer reviews.',
       p2H2Title: 'Payment Gateways:',
       p2H2Text: 'Integrated MoMo and Stripe for order payments, with webhook listeners verifying instant order confirmation.',
       p2H3Title: 'React Native & Firebase:',
-      p2H3Text: 'Built mobile apps for customers and chefs with Firebase real-time in-app customer chat.',
-      p3Tag: 'TYPOGRAPHIC SSG PORTFOLIO',
-      p3Role: 'Creator & Frontend Architect · Next.js 16 + Tailwind CSS v4',
+      p2H3Text: 'Built mobile interfaces with dual-role flows for customers and chefs, plus real-time in-app chat via Firebase.',
+      p3Tag: 'TYPOGRAPHIC STATIC ENGINE',
+      p3Role: 'Creator & Frontend Architect · Next.js 16 + TypeScript',
       p3Desc: 'Minimalist, high-performance portfolio engine built with Next.js App Router and TypeScript, compiled to static export for zero-latency hosting on GitHub Pages via automated CI/CD.',
+      p3H1Title: '100% Static Export (SSG):',
+      p3H1Text: 'Automated GitHub Actions pipeline building static assets with sub-50ms TTFB worldwide.',
+      p3H2Title: 'Pure 2D Typographic Design:',
+      p3H2Text: 'Flat-layered vector design system with zero icon or emoji dependencies.',
+      p3H3Title: 'Strict TypeScript Safety:',
+      p3H3Text: 'End-to-end typed data contracts ensuring resilience across all component hierarchies.',
       p3LiveBadge: 'You are viewing this site live',
+      p3HostingLabel: 'Hosting:',
+      p3HostingValue: 'GitHub Pages Edge CDN',
+      p3DeploymentLabel: 'Deployment:',
+      p3DeploymentValue: 'Automated CI/CD Pipeline',
+      p3TypeCoverageLabel: 'Type Coverage:',
+      p3TypeCoverageValue: '100% Strict TypeScript',
     },
     capabilities: {
       eyebrow: 'CAPABILITIES',
-      title: 'Technical Capabilities',
+      title: 'Skills & Tooling',
       subtitle: 'SYSTEM ARCHITECTURE & PRODUCTION ENGINEERING',
-      catLanguages: 'PROGRAMMING LANGUAGES',
-      catFrameworks: 'FRAMEWORKS & RUNTIMES',
-      catDatabases: 'DATABASES & CACHING',
-      catDevopsAi: 'TOOLING & AI-ASSISTED DEVELOPMENT',
+      catLanguages: 'LANGUAGES',
+      catFrameworks: 'FRAMEWORKS & LIBS',
+      catDatabases: 'DATA & DEVOPS',
+      catDevopsAi: 'AI TOOLING',
+      appliedIn: 'APPLIED IN',
+      expBadge: 'EXP',
+      projectBadge: 'PROJECT',
+      usageBadge: 'USAGE',
     },
     contact: {
       eyebrow: 'DIRECT CONTACT',
-      title: "Let's Build Together",
+      title: "LET'S BUILD TOGETHER.",
       responseBadge: 'Response within 24h',
       copyPrompt: 'CLICK TO COPY EMAIL DIRECTLY',
       copiedToast: 'Copied thinhthai963@gmail.com to clipboard!',
@@ -208,14 +286,19 @@ export const translations: Record<Locale, Translations> = {
       cvLabel: 'CURRICULUM VITAE',
       cvAction: 'View Full Profile',
       backToTop: 'Back to top',
+      copyright: '© 2026 THAI DO THINH. POWERED BY SOODFOLIO PLATFORM.',
+      versionBadge: 'VERSION 3.0',
+      demoBadge: 'LIVE DEMO DECK',
+      hostingBadge: 'Hosted on GitHub Pages',
     },
   },
   vi: {
     nav: {
       summary: 'TỔNG QUAN',
       experience: 'KINH NGHIỆM',
-      works: 'DỰ ÁN',
+      works: 'DỰ ÁN TIÊU BIỂU',
       skills: 'KỸ NĂNG',
+      education: 'HỌC VẤN & NGÔN NGỮ',
       contact: 'LIÊN HỆ',
     },
     header: {
@@ -227,6 +310,8 @@ export const translations: Record<Locale, Translations> = {
       lightTooltip: 'Chuyển sang giao diện sáng',
       darkTooltip: 'Chuyển sang giao diện tối',
       langTooltip: 'Switch to English (Chuyển sang tiếng Anh)',
+      fullscreenTooltip: 'Toàn màn hình',
+      exitFullscreenTooltip: 'Thoát toàn màn hình',
     },
     hero: {
       available: 'SẴN SÀNG NHẬN DỰ ÁN MỚI',
@@ -237,37 +322,59 @@ export const translations: Record<Locale, Translations> = {
       stat1Label: 'Ngân hàng tích hợp (OCR Pipeline)',
       stat2Label: 'Đối soát tiền mặt (BW Industrial)',
       stat3Label: 'Cắt giảm thời gian thủ công',
+      stat4Label: 'Bảo mật doanh nghiệp & CI/CD',
     },
     experience: {
       eyebrow: 'LỊCH SỬ LÀM VIỆC',
       title: 'Kinh nghiệm làm việc',
       tag1: 'NỀN TẢNG FINTECH TỰ ĐỘNG HÓA & AI',
       period1: 'THÁNG 10/2025 — THÁNG 04/2026',
+      periodBadge1: '10/2025 — 04/2026',
       role1: 'Thực tập sinh Kỹ sư Phần mềm Full-stack',
+      company1: 'BW INDUSTRIAL DEVELOPMENT JSC',
       location1: 'TP. Hồ Chí Minh, Việt Nam · Nền tảng Web Fintech Tự động hóa',
       badge1: 'Hoàn thành thực tập 6 tháng',
       desc1: 'Xây dựng ứng dụng web nội bộ phục vụ đội ngũ tài chính và kế toán xử lý sao kê ngân hàng và tạo báo cáo tiền mặt tự động, đảm nhiệm các khâu trích xuất giao dịch, phân loại và đối soát dữ liệu.',
       deliverablesHeader: 'KẾT QUẢ ĐẠT ĐƯỢC & TÁC ĐỘNG:',
-      deliverable1Title: 'Xử lý sao kê (10+ ngân hàng):',
+      deliverable1Title: 'Xử lý sao kê (10+ ngân hàng)',
       deliverable1Text: 'Xây dựng bộ parser REST bằng FastAPI cho Vietcombank, Techcombank, BIDV, ACB, MBBank, kết hợp Gemini OCR dự phòng cho hóa đơn scan.',
-      deliverable2Title: 'Tự động hóa báo cáo tiền mặt (1 ngày → 2 giờ):',
+      deliverable2Title: 'Tự động hóa báo cáo tiền mặt (1 ngày → 2 giờ)',
       deliverable2Text: 'Thiết kế luồng đối soát theo phiên làm việc khớp báo cáo đa tệp theo luật tài chính, giảm 75% thời gian xử lý thủ công.',
-      deliverable3Title: 'Đăng nhập SSO doanh nghiệp & Quản lý phiên:',
+      deliverable3Title: 'Đăng nhập SSO doanh nghiệp & Quản lý phiên',
       deliverable3Text: 'Tích hợp Google OAuth2 SSO khóa tên miền, token JWT kiểm soát phiên thiết bị qua Redis và phân quyền RBAC chặt chẽ.',
-      deliverable4Title: 'Theo dõi thời gian thực qua SSE & Giám sát AI:',
+      deliverable4Title: 'Theo dõi thời gian thực qua SSE & Giám sát AI',
       deliverable4Text: 'Xây dựng giao diện React cập nhật tiến độ batch job qua SSE, ghi log tập trung và đo lường chi phí AI nội bộ.',
+      techStackHeader: 'CÔNG NGHỆ:',
       eduTag: 'NỀN TẢNG KHOA HỌC MÁY TÍNH',
-      eduPeriod: 'THÁNG 10/2022 — HIỆN TẠI',
+      eduPeriod: '10/2022 — 12/2026 (DỰ KIẾN)',
+      eduPeriodBadge: '10/2022 — 12/2026 (Dự kiến)',
       eduDegree: 'Cử nhân Khoa học Máy tính',
       eduSchool: 'Trường Đại học Mở TP.HCM (HCMCOU)',
       eduCourseworkLabel: 'Các môn học chuyên ngành:',
       eduCourseworkText: 'Kỹ nghệ phần mềm, Phát triển hệ thống web, Lập trình hướng đối tượng (OOP), Cấu trúc dữ liệu & Giải thuật, Công nghệ lập trình hiện đại, Hệ quản trị cơ sở dữ liệu, Điện toán đám mây.',
-      eduStatus: 'Sinh viên đại học · Dự kiến tốt nghiệp: 10/2026',
+      eduCourseworkList: [
+        'Kỹ nghệ phần mềm',
+        'Phát triển hệ thống web',
+        'Lập trình hướng đối tượng (OOP)',
+        'Cấu trúc dữ liệu & Giải thuật',
+        'Công nghệ lập trình hiện đại',
+        'Hệ quản trị cơ sở dữ liệu',
+        'Điện toán đám mây',
+      ],
+      eduStatus: 'Sinh viên đại học · Dự kiến tốt nghiệp: 12/2026',
+      languagesTitle: 'NGÔN NGỮ GIAO TIẾP',
+      nativeLabel: 'Tiếng Việt',
+      nativeBadge: 'BẢN XỨ',
+      nativeDesc: 'Tiếng mẹ đẻ',
+      englishLabel: 'Tiếng Anh',
+      englishBadge: 'CHUYÊN NGHIỆP',
+      englishDesc: 'Làm việc & đọc tài liệu kỹ thuật chuyên sâu',
     },
     works: {
       eyebrow: 'DỰ ÁN TIÊU BIỂU',
       title: 'Dự án tiêu biểu',
       techStackLabel: 'CÔNG NGHỆ:',
+      sourceCodeBtn: 'Mã nguồn',
       p1Tag: 'NỀN TẢNG TUYỂN DỤNG VIỆC LÀM',
       p1Role: 'Trưởng nhóm Fullstack Developer · Spring Boot + ReactJS',
       p1Desc: 'Nền tảng tuyển dụng toàn diện kết nối ứng viên, nhà tuyển dụng và quản trị viên với phân quyền đa vai trò, quản lý vòng đời tin tuyển dụng và theo dõi hồ sơ ứng tuyển.',
@@ -281,28 +388,44 @@ export const translations: Record<Locale, Translations> = {
       p2Role: 'Kỹ sư Mobile Fullstack · React Native + Django REST',
       p2Desc: 'Ứng dụng di động đa nền tảng bao gồm đặt đồ ăn giao tận nơi, đặt bàn ăn, quản lý thực đơn và luồng xử lý đơn hàng cho đầu bếp.',
       p2H1Title: 'Django REST Framework:',
-      p2H1Text: 'Xây dựng REST API xử lý thực đơn, đặt bàn, vòng đời đơn hàng và đánh giá của khách hàng.',
+      p2H1Text: 'Xây dựng toàn diện REST API xử lý thực đơn động, đặt bàn, vòng đời đơn hàng và đánh giá của khách hàng.',
       p2H2Title: 'Cổng thanh toán:',
       p2H2Text: 'Tích hợp MoMo và Stripe để thanh toán đơn hàng với webhook xác nhận giao dịch tức thì.',
       p2H3Title: 'React Native & Firebase:',
-      p2H3Text: 'Phát triển ứng dụng khách hàng và đầu bếp với tính năng chat thời gian thực qua Firebase.',
+      p2H3Text: 'Phát triển ứng dụng di động cho khách hàng và đầu bếp với tính năng chat thời gian thực qua Firebase.',
       p3Tag: 'PORTFOLIO KIẾN TRÚC TĨNH TYPOGRAPHY',
-      p3Role: 'Tác giả & Kiến trúc sư Frontend · Next.js 16 + Tailwind CSS v4',
+      p3Role: 'Tác giả & Kiến trúc sư Frontend · Next.js 16 + TypeScript',
       p3Desc: 'Engine portfolio tối giản hiệu năng cao xây dựng với Next.js App Router và TypeScript, biên dịch tĩnh (SSG) với độ trễ bằng 0 trên GitHub Pages qua CI/CD tự động.',
+      p3H1Title: 'Xuất tĩnh 100% (SSG):',
+      p3H1Text: 'Pipeline GitHub Actions tự động hóa xây dựng tài nguyên tĩnh với TTFB dưới 50ms trên toàn cầu.',
+      p3H2Title: 'Thiết kế Typography 2D thuần túy:',
+      p3H2Text: 'Hệ thống thiết kế vector phân lớp phẳng, hoàn toàn không phụ thuộc icon hay emoji.',
+      p3H3Title: 'An toàn kiểu dữ liệu với TypeScript:',
+      p3H3Text: 'Khế ước dữ liệu định kiểu chặt chẽ toàn diện, đảm bảo tính ổn định trên toàn bộ cấu trúc component.',
       p3LiveBadge: 'Bạn đang xem trực tiếp trang này',
+      p3HostingLabel: 'Lưu trữ:',
+      p3HostingValue: 'GitHub Pages Edge CDN',
+      p3DeploymentLabel: 'Triển khai:',
+      p3DeploymentValue: 'Pipeline CI/CD tự động',
+      p3TypeCoverageLabel: 'Độ phủ Type:',
+      p3TypeCoverageValue: '100% Strict TypeScript',
     },
     capabilities: {
       eyebrow: 'NĂNG LỰC KỸ THUẬT',
       title: 'Kỹ năng chuyên môn',
       subtitle: 'KIẾN TRÚC HỆ THỐNG & KỸ THUẬT PHẦN MỀM',
       catLanguages: 'NGÔN NGỮ LẬP TRÌNH',
-      catFrameworks: 'FRAMEWORK & NỀN TẢNG',
-      catDatabases: 'CƠ SỞ DỮ LIỆU & BỘ NHỚ ĐỆM',
-      catDevopsAi: 'CÔNG CỤ & QUY TRÌNH HỖ TRỢ BỞI AI',
+      catFrameworks: 'FRAMEWORK & THƯ VIỆN',
+      catDatabases: 'CƠ SỞ DỮ LIỆU & DEVOPS',
+      catDevopsAi: 'CÔNG CỤ PHÁT TRIỂN AI',
+      appliedIn: 'ỨNG DỤNG TRONG',
+      expBadge: 'KINH NGHIỆM',
+      projectBadge: 'DỰ ÁN',
+      usageBadge: 'SỬ DỤNG',
     },
     contact: {
       eyebrow: 'LIÊN HỆ TRỰC TIẾP',
-      title: 'Kết nối hợp tác',
+      title: 'KẾT NỐI HỢP TÁC.',
       responseBadge: 'Phản hồi trong 24h',
       copyPrompt: 'BẤM ĐỂ SAO CHÉP EMAIL TRỰC TIẾP',
       copiedToast: 'Đã sao chép thinhthai963@gmail.com vào clipboard!',
@@ -312,6 +435,10 @@ export const translations: Record<Locale, Translations> = {
       cvLabel: 'HỒ SƠ NĂNG LỰC (CV)',
       cvAction: 'Xem chi tiết hồ sơ',
       backToTop: 'Trở về đầu trang',
+      copyright: '© 2026 THÁI ĐỖ THỊNH. PHÁT TRIỂN TRÊN NỀN TẢNG SOODFOLIO.',
+      versionBadge: 'PHIÊN BẢN 3.0',
+      demoBadge: 'BẢN TRÌNH DIỄN TRỰC TIẾP',
+      hostingBadge: 'Lưu trữ trên GitHub Pages',
     },
   },
 };
