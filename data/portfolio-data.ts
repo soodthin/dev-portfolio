@@ -4,7 +4,7 @@ export const portfolioData: PortfolioData = {
   profile: {
     name: "Thai Do Thinh",
     title: "Software Engineer // Full-Stack Developer",
-    roleDescription: "Final-year Computer Science student who has built and deployed several real web products, from database design to frontend and backend. Comfortable with Java, Python, JavaScript, TypeScript, C++, and frameworks like React and Spring Boot. I use AI coding tools daily to work faster while still reviewing everything myself. Looking for a Developer role to keep building real things.",
+    roleDescription: "Final-year Computer Science student who has built and deployed several real web products, from database design to frontend and backend. Comfortable with Java, Python, JavaScript, TypeScript, and frameworks like Spring Boot and React. I use AI coding tools daily to work faster while still reviewing everything myself. Looking for a Developer role to keep building real things.",
     statusText: "AVAILABLE FOR DEVELOPER ROLES // READY TO DEPLOY",
     location: "Ho Chi Minh City, Viet Nam",
     email: "thinhthai963@gmail.com",
@@ -45,45 +45,49 @@ export const portfolioData: PortfolioData = {
   skills: [
     {
       category: "Languages",
-      description: "Core programming and scripting languages for systems and web.",
+      description: "Core programming and query languages for systems and web.",
       skills: [
-        { name: "JavaScript" },
-        { name: "TypeScript" },
         { name: "Java" },
         { name: "Python" },
-        { name: "C++ (Basic)" }
+        { name: "JavaScript" },
+        { name: "TypeScript" },
+        { name: "SQL" }
       ]
     },
     {
       category: "Frameworks & Platforms",
-      description: "Fullstack development frameworks across frontend and backend services.",
+      description: "Fullstack and mobile frameworks across frontend and backend services.",
       skills: [
-        { name: "ReactJS" },
-        { name: "Next.js" },
         { name: "Spring Boot" },
+        { name: "Spring Security" },
+        { name: "Spring Data JPA (Hibernate)" },
         { name: "FastAPI" },
-        { name: "Django" },
-        { name: "Tailwind CSS" },
-        { name: "RESTful API" }
+        { name: "Django REST Framework" },
+        { name: "RESTful API" },
+        { name: "ReactJS" },
+        { name: "React Native (Expo)" },
+        { name: "Tailwind CSS" }
       ]
     },
     {
       category: "Databases",
-      description: "Relational data persistence, schema design, and caching layers.",
+      description: "Relational persistence, in-memory caching layers, and real-time stores.",
       skills: [
         { name: "PostgreSQL" },
         { name: "MySQL" },
-        { name: "Redis" }
+        { name: "Redis" },
+        { name: "Firebase" }
       ]
     },
     {
       category: "Tools & DevOps",
-      description: "Development tools, API testing, version control and deployments.",
+      description: "Unit testing, containerization, version control, and API testing.",
       skills: [
+        { name: "JUnit 5" },
+        { name: "Mockito" },
+        { name: "Docker" },
         { name: "Git" },
-        { name: "GitHub Actions" },
         { name: "Postman" },
-        { name: "Render" },
         { name: "Microsoft Office" }
       ]
     },
@@ -93,9 +97,7 @@ export const portfolioData: PortfolioData = {
       skills: [
         { name: "Claude Code" },
         { name: "Codex" },
-        { name: "Antigravity (IDE)" },
-        { name: "Prompt Engineering" },
-        { name: "Code Review & Verification" }
+        { name: "Antigravity (IDE)" }
       ]
     }
   ],
@@ -109,16 +111,15 @@ export const portfolioData: PortfolioData = {
       projectTitle: "Finance Data Processing Web",
       projectUrl: "https://bwid-automation.onrender.com/",
       teamSize: "3",
-      description: "Engineered an internal web application used by the finance and accounting team to process bank statements and generate automated cash reports, handling transaction extraction, classification, and reconciliation.",
+      description: "An internal web app used by the finance/accounting team to process bank statements and generate cash reports, automating transaction extraction, classification, and reconciliation.",
       highlights: [
-        "Bank Statement Parsing: Built REST APIs with FastAPI, including parsers for 10+ banks (VCB, TCB, BIDV, ACB, MBB...) to automatically extract transaction data from uploaded statements, with OCR fallback via Gemini for scanned files.",
-        "Cash Report Automation: Built a session-based pipeline to process and reconcile cash reports from multiple uploaded files, including automated transaction classification based on rules learned from the finance team's feedback — cutting processing time from about a day to two hours.",
-        "Security & Access Control: Implemented enterprise-grade authentication with Google OAuth2 SSO (restricted to company email domain), JWT access tokens with refresh-token session tracking across devices, plus role-based access control (RBAC) separating admin and finance-team permissions.",
-        "Frontend Integration: Built the UI with React, TypeScript, and Tailwind CSS for both workflows, including a review/classification screen and a real-time progress tracker (via SSE) for long-running file processing.",
-        "Reliability & Monitoring: Set up centralized structured logging and health-check endpoints, plus an internal admin dashboard tracking AI usage cost, active sessions, and processing stats in real time.",
-        "Documentation: Wrote step-by-step usage guides with screenshots so the finance team could use both tools on their own."
+        "Bank Statement Parsing: Built FastAPI parsers in Python for 14 banks to extract data from 10–30 statements per batch (up to 50 files), with 3-stream concurrent Gemini OCR fallback.",
+        "Cash Report Automation: Built a PostgreSQL pipeline reconciling 500–3,000 rows per run using 50-row AI classification batches, cutting processing time for 3+ finance users from 1 day to 2 hours.",
+        "Performance & Caching (Redis): Built an async Redis caching layer (redis.asyncio) with SHA-256 key hashing and pipeline batching (mget) for OCR/AI results, cutting redundant LLM API calls with graceful in-memory fallback.",
+        "Security & Auth: Secured APIs via domain-restricted Google OAuth2 SSO, JWT refresh rotation, and RBAC across 2 roles, managing up to 10 concurrent sessions (5 per user).",
+        "Frontend & DevOps: Built the ReactJS, TypeScript, and Tailwind CSS admin dashboard to track real-time AI token costs, and containerized the backend workflow using Docker."
       ],
-      technologies: ["React", "TypeScript", "Tailwind CSS", "FastAPI", "PostgreSQL", "Redis", "Google OAuth2", "SSE"]
+      technologies: ["React", "TypeScript", "Tailwind CSS", "FastAPI", "PostgreSQL", "Redis", "Docker", "Google OAuth2"]
     }
   ],
 
@@ -129,7 +130,7 @@ export const portfolioData: PortfolioData = {
       title: "FlexiConnect Web",
       subtitle: "Job Portal & Application Tracker Platform",
       description: "Full-featured recruitment platform connecting candidates, employers, and administrators with comprehensive role-based access, job lifecycle management, and application workflows.",
-      tags: ["Spring Boot", "ReactJS", "Vite", "Tailwind CSS", "MySQL", "Spring Security", "JWT", "Render"],
+      tags: ["Spring Boot", "ReactJS", "MySQL", "Spring Security", "Spring Data JPA", "JUnit 5", "Mockito", "Render"],
       githubUrl: "https://github.com/soodthin/FlexiConnect",
       screenshots: [
         "/images/flexiconnect/1-job-search.png",
@@ -143,10 +144,11 @@ export const portfolioData: PortfolioData = {
       ],
       featured: true,
       keyHighlights: [
-        "Backend & Database: Built REST APIs with Spring Boot and Spring Data JPA on a MySQL database, handling job listings, applications, and role-based access for candidates, employers, and admin.",
-        "Security: Implemented authentication and authorization with Spring Security and JWT.",
-        "Frontend Integration: Built the UI with ReactJS, Vite, and Tailwind CSS, consuming the backend REST API across all three user roles.",
-        "Deployment: Deployed on Render, resolving build errors independently to keep the app stable."
+        "Backend & Database Architecture: Built 78 RESTful APIs across 12 controllers in Java and Spring Boot on a 23-table MySQL schema (21 JPA entities), plus 1 WebSocket endpoint for live alerts.",
+        "Data Integrity & Pagination: Applied @Transactional for automatic rollback on payment and job application flows, and added Pageable pagination across 3 admin management modules.",
+        "Integrations & Security: Integrated MoMo payment gateway and Cloudinary for CV storage; set up authentication and role-based authorization for 3 user roles (Admin, Employer, Candidate) via Spring Security and JWT.",
+        "Testing: Wrote unit tests for core service-layer business logic and edge cases using JUnit and Mockito.",
+        "Frontend & Deployment: Built the UI with ReactJS, Vite, and Tailwind CSS, and deployed the full-stack application on Render."
       ]
     },
     {
@@ -155,7 +157,7 @@ export const portfolioData: PortfolioData = {
       title: "Food Delivery & Restaurant Booking App",
       subtitle: "Fullstack Mobile Experience with Dual-Role Portals",
       description: "Cross-platform mobile application covering customer food delivery ordering, table reservations, restaurant menu management, and dedicated kitchen staff (chef) workflows.",
-      tags: ["React Native", "Expo", "Django", "Django REST Framework", "MoMo", "Stripe", "Firebase"],
+      tags: ["React Native", "Expo", "Django", "Django REST Framework", "RESTful API", "MoMo", "Stripe", "Firebase"],
       githubUrl: "https://github.com/soodthin/T-Restaurant-App",
       screenshots: [
         "/images/restaurant/1-menu-home.jpg",
@@ -167,8 +169,8 @@ export const portfolioData: PortfolioData = {
       ],
       featured: true,
       keyHighlights: [
-        "Backend & Database: Built REST APIs with Django REST Framework, covering menus, table bookings, orders, and reviews.",
-        "Payment Integration: Integrated MoMo and Stripe for order payments, including webhook handling for payment confirmation.",
+        "Backend & Database: Built 26 RESTful APIs using Python and Django REST Framework covering menus, dish comparisons, table bookings, order workflows, and 90-day chef revenue stats.",
+        "Payment Integration: Integrated 2 payment gateways (MoMo and Stripe) with 4 webhook and redirect endpoints to automate order payment confirmation and cancellation.",
         "Frontend Integration: Built the mobile UI with React Native and Expo, covering separate flows for customers and kitchen staff (chefs).",
         "Real-time Features: Implemented in-app chat between customers and the restaurant using Firebase."
       ]
