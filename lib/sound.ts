@@ -6,9 +6,15 @@ let isMuted = false;
 function getAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null;
   if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    if (AudioContextClass) {
-      audioCtx = new AudioContextClass();
+    try {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
+    } catch {
+      return null;
     }
   }
   if (audioCtx && audioCtx.state === 'suspended') {
@@ -19,19 +25,32 @@ function getAudioContext(): AudioContext | null {
 
 export function toggleMuteSound(): boolean {
   isMuted = !isMuted;
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem('soodfolio_muted', isMuted ? 'true' : 'false');
+    } catch {}
+  }
   return isMuted;
 }
 
 export function getMuteState(): boolean {
+  if (typeof window !== 'undefined') {
+    try {
+      const saved = localStorage.getItem('soodfolio_muted');
+      if (saved !== null) {
+        isMuted = saved === 'true';
+      }
+    } catch {}
+  }
   return isMuted;
 }
 
 export function playSlideSwitchSound(direction: number = 1) {
-  if (isMuted) return;
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
+  if (getMuteState()) return;
   try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -52,17 +71,17 @@ export function playSlideSwitchSound(direction: number = 1) {
 
     osc.start(now);
     osc.stop(now + 0.16);
-  } catch (err) {
+  } catch {
     // Audio context may be restricted by autoplay policy
   }
 }
 
 export function playClickSound() {
-  if (isMuted) return;
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
+  if (getMuteState()) return;
   try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -79,5 +98,7 @@ export function playClickSound() {
 
     osc.start(now);
     osc.stop(now + 0.07);
-  } catch (err) {}
+  } catch {
+    // Audio context may be restricted by autoplay policy
+  }
 }

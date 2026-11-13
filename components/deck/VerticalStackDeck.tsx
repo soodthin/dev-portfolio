@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import Image from 'next/image';
 import { ProjectImageStack } from '@/components/deck/ProjectImageStack';
 import { CommandPalette } from '@/components/deck/CommandPalette';
 import { Locale, translations } from '@/lib/i18n';
 import { getAssetPath } from '@/lib/asset';
+import { PortfolioData } from '@/types/portfolio';
 import {
   Share2,
   Maximize2,
@@ -13,29 +13,17 @@ import {
   Check,
   CheckCircle2,
   Copy,
-  Mail,
   Sun,
   Moon,
   Globe,
   ArrowUp,
   ArrowUpRight,
   Code2,
-  ExternalLink,
   Layers,
-  Calendar,
-  Briefcase,
-  Clock,
   Building2,
-  ShieldCheck,
-  Terminal,
   FileText,
   Phone,
   Sparkles,
-  Award,
-  Coffee,
-  GitPullRequest,
-  GitCommit,
-  Zap,
   Database,
   Search,
   ChevronLeft,
@@ -100,7 +88,7 @@ function SaigonLiveClock() {
 }
 
 interface VerticalStackDeckProps {
-  data?: any;
+  data?: PortfolioData;
 }
 
 // Context Mapping for Skill section hover tooltips
@@ -249,37 +237,70 @@ const PROJECT_TECH_STACKS: string[][] = [
 ];
 
 function SkillWithContext({ name, lang = 'en' }: { name: string; lang?: Locale }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
   const contexts = SKILL_CONTEXTS[name] || [];
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', handleClickOutside);
+    return () => document.removeEventListener('pointerdown', handleClickOutside);
+  }, [isOpen]);
+
+  if (contexts.length === 0) {
+    return <span>{name}</span>;
+  }
+
   return (
-    <span className="relative group/skill inline-block cursor-pointer">
+    <span
+      ref={ref}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isOpen}
+      onClick={() => setIsOpen((prev) => !prev)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setIsOpen((prev) => !prev);
+        }
+      }}
+      className="relative group/skill inline-block cursor-pointer focus:outline-hidden"
+    >
       <span className="hover:text-[#0d9488] dark:hover:text-[#2dd4bf] underline decoration-dotted decoration-slate-400/50 hover:decoration-[#0d9488] dark:hover:decoration-[#2dd4bf] underline-offset-4 transition-colors">
         {name}
       </span>
-      {contexts.length > 0 && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/skill:flex flex-col gap-1 z-30 px-3 py-2 rounded-xl bg-slate-950/95 dark:bg-[#0d131a]/95 border border-slate-700/70 dark:border-white/15 text-xs font-mono shadow-2xl backdrop-blur-md pointer-events-none whitespace-nowrap animate-in fade-in zoom-in-95 duration-100 text-left">
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
-            {lang === 'vi' ? 'ỨNG DỤNG TRONG' : 'APPLIED IN'}
-          </span>
-          {contexts.map((c) => (
-            <span key={c.label} className="flex items-center gap-1.5 text-slate-200">
-              <span className="text-[#0d9488] dark:text-[#2dd4bf] text-[10px] font-bold">
-                [{lang === 'vi'
-                  ? c.type === 'exp'
-                    ? 'KINH NGHIỆM'
-                    : c.type === 'project'
-                    ? 'DỰ ÁN'
-                    : 'SỬ DỤNG'
-                  : c.type === 'exp'
-                  ? 'EXP'
-                  : c.type === 'project'
-                  ? 'PROJECT'
-                  : 'USAGE'}]
-              </span>
-              <span className="font-medium">{c.label}</span>
-            </span>
-          ))}
+      <span
+        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 ${
+          isOpen ? 'flex' : 'hidden group-hover/skill:flex'
+        } flex-col gap-1 z-30 px-3 py-2 rounded-xl bg-slate-950/95 dark:bg-[#0d131a]/95 border border-slate-700/70 dark:border-white/15 text-xs font-mono shadow-2xl backdrop-blur-md pointer-events-none w-max max-w-[85vw] sm:max-w-xs whitespace-normal sm:whitespace-nowrap animate-in fade-in zoom-in-95 duration-100 text-left`}
+      >
+        <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
+          {lang === 'vi' ? 'ỨNG DỤNG TRONG' : 'APPLIED IN'}
         </span>
-      )}
+        {contexts.map((c) => (
+          <span key={c.label} className="flex items-center gap-1.5 text-slate-200">
+            <span className="text-[#0d9488] dark:text-[#2dd4bf] text-[10px] font-bold shrink-0">
+              [{lang === 'vi'
+                ? c.type === 'exp'
+                  ? 'KINH NGHIỆM'
+                  : c.type === 'project'
+                  ? 'DỰ ÁN'
+                  : 'SỬ DỤNG'
+                : c.type === 'exp'
+                ? 'EXP'
+                : c.type === 'project'
+                ? 'PROJECT'
+                : 'USAGE'}]
+            </span>
+            <span className="font-medium truncate sm:whitespace-normal">{c.label}</span>
+          </span>
+        ))}
+      </span>
     </span>
   );
 }
@@ -330,7 +351,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('soodfolio_lang') as Locale | null;
       if (savedLang === 'vi' || savedLang === 'en') {
-        setLang(savedLang);
+        queueMicrotask(() => {
+          setLang(savedLang);
+        });
       }
     }
   }, []);
@@ -351,7 +374,9 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   useEffect(() => {
     const savedTheme = localStorage.getItem('soodfolio-theme') as 'dark' | 'light' | null;
     if (savedTheme) {
-      setTheme(savedTheme);
+      queueMicrotask(() => {
+        setTheme(savedTheme);
+      });
       document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     } else {
       document.documentElement.classList.add('dark');
@@ -379,6 +404,21 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
   );
 
   const scrollToSection = useCallback((id: string) => {
+    if (id === 'project-01' || id === 'project-02' || id === 'project-03') {
+      const tabIndex = id === 'project-01' ? 0 : id === 'project-02' ? 1 : 2;
+      setActiveProjectTab(tabIndex);
+      const el = document.getElementById('works');
+      if (el) {
+        const headerOffset = 70;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }
+      return;
+    }
     const targetId = id === 'trajectory' ? 'experience' : id;
     const el = document.getElementById(targetId);
     if (el) {
@@ -390,7 +430,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         behavior: 'smooth',
       });
     }
-  }, []);
+  }, [setActiveProjectTab]);
 
   // Global Keyboard Shortcuts: Numbers 1-6 for Quick Slide Jump & Cmd+K for Command Palette
   useEffect(() => {
@@ -547,24 +587,25 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     }
   };
 
-  const directEmail = 'thinhthai963@gmail.com';
-  const userAvatar = getAssetPath(data?.profile?.avatarUrl || data?.avatarUrl || '/images/avatar.png');
-  const userTitle = data?.profile?.name || data?.title || 'THAI DO THINH';
-  const userTagline = data?.profile?.title || data?.tagline || 'Software Engineer // Full-Stack Developer';
-  const userBio = data?.profile?.roleDescription || data?.bio || t.hero.bio;
+  const userAvatar = getAssetPath(data?.profile?.avatarUrl || '/images/avatar.png');
+  const userTitle = data?.profile?.name || 'THAI DO THINH';
+  const userTagline = data?.profile?.title || 'Software Engineer // Full-Stack Developer';
+  const userBio = data?.profile?.roleDescription || t.hero.bio;
 
   // Multi-image collections for Project Image Stacks (Ngan xep hinh)
-  const rawProject1Images: string[] = data?.projects?.[0]?.screenshots || [
-    '/images/flexiconnect/1-job-search.png',
-    '/images/flexiconnect/2-job-detail-map.png',
-    '/images/flexiconnect/3-candidate-profile.png',
-    '/images/flexiconnect/4-ai-interview.png',
-    '/images/flexiconnect/5-ai-feedback.png',
-    '/images/flexiconnect/6-admin-dashboard.png',
-    '/images/flexiconnect/7-post-job.png',
-    '/images/flexiconnect/8-auth-portal.png',
-  ];
-  const project1Images = useMemo(() => rawProject1Images.map(getAssetPath), [rawProject1Images]);
+  const project1Images = useMemo(() => {
+    const raw: string[] = data?.projects?.[0]?.screenshots || [
+      '/images/flexiconnect/1-job-search.png',
+      '/images/flexiconnect/2-job-detail-map.png',
+      '/images/flexiconnect/3-candidate-profile.png',
+      '/images/flexiconnect/4-ai-interview.png',
+      '/images/flexiconnect/5-ai-feedback.png',
+      '/images/flexiconnect/6-admin-dashboard.png',
+      '/images/flexiconnect/7-post-job.png',
+      '/images/flexiconnect/8-auth-portal.png',
+    ];
+    return raw.map(getAssetPath);
+  }, [data?.projects]);
 
   const project1Captions = lang === 'vi' ? [
     'Tìm kiếm việc làm & Bộ lọc đa năng',
@@ -586,15 +627,17 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
     'Role-Based JWT Authentication Portal',
   ];
 
-  const rawProject2Images: string[] = data?.projects?.[1]?.screenshots || [
-    '/images/restaurant/1-menu-home.jpg',
-    '/images/restaurant/2-dish-detail.png',
-    '/images/restaurant/3-cart-checkout.png',
-    '/images/restaurant/4-order-momo.png',
-    '/images/restaurant/5-reviews.png',
-    '/images/restaurant/6-auth-login.png',
-  ];
-  const project2Images = useMemo(() => rawProject2Images.map(getAssetPath), [rawProject2Images]);
+  const project2Images = useMemo(() => {
+    const raw: string[] = data?.projects?.[1]?.screenshots || [
+      '/images/restaurant/1-menu-home.jpg',
+      '/images/restaurant/2-dish-detail.png',
+      '/images/restaurant/3-cart-checkout.png',
+      '/images/restaurant/4-order-momo.png',
+      '/images/restaurant/5-reviews.png',
+      '/images/restaurant/6-auth-login.png',
+    ];
+    return raw.map(getAssetPath);
+  }, [data?.projects]);
 
   const project2Captions = lang === 'vi' ? [
     'Khám phá thực đơn món ngon Sài Gòn Savory',
@@ -1104,23 +1147,24 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            {/* Left Vignette Blur Overlay for Inactive Prev Slide */}
+            {/* Left Vignette Edge Fade for Inactive Prev Slide */}
             {activeProjectTab > 0 && (
-              <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-16 lg:w-20 bg-gradient-to-r from-white dark:from-[#0d131a] via-white/85 dark:via-[#0d131a]/85 to-transparent backdrop-blur-[3px] z-20 rounded-l-2xl sm:rounded-l-3xl transition-opacity duration-300" />
+              <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-3 sm:w-4 bg-gradient-to-r from-white/70 dark:from-[#0d131a]/70 to-transparent z-10 rounded-l-2xl sm:rounded-l-3xl transition-opacity duration-300" />
             )}
 
-            {/* Right Vignette Blur Overlay for Inactive Next Slide (Khoanh đỏ) */}
+            {/* Right Vignette Edge Fade for Inactive Next Slide */}
             {activeProjectTab < 2 && (
-              <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-16 lg:w-20 bg-gradient-to-l from-white dark:from-[#0d131a] via-white/85 dark:via-[#0d131a]/85 to-transparent backdrop-blur-[3px] z-20 rounded-r-2xl sm:rounded-r-3xl transition-opacity duration-300" />
+              <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-3 sm:w-4 bg-gradient-to-l from-white/70 dark:from-[#0d131a]/70 to-transparent z-10 rounded-r-2xl sm:rounded-r-3xl transition-opacity duration-300" />
             )}
 
             <div
-              className="flex w-[300%] transition-transform duration-500 ease-out"
+              className="flex items-start w-[300%] transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${(activeProjectTab * 100) / 3}%)` }}
             >
               {/* SLIDE 01: FlexiConnect Web */}
               <div
                 id="project-01"
+                inert={activeProjectTab !== 0}
                 className={`w-1/3 shrink-0 px-2 sm:px-4 transition-all duration-500 ease-out ${
                   activeProjectTab === 0
                     ? 'opacity-100 blur-0'
@@ -1203,6 +1247,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               {/* SLIDE 02: Food Delivery & Restaurant App */}
               <div
                 id="project-02"
+                inert={activeProjectTab !== 1}
                 className={`w-1/3 shrink-0 px-2 sm:px-4 transition-all duration-500 ease-out ${
                   activeProjectTab === 1
                     ? 'opacity-100 blur-0'
@@ -1286,15 +1331,16 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
               {/* SLIDE 03: Dev Portfolio Engine */}
               <div
                 id="project-03"
+                inert={activeProjectTab !== 2}
                 className={`w-1/3 shrink-0 px-2 sm:px-4 transition-all duration-500 ease-out ${
                   activeProjectTab === 2
                     ? 'opacity-100 blur-0'
                     : 'opacity-15 blur-[4px] pointer-events-none select-none'
                 }`}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                   {/* LEFT: Content */}
-                  <div className="lg:col-span-7 flex flex-col justify-between space-y-5 h-full">
+                  <div className="lg:col-span-7 flex flex-col justify-start space-y-5">
                     <div className="flex items-center gap-2 font-mono text-xs text-[#0d9488] dark:text-[#2dd4bf] font-bold">
                       <span>03</span>
                       <span className="text-slate-400 dark:text-slate-600">·</span>
@@ -1352,7 +1398,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
                   </div>
 
                   {/* RIGHT: Live Site Notice & Specs Card */}
-                  <div className="lg:col-span-5 flex flex-col justify-between items-start h-full space-y-6">
+                  <div className="lg:col-span-5 flex flex-col justify-start items-start space-y-4">
                     <div className="w-full space-y-4">
                       <div className="flex flex-wrap items-center gap-3">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#f0fdfa] dark:bg-[#2dd4bf]/10 text-[#0d9488] dark:text-[#2dd4bf] border border-[#14b8a6]/30 dark:border-[#2dd4bf]/25">
@@ -1405,14 +1451,20 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
         {/* ======================================================================= */}
         {/* SECTION 04: CAPABILITIES (WITH AMBIENT WATERMARK TECH SILHOUETTES)      */}
         {/* ======================================================================= */}
-        <section id="skills" className="relative space-y-8 pt-6 overflow-hidden">
+        <section id="skills" className="relative space-y-8 pt-6">
           {/* Subtle Ambient Watermark SVGs in Background */}
           
           {/* Section Header */}
-          <div className="relative z-10 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07]">
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
-              {t.capabilities.title}
-            </h2>
+          <div className="relative z-10 pb-6 border-b border-[#e2e8f0] dark:border-white/[0.07] flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+            <div>
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white uppercase">
+                {t.capabilities.title}
+              </h2>
+            </div>
+            <p className="text-xs font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1.5 self-start sm:self-end">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488] dark:bg-[#2dd4bf] animate-pulse" />
+              <span>{lang === 'vi' ? 'Chạm hoặc rê chuột vào kỹ năng để xem nơi ứng dụng' : 'Hover or tap a skill to view practical context'}</span>
+            </p>
           </div>
 
           {/* Categorized Flowing Rows with Ambient Depth */}
@@ -1694,7 +1746,7 @@ export function VerticalStackDeck({ data }: VerticalStackDeckProps) {
 
             {/* Resume / Curriculum Vitae */}
             <a
-              href="https://soodthin.github.io/dev-portfolio/"
+              href={getAssetPath('/docs/version2.1.pdf')}
               target="_blank"
               rel="noopener noreferrer"
               className="p-4 rounded-xl border border-teal-300 dark:border-[#2dd4bf]/30 bg-teal-50/70 dark:bg-[#2dd4bf]/5 hover:bg-teal-100/70 dark:hover:bg-[#2dd4bf]/10 shadow-xs transition-all flex items-center gap-3 group"

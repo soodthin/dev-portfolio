@@ -187,7 +187,7 @@ export const portfolioData: PortfolioData = {
       featured: true,
       keyHighlights: [
         "100% static export (SSG) with automated deployment pipeline via GitHub Actions.",
-        "Pure typographic 2D vector flat-layered design system with zero icon or emoji dependencies.",
+        "Flat-layered design system with Tailwind CSS v4, Lucide React icons, and adaptive dark/light modes.",
         "Strict TypeScript typing throughout data models and component interfaces."
       ]
     }

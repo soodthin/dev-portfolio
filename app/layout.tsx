@@ -22,6 +22,19 @@ export const metadata: Metadata = {
   authors: [{ name: portfolioData.profile.name }],
 };
 
+const themeScript = `
+  (function() {
+    try {
+      var saved = localStorage.getItem('soodfolio-theme');
+      if (saved === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: {
@@ -29,7 +42,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`dark min-h-full ${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen antialiased selection:bg-[#c5a073]/30 selection:text-white font-sans">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="min-h-screen antialiased selection:bg-teal-500/20 selection:text-teal-200 font-sans">
         {children}
       </body>
     </html>
