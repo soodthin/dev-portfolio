@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useSyncExternalStore } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Maximize2, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { ProjectImage } from '@/types/portfolio';
@@ -219,7 +219,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               <article id={proj1.id} className="scroll-mt-24 space-y-5 lg:space-y-6">
               {/* Full-Width Project Header Bar */}
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
-                <div className="space-y-1.5 max-w-2xl">
+                <div className="space-y-2 max-w-2xl">
                   <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                     <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                       {proj1.number}
@@ -227,51 +227,60 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     <span>·</span>
                     <span>{proj1.subtitle}</span>
                   </div>
-                  <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)]">
-                    {proj1.title}
-                  </h3>
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    {proj1.demoUrl ? (
+                      <a
+                        href={proj1.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 hover:text-[var(--accent)] transition-colors"
+                      >
+                        <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                          {proj1.title}
+                        </h3>
+                        <ExternalLink
+                          size={20}
+                          className="text-[var(--accent)] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                        />
+                      </a>
+                    ) : (
+                      <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)]">
+                        {proj1.title}
+                      </h3>
+                    )}
+
+                    {proj1.githubUrl && (
+                      <MagneticButton strength={0.2}>
+                        <a
+                          href={proj1.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] hover:bg-[var(--surface-2)] text-[var(--text)] text-xs font-medium transition-colors"
+                        >
+                          <GithubIcon size={13} />
+                          <span>{t.works.sourceCodeBtn}</span>
+                        </a>
+                      </MagneticButton>
+                    )}
+                  </div>
+
                   <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl">
                     {proj1.description}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                  {proj1.demoUrl && (
-                    <a
-                      href={proj1.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                {/* Tech Stack in header replacing old action buttons */}
+                <div className="flex flex-wrap items-center gap-1.5 lg:justify-end max-w-xl shrink-0">
+                  {proj1.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
                     >
-                      <span>{t.works.liveDemoBtn}</span>
-                      <ExternalLink size={12} />
-                    </a>
-                  )}
-
-                  {proj1.githubUrl && (
-                    <MagneticButton strength={0.2}>
-                      <a
-                        href={proj1.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
-                      >
-                        <GithubIcon size={13} />
-                        <span>{t.works.sourceCodeBtn}</span>
-                      </a>
-                    </MagneticButton>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => onOpenLightbox(p1Images, p1Index, proj1.title)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
-                  >
-                    <Maximize2 size={12} strokeWidth={2} />
-                    <span>
-                      {t.works.viewGallery} ({p1Images.length})
+                      <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
+                      <span>{tag}</span>
                     </span>
-                  </button>
+                  ))}
                 </div>
               </div>
 
@@ -297,18 +306,6 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     layoutIdPrefix="proj1"
                     sectionLabel={t.works.architectureTitle}
                   />
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {proj1.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
-                      >
-                        <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
-                        <span>{tag}</span>
-                      </span>
-                    ))}
-                  </div>
                 </div>
 
                 {/* Right (7 cols): Perspective Browser Stage + Synced Caption + Thumbnails */}
@@ -454,7 +451,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               >
               {/* Full-Width Project Header Bar */}
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
-                <div className="space-y-1.5 max-w-2xl">
+                <div className="space-y-2 max-w-2xl">
                   <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                     <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                       {proj2.number}
@@ -462,51 +459,60 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     <span>·</span>
                     <span>{proj2.subtitle}</span>
                   </div>
-                  <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)]">
-                    {proj2.title}
-                  </h3>
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    {proj2.demoUrl ? (
+                      <a
+                        href={proj2.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 hover:text-[var(--accent)] transition-colors"
+                      >
+                        <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                          {proj2.title}
+                        </h3>
+                        <ExternalLink
+                          size={20}
+                          className="text-[var(--accent)] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                        />
+                      </a>
+                    ) : (
+                      <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)]">
+                        {proj2.title}
+                      </h3>
+                    )}
+
+                    {proj2.githubUrl && (
+                      <MagneticButton strength={0.2}>
+                        <a
+                          href={proj2.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] hover:bg-[var(--surface-2)] text-[var(--text)] text-xs font-medium transition-colors"
+                        >
+                          <GithubIcon size={13} />
+                          <span>{t.works.sourceCodeBtn}</span>
+                        </a>
+                      </MagneticButton>
+                    )}
+                  </div>
+
                   <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl">
                     {proj2.description}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                  {proj2.demoUrl && (
-                    <a
-                      href={proj2.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                {/* Tech Stack in header replacing old action buttons */}
+                <div className="flex flex-wrap items-center gap-1.5 lg:justify-end max-w-xl shrink-0">
+                  {proj2.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
                     >
-                      <span>{t.works.liveDemoBtn}</span>
-                      <ExternalLink size={13} />
-                    </a>
-                  )}
-
-                  {proj2.githubUrl && (
-                    <MagneticButton strength={0.2}>
-                      <a
-                        href={proj2.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
-                      >
-                        <GithubIcon size={14} />
-                        <span>{t.works.sourceCodeBtn}</span>
-                      </a>
-                    </MagneticButton>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => onOpenLightbox(p2Images, 0, proj2.title)}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
-                  >
-                    <Maximize2 size={13} strokeWidth={2} />
-                    <span>
-                      {t.works.viewGallery} ({p2Images.length})
+                      <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
+                      <span>{tag}</span>
                     </span>
-                  </button>
+                  ))}
                 </div>
               </div>
 
@@ -638,18 +644,6 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     layoutIdPrefix="proj2"
                     sectionLabel={t.works.architectureTitle}
                   />
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {proj2.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
-                      >
-                        <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
-                        <span>{tag}</span>
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </div>
             </article>
@@ -664,7 +658,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               <article id={proj3.id} className="scroll-mt-24 pt-8 lg:pt-10 border-t border-[var(--hairline)]">
                 <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 sm:p-7 lg:p-8">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
-                  <div className="space-y-1.5 max-w-2xl">
+                  <div className="space-y-2 max-w-2xl">
                     <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                       <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                         {proj3.number}
@@ -673,40 +667,59 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                       <span>{proj3.subtitle}</span>
                     </div>
 
-                    <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl tracking-[-0.02em] text-[var(--text)]">
-                      {proj3.title}
-                    </h3>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {proj3.demoUrl ? (
+                        <a
+                          href={proj3.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center gap-2 hover:text-[var(--accent)] transition-colors"
+                        >
+                          <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                            {proj3.title}
+                          </h3>
+                          <ExternalLink
+                            size={20}
+                            className="text-[var(--accent)] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                          />
+                        </a>
+                      ) : (
+                        <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)]">
+                          {proj3.title}
+                        </h3>
+                      )}
+
+                      {proj3.githubUrl && (
+                        <MagneticButton strength={0.2}>
+                          <a
+                            href={proj3.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] hover:bg-[var(--surface-2)] text-[var(--text)] text-xs font-medium transition-colors"
+                          >
+                            <GithubIcon size={13} />
+                            <span>{t.works.sourceCodeBtn}</span>
+                          </a>
+                        </MagneticButton>
+                      )}
+                    </div>
 
                     <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl">
                       {proj3.description}
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                    {proj3.demoUrl && (
-                      <a
-                        href={proj3.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                  {/* Tech Stack in header replacing old action buttons */}
+                  <div className="flex flex-wrap items-center gap-1.5 lg:justify-end max-w-xl shrink-0">
+                    {proj3.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
                       >
-                        <span>{t.works.liveDemoBtn}</span>
-                        <ExternalLink size={13} />
-                      </a>
-                    )}
-                    {proj3.githubUrl && (
-                      <MagneticButton strength={0.2}>
-                        <a
-                          href={proj3.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all"
-                        >
-                          <GithubIcon size={14} />
-                          <span>{t.works.sourceCodeBtn}</span>
-                        </a>
-                      </MagneticButton>
-                    )}
+                        <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
+                        <span>{tag}</span>
+                      </span>
+                    ))}
                   </div>
                 </div>
 
