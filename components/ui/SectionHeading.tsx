@@ -10,6 +10,7 @@ interface SectionHeadingProps {
   eyebrow: string;
   title: string;
   subtitle?: React.ReactNode;
+  rightElement?: React.ReactNode;
   className?: string;
 }
 
@@ -18,6 +19,7 @@ export function SectionHeading({
   eyebrow,
   title,
   subtitle,
+  rightElement,
   className = 'mb-14 md:mb-20',
 }: SectionHeadingProps) {
   const prefersReducedMotion = useReducedMotion();
@@ -33,9 +35,9 @@ export function SectionHeading({
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-10 items-end pb-7">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-end pb-5 sm:pb-6">
         {/* Left: Chapter Index + Eyebrow + Display Title */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className={rightElement ? 'lg:col-span-5 xl:col-span-4 space-y-3' : 'lg:col-span-7 space-y-3'}>
           <div className="flex items-center gap-3">
             <span className="font-mono text-xs tabular-nums font-semibold text-[var(--accent)]">
               {index}
@@ -59,8 +61,12 @@ export function SectionHeading({
           </div>
         </div>
 
-        {/* Right: Bottom-aligned Subtitle */}
-        {subtitle && (
+        {/* Right: Custom Element (e.g. Filters) or Subtitle */}
+        {rightElement ? (
+          <div className="lg:col-span-7 xl:col-span-8 lg:flex lg:justify-end pb-1">
+            {rightElement}
+          </div>
+        ) : subtitle ? (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -72,7 +78,7 @@ export function SectionHeading({
               {subtitle}
             </div>
           </motion.div>
-        )}
+        ) : null}
       </div>
 
       {/* Scroll-linked GPU hairline divider */}

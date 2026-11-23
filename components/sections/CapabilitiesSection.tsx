@@ -90,57 +90,57 @@ export function CapabilitiesSection() {
   return (
     <section
       id="skills"
-      className="relative bg-[var(--bg-alt)] chapter-divider-sheen lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center py-12 sm:py-14 lg:py-12 xl:py-14 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg-alt)] chapter-divider-sheen lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center py-10 md:py-14 lg:py-12 xl:py-14 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <ScrollDepthWrapper sectionId="skills" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <SectionHeading
           index="04"
           eyebrow={t.capabilities.eyebrow}
           title={t.capabilities.title}
-          className="mb-6 sm:mb-7 lg:mb-8"
+          className="mb-4 sm:mb-6"
+          rightElement={
+            <div
+              role="tablist"
+              aria-label="Filter skills by project"
+              className="flex flex-wrap items-center gap-2 lg:justify-end"
+            >
+              {PROJECT_FILTERS.map((filter) => {
+                const isActive = activeFilterKey === filter.key;
+                const label = lang === 'vi' ? filter.labelVi : filter.labelEn;
+                return (
+                  <button
+                    key={filter.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveFilterKey(filter.key)}
+                    className={`relative px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
+                      isActive
+                        ? 'text-[var(--accent-cta-text)]'
+                        : 'text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--hairline)] bg-[var(--surface-1)] hover:bg-[var(--surface-2)]'
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="projectCrossHighlightPill"
+                        transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
+                        className="absolute inset-0 rounded-full bg-[var(--accent-deep)] -z-10"
+                      />
+                    )}
+                    <span>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          }
         />
-
-        {/* Project Cross-Highlighter Bar (shared layoutId active pill) */}
-        <div
-          role="tablist"
-          aria-label="Filter skills by project"
-          className="flex flex-wrap items-center gap-2 pb-6 border-b border-[var(--hairline)]"
-        >
-          {PROJECT_FILTERS.map((filter) => {
-            const isActive = activeFilterKey === filter.key;
-            const label = lang === 'vi' ? filter.labelVi : filter.labelEn;
-            return (
-              <button
-                key={filter.key}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setActiveFilterKey(filter.key)}
-                className={`relative px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
-                  isActive
-                    ? 'text-[var(--accent-cta-text)]'
-                    : 'text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--hairline)] bg-[var(--surface-1)]'
-                }`}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="projectCrossHighlightPill"
-                    transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
-                    className="absolute inset-0 rounded-full bg-[var(--accent-deep)] -z-10"
-                  />
-                )}
-                <span>{label}</span>
-              </button>
-            );
-          })}
-        </div>
 
         {/* Editorial Grouped Rows (1px horizontal hairlines, zero nested cards) */}
         <div className="divide-y divide-[var(--hairline)]">
           {data.skills.map((group) => (
             <div
               key={group.category}
-              className="py-4 sm:py-4.5 lg:py-4 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 items-center"
+              className="py-5 sm:py-6 lg:py-5.5 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 items-center"
             >
               <div className="md:col-span-3">
                 <h3 className="text-sm sm:text-base font-semibold text-[var(--text)]">
