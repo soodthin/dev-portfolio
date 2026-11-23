@@ -451,13 +451,13 @@ export function ContactSection() {
           )}
 
           {/* Unified Horizontal Action Bar: Copy Email + Print Resume | LinkedIn + GitHub + Email + Phone */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2 no-print">
+          <div className="flex flex-wrap items-center gap-3.5 sm:gap-4 pt-4 sm:pt-6 no-print">
             {/* Primary Action: Copy Email */}
             <MagneticButton strength={0.2}>
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer shadow-lg shadow-[var(--accent)]/10 min-w-[136px]"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer shadow-lg shadow-[var(--accent)]/10 min-w-[144px]"
               >
                 <AnimatePresence mode="wait" initial={false}>
                   {copiedEmail ? (
@@ -467,9 +467,9 @@ export function ContactSection() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.15 }}
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                     >
-                      <Check size={15} strokeWidth={2.5} />
+                      <Check size={16} strokeWidth={2.5} />
                       <span>{t.contact.emailCopied}</span>
                     </motion.span>
                   ) : (
@@ -479,9 +479,9 @@ export function ContactSection() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.15 }}
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                     >
-                      <Copy size={15} strokeWidth={1.75} />
+                      <Copy size={16} strokeWidth={1.75} />
                       <span>{t.contact.copyEmail}</span>
                     </motion.span>
                   )}
@@ -495,21 +495,21 @@ export function ContactSection() {
                 type="button"
                 onClick={handlePrintResume}
                 title={t.contact.printHint}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
               >
-                <Printer size={15} strokeWidth={1.75} className="text-[var(--accent)]" />
+                <Printer size={16} strokeWidth={1.75} className="text-[var(--accent)]" />
                 <span>{t.contact.printResume}</span>
               </button>
             </MagneticButton>
 
-            {/* Vertical Divider "|" */}
+            {/* Vertical Divider "|" with Generous Spacing */}
             <span
-              className="hidden sm:inline-block h-6 w-px bg-[var(--hairline-strong)] opacity-60 mx-1"
+              className="hidden md:inline-block h-7 w-px bg-[var(--hairline-strong)] opacity-60 mx-2 lg:mx-3"
               aria-hidden="true"
             />
 
             {/* Direct Social Channels (LinkedIn, GitHub, Email, Phone) */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-3.5">
               {data.socials.map((soc) => {
                 const isExternal = soc.url.startsWith('http');
                 return (
@@ -518,18 +518,18 @@ export function ContactSection() {
                     href={soc.url}
                     target={isExternal ? '_blank' : undefined}
                     rel={isExternal ? 'noopener noreferrer' : undefined}
-                    className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/75 hover:bg-[var(--surface-2)] hover:border-[var(--accent)] text-[var(--text)] text-sm transition-all duration-200"
+                    className="group inline-flex items-center gap-2.5 px-5 py-3.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/75 hover:bg-[var(--surface-2)] hover:border-[var(--accent)] text-[var(--text)] text-sm font-medium transition-all duration-200"
                     title={`${soc.label}: ${soc.handle}`}
                   >
                     <span className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:scale-110 transition-all">
                       {getSocialIcon(soc.label)}
                     </span>
-                    <span className="font-serif font-semibold text-xs sm:text-sm group-hover:text-[var(--accent)] transition-colors">
+                    <span className="font-serif font-semibold text-sm group-hover:text-[var(--accent)] transition-colors">
                       {soc.label}
                     </span>
                     {isExternal && (
                       <ArrowUpRight
-                        size={12}
+                        size={13}
                         strokeWidth={1.75}
                         className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                       />
