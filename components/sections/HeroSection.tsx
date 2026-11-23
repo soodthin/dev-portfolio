@@ -9,6 +9,7 @@ import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { getAssetPath } from '@/lib/asset';
 import { RollingCounter } from '@/components/motion/RollingCounter';
 import { MagneticButton } from '@/components/motion/MagneticButton';
+import { SpotlightSurface } from '@/components/ui/SpotlightSurface';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -25,7 +26,6 @@ export function HeroSection() {
 
   // Subtle GPU-only scroll-out depth recede
   const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.45]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 28]);
 
   const roleHeadline =
@@ -37,27 +37,16 @@ export function HeroSection() {
     <section
       id="summary"
       ref={sectionRef}
-      className="relative pt-28 pb-20 md:pt-36 md:pb-28 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative pt-24 pb-20 md:pt-32 md:pb-28 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <motion.div
         style={
           prefersReducedMotion
             ? undefined
-            : { scale: contentScale, opacity: contentOpacity, y: contentY }
+            : { scale: contentScale, y: contentY }
         }
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform"
       >
-        {/* Status Line */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-7 mb-10 border-b border-[var(--hairline)]">
-          <div className="inline-flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
-            <span className="w-2 h-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-            <span className="font-medium tracking-wide">{data.profile.statusText}</span>
-          </div>
-          <span className="font-mono text-xs text-[var(--text-muted)] tabular-nums">
-            {data.profile.location}
-          </span>
-        </div>
-
         {/* Main Hero Row: Balanced Height Between Headline+Lead and Circular Avatar */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           <div className="lg:col-span-8 space-y-6">
@@ -165,32 +154,34 @@ export function HeroSection() {
           </motion.div>
         )}
 
-        {/* Clean Horizontal divide-x Metrics Strip */}
+        {/* Clean Elevated Metrics Strip */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
-          className="mt-12 pt-10 border-t border-[var(--hairline)]"
+          className="mt-12"
         >
-          <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--hairline)]">
-            {data.metrics.map((metric, idx) => (
-              <div
-                key={idx}
-                className="py-5 lg:py-0 lg:px-7 first:lg:pl-0 last:lg:pr-0 flex flex-col justify-between gap-2"
-              >
-                <div className="text-3xl sm:text-4xl font-mono font-bold text-[var(--text)] tracking-tight tabular-nums">
-                  <RollingCounter value={metric.value} suffix={metric.suffix} />
+          <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--hairline)]">
+              {data.metrics.map((metric, idx) => (
+                <div
+                  key={idx}
+                  className="py-5 lg:py-0 lg:px-7 first:lg:pl-0 last:lg:pr-0 flex flex-col justify-between gap-3"
+                >
+                  <div className="text-3xl sm:text-4xl font-mono font-bold text-[var(--text)] tracking-tight tabular-nums">
+                    <RollingCounter value={metric.value} suffix={metric.suffix} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <h3 className="text-sm font-semibold text-[var(--text)]">{metric.label}</h3>
+                    <p className="text-xs text-[var(--text)]/80 leading-relaxed">
+                      {metric.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <h3 className="text-sm font-semibold text-[var(--text)]">{metric.label}</h3>
-                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                    {metric.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </SpotlightSurface>
         </motion.div>
       </motion.div>
     </section>

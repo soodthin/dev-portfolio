@@ -117,7 +117,6 @@ export function CapabilitiesSection() {
           index="04"
           eyebrow={t.capabilities.eyebrow}
           title={t.capabilities.title}
-          subtitle={t.capabilities.subtitle}
           className="mb-12"
         />
 

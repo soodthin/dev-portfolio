@@ -150,8 +150,7 @@ export const translations: Record<Locale, Translations> = {
     capabilities: {
       eyebrow: 'Capabilities',
       title: 'Technical Matrix',
-      subtitle:
-        'Languages, frameworks, databases, and verification workflows mapped directly to shipped production systems.',
+      subtitle: '',
       filterAll: 'All',
       filterLanguages: 'Languages',
       filterFrameworks: 'Frameworks & Platforms',
@@ -253,8 +252,7 @@ export const translations: Record<Locale, Translations> = {
     capabilities: {
       eyebrow: 'Năng lực',
       title: 'Ma trận Công nghệ',
-      subtitle:
-        'Ngôn ngữ, framework, cơ sở dữ liệu và quy trình kiểm chứng gắn liền với các hệ thống thực tế.',
+      subtitle: '',
       filterAll: 'Tất cả',
       filterLanguages: 'Ngôn ngữ',
       filterFrameworks: 'Frameworks & Nền tảng',

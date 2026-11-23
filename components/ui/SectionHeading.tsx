@@ -28,21 +28,11 @@ export function SectionHeading({
     offset: ['start end', 'end start'],
   });
 
-  // GPU-only scroll parallax & hairline draw
-  const watermarkY = useTransform(scrollYProgress, [0, 1], [20, -20]);
+  // GPU-only scroll hairline draw
   const ruleScale = useTransform(scrollYProgress, [0, 0.35], [0.18, 1]);
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
-      {/* Subtle scroll-linked watermark chapter numeral */}
-      <motion.span
-        aria-hidden="true"
-        style={prefersReducedMotion ? undefined : { y: watermarkY }}
-        className="pointer-events-none select-none hidden md:block absolute -top-10 -left-3 font-serif font-bold text-[8.5rem] leading-none tracking-tighter text-[var(--text)]/[0.04] will-change-transform"
-      >
-        {index}
-      </motion.span>
-
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-10 items-end pb-7">
         {/* Left: Chapter Index + Eyebrow + Display Title */}
         <div className="lg:col-span-7 space-y-3">
