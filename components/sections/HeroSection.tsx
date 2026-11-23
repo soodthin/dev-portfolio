@@ -26,7 +26,7 @@ const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
  * Drop-in replacement for Next.js 16 static export (Obsidian + Teal, EN/VI, Dark/Light).
  * Features:
  * - Unboxed open layout with strict design tokens (no rounded cards, no glassmorphism, no eyebrows).
- * - Compact chamfered portrait (5:4 aspect ratio) with quiet live GMT+7 timestamp.
+ * - Chamfered portrait aligned precisely to the bottom of the CTA row.
  * - Ultra-subtle sky starfield canvas synced to ContactSection Deep Starfield (auto-paused off-screen).
  * - Progressive disclosure for full background paragraphs & clean 4-metric strip without subscripts.
  */
@@ -37,7 +37,6 @@ export function HeroSection() {
 
   const [bioOpen, setBioOpen] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [saigonTime, setSaigonTime] = useState<string>('');
 
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -60,27 +59,6 @@ export function HeroSection() {
         window.clearTimeout(copyTimerRef.current);
       }
     };
-  }, []);
-
-  // Client-only Saigon live clock (HH:MM GMT+7) to prevent SSR/SSG hydration mismatch
-  useEffect(() => {
-    const updateClock = () => {
-      try {
-        const formatted = new Intl.DateTimeFormat('en-GB', {
-          timeZone: 'Asia/Ho_Chi_Minh',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }).format(new Date());
-        setSaigonTime(formatted);
-      } catch {
-        setSaigonTime('');
-      }
-    };
-
-    updateClock();
-    const interval = window.setInterval(updateClock, 15000);
-    return () => window.clearInterval(interval);
   }, []);
 
   // Subtle GPU-only scroll-out depth recede
@@ -255,7 +233,6 @@ export function HeroSection() {
       ? 'Kỹ sư Phần mềm & Tự động hóa FinTech'
       : 'Software Engineer & FinTech Automation';
 
-  const cityLabel = lang === 'vi' ? 'TP. Hồ Chí Minh' : 'Ho Chi Minh City';
   const readStoryLabel = lang === 'vi' ? 'Đọc thêm quá trình làm việc' : 'Read full background';
   const hideStoryLabel = lang === 'vi' ? 'Thu gọn' : 'Collapse background';
 
@@ -400,15 +377,15 @@ export function HeroSection() {
             </AnimatePresence>
           </div>
 
-          {/* Right Column (4 cols): Compact Chamfered Portrait (Reduced Height 5:4) */}
+          {/* Right Column (4 cols): Chamfered Portrait Aligned with Left Actions */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.12, ease: EASE_OUT }}
-            className="lg:col-span-4 flex flex-col lg:items-end gap-3.5 lg:pt-1"
+            className="lg:col-span-4 flex flex-col lg:items-end lg:pt-1"
           >
             <div
-              className="group relative w-52 sm:w-60 lg:w-64 aspect-[5/4] overflow-hidden bg-[var(--surface-2)]"
+              className="group relative w-60 sm:w-64 lg:w-[270px] xl:w-[280px] h-[290px] sm:h-[310px] lg:h-[318px] overflow-hidden bg-[var(--surface-2)] shadow-xl"
               style={{
                 clipPath:
                   'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)',
@@ -419,17 +396,12 @@ export function HeroSection() {
                   src={getAssetPath(data.profile.avatarUrl)}
                   alt={data.profile.name}
                   fill
-                  sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 256px"
+                  sizes="(max-width: 640px) 240px, (max-width: 1024px) 260px, 280px"
                   priority
                   unoptimized
-                  className="object-cover object-[50%_70%] scale-[1.2]"
+                  className="object-cover object-[50%_30%]"
                 />
               </div>
-            </div>
-
-            <div className="font-mono text-xs text-[var(--text-muted)] tabular-nums lg:text-right">
-              {cityLabel}
-              {saigonTime ? ` · ${saigonTime} GMT+7` : ' · GMT+7'}
             </div>
           </motion.div>
         </div>
