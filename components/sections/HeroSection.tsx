@@ -105,8 +105,8 @@ export function HeroSection() {
     const drawFrame = () => {
       ctx.clearRect(0, 0, width, height);
       const isDark = themeRef.current === 'dark';
-      const baseRgb = isDark ? '226, 232, 240' : '15, 23, 42';
-      const accentRgb = isDark ? '45, 212, 191' : '13, 148, 136';
+      const baseRgb = isDark ? '226, 232, 240' : '13, 21, 29';
+      const accentRgb = isDark ? '45, 212, 191' : '10, 108, 101';
 
       smoothNormX += (targetNormX - smoothNormX) * 0.05;
       smoothNormY += (targetNormY - smoothNormY) * 0.05;

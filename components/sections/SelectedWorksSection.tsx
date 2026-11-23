@@ -123,7 +123,7 @@ function HighlightExplorer({
       </div>
 
       {/* Active Highlight Detail Panel with strictly fixed height to prevent layout shifts */}
-      <SpotlightSurface className="rounded-xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 h-[200px] sm:h-[175px] lg:h-[170px] overflow-hidden flex flex-col justify-start">
+      <SpotlightSurface className="rounded-xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 h-[200px] sm:h-[175px] lg:h-[170px] overflow-hidden flex flex-col justify-start shadow-[var(--surface-shadow)]">
         <AnimatePresence mode="wait">
           <motion.div
             key={safeIdx}
@@ -289,7 +289,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 {/* Left (5 cols): Metrics + Interactive All-Highlights Switcher + Tech Stack */}
                 <div className="lg:col-span-5 space-y-5 lg:space-y-6">
                   {proj1.metricsList && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-px rounded-xl overflow-hidden border border-[var(--hairline)] bg-[var(--hairline)]">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-px rounded-xl overflow-hidden border border-[var(--hairline)] bg-[var(--hairline)] shadow-[var(--surface-shadow)]">
                       {proj1.metricsList.map((m, i) => (
                         <div key={i} className="bg-[var(--surface-1)] px-3 py-2 sm:py-2.5">
                           <div className="font-mono text-xl font-bold tabular-nums text-[var(--text)]">
@@ -320,7 +320,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                         ? { rotateX: p1RotateX, scale: p1Scale, transformOrigin: 'center bottom' }
                         : undefined
                     }
-                    className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] overflow-hidden shadow-xl will-change-transform"
+                    className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] overflow-hidden shadow-[var(--surface-shadow)] will-change-transform"
                   >
                     {/* Browser Chrome */}
                     <div className="flex items-center justify-between px-3.5 py-2 border-b border-[var(--hairline)] bg-[var(--surface-2)]">
@@ -627,7 +627,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 {/* Right (6 cols): Metrics + Interactive Highlights + Tech Stack */}
                 <div className="lg:col-span-6 space-y-7">
                   {proj2.metricsList && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-xl overflow-hidden border border-[var(--hairline)] bg-[var(--hairline)]">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-xl overflow-hidden border border-[var(--hairline)] bg-[var(--hairline)] shadow-[var(--surface-shadow)]">
                       {proj2.metricsList.map((m, i) => (
                         <div key={i} className="bg-[var(--surface-1)] px-4 py-3.5">
                           <div className="font-mono text-xl font-bold tabular-nums text-[var(--text)]">
@@ -656,7 +656,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
           {proj3 && (
             <ScrollDepthWrapper sectionId={proj3.id}>
               <article id={proj3.id} className="scroll-mt-24 pt-8 lg:pt-10 border-t border-[var(--hairline)]">
-                <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 sm:p-7 lg:p-8">
+                <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 sm:p-7 lg:p-8 shadow-[var(--surface-shadow)]">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
                   <div className="space-y-2 max-w-2xl">
                     <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">

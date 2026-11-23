@@ -190,8 +190,8 @@ export function ContactSection() {
       ctx.clearRect(0, 0, width, height);
 
       const isDark = themeRef.current === 'dark';
-      const baseRgb = isDark ? '226, 232, 240' : '15, 23, 42';
-      const accentRgb = isDark ? '45, 212, 191' : '13, 148, 136';
+      const baseRgb = isDark ? '226, 232, 240' : '13, 21, 29';
+      const accentRgb = isDark ? '45, 212, 191' : '10, 108, 101';
 
       const hasTarget = mouse.active;
       const targetX = mouse.tx;

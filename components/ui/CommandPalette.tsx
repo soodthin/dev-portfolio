@@ -193,7 +193,7 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl rounded-2xl bg-[var(--surface-1)] border border-[var(--hairline)] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+        className="relative w-full max-w-2xl rounded-2xl bg-[var(--surface-1)] border border-[var(--hairline)] shadow-[var(--surface-shadow)] dark:shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDownInList}
       >

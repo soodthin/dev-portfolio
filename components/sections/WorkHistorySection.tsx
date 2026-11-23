@@ -48,7 +48,7 @@ export function WorkHistorySection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Left Sticky Column (5 cols): Overview + Live SVG 5-Stage Pipeline */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 lg:self-start space-y-6">
-            <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7">
+            <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7 shadow-[var(--surface-shadow)]">
               <div className="flex items-center justify-between gap-3 mb-4">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-[var(--accent)] bg-[var(--accent-wash)] border border-[var(--hairline-strong)]">
                   {t.experience.companyBadge}
@@ -83,7 +83,7 @@ export function WorkHistorySection() {
 
             {/* 5-Stage Pipeline with Live SVG Data Stream */}
             {stages.length > 0 && (
-              <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6">
+              <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 shadow-[var(--surface-shadow)]">
                 <div className="flex items-center justify-between gap-2 pb-4 border-b border-[var(--hairline)] mb-5">
                   <h4 className="text-sm font-semibold text-[var(--text)]">
                     {t.experience.pipelineTitle}
@@ -217,7 +217,7 @@ export function WorkHistorySection() {
                       onMouseEnter={() => setActiveIndex(idx)}
                       className={`w-full text-left py-5 px-4 -mx-4 rounded-xl transition-colors cursor-pointer flex items-start gap-4 relative ${
                         isSynced
-                          ? 'bg-[var(--surface-1)]'
+                          ? 'bg-[var(--surface-1)] shadow-[var(--surface-shadow)]'
                           : 'hover:bg-[var(--surface-1)]/60'
                       }`}
                     >

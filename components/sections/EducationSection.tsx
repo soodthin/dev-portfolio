@@ -27,7 +27,7 @@ export function EducationSection() {
           {/* Row 1: Academic Credential (7 cols) + Language Proficiencies (5 cols) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
             {/* Degree & Institution Card */}
-            <div className="lg:col-span-7 rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7 flex flex-col justify-between hover:border-[var(--hairline-strong)] transition-colors">
+            <div className="lg:col-span-7 rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7 flex flex-col justify-between hover:border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] transition-colors">
               <div>
                 <div className="flex flex-wrap items-center gap-2 text-xs mb-3.5">
                   <span className="font-mono text-xs tabular-nums text-[var(--accent)] font-medium px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)]">
@@ -63,7 +63,7 @@ export function EducationSection() {
             </div>
 
             {/* Languages Card (Clean badges, zero tacky progress bars) */}
-            <div className="lg:col-span-5 rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7 flex flex-col justify-between hover:border-[var(--hairline-strong)] transition-colors">
+            <div className="lg:col-span-5 rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7 flex flex-col justify-between hover:border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] transition-colors">
               <div>
                 <div className="flex items-center justify-between pb-3 border-b border-[var(--hairline)] mb-4">
                   <h4 className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">
@@ -96,7 +96,7 @@ export function EducationSection() {
           </div>
 
           {/* Row 2: Core Coursework (Full-width clean chip cloud, zero orphaned grid cells) */}
-          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7 hover:border-[var(--hairline-strong)] transition-colors">
+          <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7 hover:border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] transition-colors">
             <div className="flex items-center justify-between pb-3.5 border-b border-[var(--hairline)] mb-4">
               <h4 className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">
                 {t.education.courseworkTitle}

@@ -21,7 +21,7 @@ export function SectionTracker() {
     /* Restricted to 2xl (1536px+) so it never overlaps the max-w-7xl content grid at 1280px–1440px */
     <aside
       aria-label="Section Tracker"
-      className="hidden 2xl:flex fixed right-6 top-1/2 -translate-y-1/2 z-30 flex-col gap-2 py-2.5 px-1.5 rounded-full bg-[var(--surface-1)] border border-[var(--hairline)] select-none no-print"
+      className="hidden 2xl:flex fixed right-6 top-1/2 -translate-y-1/2 z-30 flex-col gap-2 py-2.5 px-1.5 rounded-full bg-[var(--surface-1)] border border-[var(--hairline)] shadow-[var(--surface-shadow)] select-none no-print"
     >
       {SECTIONS.map((sec) => {
         const isActive = activeSection === sec.id;
