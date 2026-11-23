@@ -356,40 +356,6 @@ export function HeroSection() {
                 </button>
               )}
             </motion.div>
-
-            {/* Expandable Full Background (Smooth Kinetic Accordion Disclosure) */}
-            <AnimatePresence initial={false}>
-              {bioOpen && data.profile.aboutParagraphs.length > 0 && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{
-                    height: 'auto',
-                    opacity: 1,
-                    transition: {
-                      height: { duration: 0.42, ease: EASE_OUT },
-                      opacity: { duration: 0.28, delay: 0.08, ease: 'easeOut' },
-                    },
-                  }}
-                  exit={{
-                    height: 0,
-                    opacity: 0,
-                    transition: {
-                      height: { duration: 0.32, ease: EASE_OUT },
-                      opacity: { duration: 0.18, ease: 'easeIn' },
-                    },
-                  }}
-                  className="overflow-hidden"
-                >
-                  <div className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-2xl">
-                    {data.profile.aboutParagraphs.map((para, idx) => (
-                      <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.7]">
-                        {para}
-                      </p>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Right Column (4 cols): Chamfered Portrait Aligned with Left Actions */}
@@ -420,6 +386,84 @@ export function HeroSection() {
             </div>
           </motion.div>
         </div>
+
+        {/* Full-Width Expandable Background (Spans all 12 cols, fully utilizing the space below the avatar) */}
+        <AnimatePresence initial={false}>
+          {bioOpen && data.profile.aboutParagraphs.length > 0 && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{
+                height: 'auto',
+                opacity: 1,
+                transition: {
+                  height: { duration: 0.42, ease: EASE_OUT },
+                  opacity: { duration: 0.28, delay: 0.08, ease: 'easeOut' },
+                },
+              }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                transition: {
+                  height: { duration: 0.32, ease: EASE_OUT },
+                  opacity: { duration: 0.18, ease: 'easeIn' },
+                },
+              }}
+              className="overflow-hidden"
+            >
+              <div className="pt-8 mt-8 border-t border-[var(--hairline)] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full">
+                {/* Left (8 cols): Two Detailed Narrative Paragraphs */}
+                <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+                  {data.profile.aboutParagraphs.map((para, idx) => (
+                    <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.75]">
+                      {para}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Right (4 cols): Utilizing the space directly beneath the avatar */}
+                <div className="lg:col-span-4 space-y-5 lg:pl-6 border-t lg:border-t-0 lg:border-l border-[var(--hairline)] pt-6 lg:pt-0">
+                  <div>
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--accent)] block mb-1">
+                      {lang === 'vi' ? 'Học vấn & Đào tạo' : 'Academic Foundation'}
+                    </span>
+                    <p className="text-sm font-medium text-[var(--text)]">
+                      {data.education.degree}
+                    </p>
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                      {data.education.school}
+                    </p>
+                    <p className="font-mono text-[11px] text-[var(--text-muted)] mt-1 opacity-70">
+                      {data.education.period}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-[var(--hairline)]">
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--accent)] block mb-2">
+                      {lang === 'vi' ? 'Trọng tâm kỹ thuật' : 'Core Focus & Stack'}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        'FastAPI',
+                        'Spring Boot',
+                        'FinTech Automation',
+                        'AI OCR Pipelines',
+                        'PostgreSQL',
+                        'Redis',
+                      ].map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 rounded text-[11px] font-mono bg-[var(--surface-2)] text-[var(--text-muted)] border border-[var(--hairline)]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Bottom Open Typographic Metrics Strip (Clean Figures Only — Zero Subscripts) */}
         <motion.div
