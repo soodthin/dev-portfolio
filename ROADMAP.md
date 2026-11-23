@@ -66,7 +66,7 @@ flowchart TD
   - Ảnh chân dung bo góc viền kép, tagline chức danh, status pill `AVAILABLE FOR DEVELOPER ROLES`, nút liên kết nhanh.
 - [x] **3.3. Work History / Experience**:
   - Trình bày kinh nghiệm thực tập tại BW Industrial Development JSC với metrics định lượng, kỹ thuật Gemini OCR fallback, Redis cache, và bảo mật OAuth2 SSO.
-- [x] **3.4. Selected Works / Projects**:
+- [x] **3.4. Work Experience / Projects**:
   - Bộ trình chiếu 3 dự án lớn (FlexiConnect Web, Food Delivery & Restaurant App, Dev Portfolio Engine) với slider chuyển tab và ProjectImageStack đa ảnh chụp thực tế.
 - [x] **3.5. Capabilities & Skills Matrix**:
   - Lưới kỹ năng phân loại trực quan (Languages, Frameworks, Databases, Tools/DevOps, AI-assisted) với tooltip hiển thị ngữ cảnh ứng dụng thực tế.

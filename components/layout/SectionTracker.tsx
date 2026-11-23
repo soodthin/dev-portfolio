@@ -7,7 +7,7 @@ import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 const SECTIONS = [
   { id: 'summary', number: '01', labelEn: 'Summary', labelVi: 'Tổng quan' },
   { id: 'experience', number: '02', labelEn: 'Experience', labelVi: 'Kinh nghiệm' },
-  { id: 'works', number: '03', labelEn: 'Selected Works', labelVi: 'Dự án' },
+  { id: 'works', number: '03', labelEn: 'Work Experience', labelVi: 'Dự án' },
   { id: 'skills', number: '04', labelEn: 'Capabilities', labelVi: 'Năng lực' },
   { id: 'education', number: '05', labelEn: 'Education', labelVi: 'Học vấn' },
   { id: 'contact', number: '06', labelEn: 'Contact', labelVi: 'Liên hệ' },

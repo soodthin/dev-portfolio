@@ -104,7 +104,7 @@ export const translations: Record<Locale, Translations> = {
     nav: {
       summary: 'Summary',
       experience: 'Experience',
-      works: 'Selected Works',
+      works: 'Work Experience',
       skills: 'Capabilities',
       education: 'Education',
       contact: 'Contact',
@@ -121,7 +121,7 @@ export const translations: Record<Locale, Translations> = {
     },
     hero: {
       eyebrow: 'Summary',
-      viewWork: 'Selected Works',
+      viewWork: 'Work Experience',
       contactMe: 'Get in Touch',
       metricsCaption: 'Engineering Impact',
     },
@@ -137,7 +137,7 @@ export const translations: Record<Locale, Translations> = {
       techStackTitle: 'Core Stack',
     },
     works: {
-      eyebrow: 'Selected Works',
+      eyebrow: 'Work Experience',
       title: 'Shipped Systems',
       subtitle:
         'Three full-stack production systems built for transaction integrity, clear architecture, and measurable outcomes.',
