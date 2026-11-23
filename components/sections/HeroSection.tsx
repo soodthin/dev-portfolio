@@ -351,9 +351,19 @@ export function HeroSection() {
                   type="button"
                   onClick={() => setBioOpen((prev) => !prev)}
                   aria-expanded={bioOpen}
-                  className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+                  className="inline-flex items-center text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
                 >
-                  {bioOpen ? `${hideStoryLabel} −` : `${readStoryLabel} +`}
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={bioOpen ? 'hide' : 'read'}
+                      initial={{ opacity: 0, y: -2 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 2 }}
+                      transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      {bioOpen ? `${hideStoryLabel} −` : `${readStoryLabel} +`}
+                    </motion.span>
+                  </AnimatePresence>
                 </button>
               )}
             </motion.div>
@@ -392,26 +402,60 @@ export function HeroSection() {
         <AnimatePresence initial={false}>
           {bioOpen && data.profile.aboutParagraphs.length > 0 && (
             <motion.div
+              key="bio-expandable-wrapper"
               initial={{ height: 0, opacity: 0 }}
               animate={{
                 height: 'auto',
                 opacity: 1,
                 transition: {
-                  height: { duration: 0.42, ease: EASE_OUT },
-                  opacity: { duration: 0.28, delay: 0.08, ease: 'easeOut' },
+                  height: {
+                    duration: prefersReducedMotion ? 0 : 0.52,
+                    ease: [0.16, 1, 0.3, 1],
+                  },
+                  opacity: {
+                    duration: prefersReducedMotion ? 0 : 0.38,
+                    delay: prefersReducedMotion ? 0 : 0.05,
+                    ease: 'easeOut',
+                  },
                 },
               }}
               exit={{
                 height: 0,
                 opacity: 0,
                 transition: {
-                  height: { duration: 0.32, ease: EASE_OUT },
-                  opacity: { duration: 0.18, ease: 'easeIn' },
+                  height: {
+                    duration: prefersReducedMotion ? 0 : 0.4,
+                    ease: [0.16, 1, 0.3, 1],
+                  },
+                  opacity: {
+                    duration: prefersReducedMotion ? 0 : 0.22,
+                    ease: 'easeIn',
+                  },
                 },
               }}
-              className="overflow-hidden"
+              className="overflow-hidden will-change-[height,opacity]"
             >
-              <div className="pt-8 mt-8 border-t border-[var(--hairline)] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full">
+              <motion.div
+                initial={prefersReducedMotion ? false : { y: -16, opacity: 0.2 }}
+                animate={{
+                  y: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: prefersReducedMotion ? 0 : 0.48,
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: prefersReducedMotion ? 0 : 0.04,
+                  },
+                }}
+                exit={{
+                  y: -12,
+                  opacity: 0,
+                  transition: {
+                    duration: prefersReducedMotion ? 0 : 0.22,
+                    ease: 'easeIn',
+                  },
+                }}
+                className="pt-8 mt-8 border-t border-[var(--hairline)] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full will-change-transform"
+              >
                 {/* Left (8 cols): Two Detailed Narrative Paragraphs */}
                 <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
                   {data.profile.aboutParagraphs.map((para, idx) => (
@@ -461,7 +505,7 @@ export function HeroSection() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
