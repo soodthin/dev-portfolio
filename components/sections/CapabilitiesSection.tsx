@@ -90,21 +90,21 @@ export function CapabilitiesSection() {
   return (
     <section
       id="skills"
-      className="relative bg-[var(--bg-alt)] chapter-divider-sheen lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center py-10 md:py-14 lg:py-10 xl:py-12 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg-alt)] chapter-divider-sheen lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center py-12 sm:py-14 lg:py-12 xl:py-14 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <ScrollDepthWrapper sectionId="skills" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <SectionHeading
           index="04"
           eyebrow={t.capabilities.eyebrow}
           title={t.capabilities.title}
-          className="mb-5 sm:mb-6 lg:mb-7"
+          className="mb-6 sm:mb-7 lg:mb-8"
         />
 
         {/* Project Cross-Highlighter Bar (shared layoutId active pill) */}
         <div
           role="tablist"
           aria-label="Filter skills by project"
-          className="flex flex-wrap items-center gap-2 pb-5 lg:pb-6 border-b border-[var(--hairline)]"
+          className="flex flex-wrap items-center gap-2 pb-6 border-b border-[var(--hairline)]"
         >
           {PROJECT_FILTERS.map((filter) => {
             const isActive = activeFilterKey === filter.key;
@@ -116,7 +116,7 @@ export function CapabilitiesSection() {
                 role="tab"
                 aria-selected={isActive}
                 onClick={() => setActiveFilterKey(filter.key)}
-                className={`relative px-3.5 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                className={`relative px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
                   isActive
                     ? 'text-[var(--accent-cta-text)]'
                     : 'text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--hairline)] bg-[var(--surface-1)]'
@@ -140,15 +140,15 @@ export function CapabilitiesSection() {
           {data.skills.map((group) => (
             <div
               key={group.category}
-              className="py-3.5 sm:py-4 lg:py-3.5 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 items-center"
+              className="py-4 sm:py-4.5 lg:py-4 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 items-center"
             >
               <div className="md:col-span-3">
-                <h3 className="text-xs sm:text-sm font-semibold text-[var(--text)]">
+                <h3 className="text-sm sm:text-base font-semibold text-[var(--text)]">
                   {getCategoryLabel(group.category)}
                 </h3>
               </div>
 
-              <div className="md:col-span-9 flex flex-wrap gap-2">
+              <div className="md:col-span-9 flex flex-wrap gap-2 sm:gap-2.5">
                 {group.skills.map((skill) => {
                   const isHighlighted =
                     activeFilterKey !== 'all' && skillMatchesFilter(skill, activeFilter);
@@ -163,7 +163,7 @@ export function CapabilitiesSection() {
                         scale: isHighlighted ? 1.03 : 1,
                       }}
                       transition={{ duration: 0.22, ease: EASE_OUT_EXPO }}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors will-change-transform ${
+                      className={`inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border transition-colors will-change-transform ${
                         isHighlighted
                           ? 'border-[var(--hairline-strong)] bg-[var(--surface-2)] text-[var(--text)] ring-1 ring-[var(--accent)]/30'
                           : 'border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text)]'
@@ -171,7 +171,7 @@ export function CapabilitiesSection() {
                     >
                       <TechIcon
                         name={skill.name}
-                        size={13}
+                        size={15}
                         className={
                           isHighlighted
                             ? 'text-[var(--accent)]'
