@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Copy, Check, Printer, ArrowUpRight } from 'lucide-react';
+import { Copy, Check, Printer, ArrowUpRight, Mail, Phone } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'motion/react';
+import { siGithub } from 'simple-icons';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 import { SaigonLiveClock } from '@/components/ui/SaigonLiveClock';
@@ -26,14 +27,62 @@ interface Meteor {
   life: number;
 }
 
+function LinkedInIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451c.978 0 1.778-.773 1.778-1.729V1.73C24 .774 23.205 0 22.225 0z" />
+    </svg>
+  );
+}
+
+function GitHubIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d={siGithub.path} />
+    </svg>
+  );
+}
+
+function getSocialIcon(label: string) {
+  switch (label.toLowerCase()) {
+    case 'linkedin':
+      return <LinkedInIcon size={16} className="shrink-0" />;
+    case 'github':
+      return <GitHubIcon size={16} className="shrink-0" />;
+    case 'email':
+      return <Mail size={16} strokeWidth={1.75} className="shrink-0" />;
+    case 'phone':
+      return <Phone size={16} strokeWidth={1.75} className="shrink-0" />;
+    default:
+      return null;
+  }
+}
+
 /**
- * ContactSection — Deep Starfield Edition
+ * ContactSection — Full-Width Deep Starfield Edition
  * Drop-in replacement for Next.js 16 static export (Obsidian + Teal, EN/VI, Dark/Light).
  * Features:
- * - 60FPS GPU-friendly Canvas 2D 3-layer Z-depth starfield with smooth cursor parallax inertia.
- * - Rare ambient 1px shooting stars + dual Teal meteor launch when clicking/copying email.
- * - Automatic IntersectionObserver pause when scrolled out of view & ResizeObserver scaling.
- * - Respects prefers-reduced-motion (renders static starfield and redraws on theme switch).
+ * - Edge-to-edge full width and viewport height deep starfield canvas.
+ * - 60FPS GPU-friendly Canvas 2D 3-layer Z-depth starfield with cursor parallax inertia.
+ * - Ambient shooting stars + dual Teal meteor launch on email copy/click.
+ * - Authentic SVG and vector brand icons for all direct social channels.
+ * - Respects prefers-reduced-motion and automatically scales via ResizeObserver.
  */
 export function ContactSection() {
   const { data, t, lang, theme } = usePortfolio();
@@ -41,10 +90,9 @@ export function ContactSection() {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Refs shared with the Canvas 2D loop (zero React re-renders on mousemove)
+  // Shared refs for the Canvas 2D animation loop (zero React re-renders on mousemove)
   const themeRef = useRef<'dark' | 'light'>(theme);
   const lockTargetRef = useRef<{ x: number; y: number } | null>(null);
   const spawnMeteorRef = useRef<((fromX?: number, fromY?: number) => void) | null>(null);
@@ -54,7 +102,6 @@ export function ContactSection() {
 
   useEffect(() => {
     themeRef.current = theme;
-    // Immediately refresh static starfield palette when reduced motion is enabled
     if (prefersReducedMotion) {
       redrawStaticRef.current?.();
     }
@@ -77,10 +124,10 @@ export function ContactSection() {
   });
   const kineticGlideX = useTransform(scrollYProgress, [0, 1], [-32, 24]);
 
-  // Mount Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas 2D engine
+  // Mount Full-Width Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas 2D engine
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = stageRef.current;
+    const container = sectionRef.current;
     if (!canvas || !container) return;
 
     const ctx = canvas.getContext('2d');
@@ -101,7 +148,7 @@ export function ContactSection() {
     let meteors: Meteor[] = [];
 
     const initStars = () => {
-      const count = Math.min(115, Math.max(60, Math.floor((width * height) / 6200)));
+      const count = Math.min(160, Math.max(75, Math.floor((width * height) / 7500)));
       stars = Array.from({ length: count }, () => {
         const layer: 0 | 1 | 2 = Math.random() < 0.55 ? 0 : Math.random() < 0.78 ? 1 : 2;
         return {
@@ -296,7 +343,7 @@ export function ContactSection() {
   }, [prefersReducedMotion]);
 
   const triggerMeteorBurst = useCallback((clientX: number, clientY: number) => {
-    const container = stageRef.current;
+    const container = sectionRef.current;
     if (!container) return;
     const rect = container.getBoundingClientRect();
     const relX = clientX - rect.left;
@@ -338,7 +385,7 @@ export function ContactSection() {
   };
 
   const handleEmailHover = (e: React.MouseEvent<HTMLElement>) => {
-    const container = stageRef.current;
+    const container = sectionRef.current;
     if (!container) return;
     const targetRect = e.currentTarget.getBoundingClientRect();
     const wrapRect = container.getBoundingClientRect();
@@ -360,160 +407,159 @@ export function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative py-20 md:py-28 overflow-x-clip"
+      className="relative min-h-[85vh] lg:min-h-screen w-full flex flex-col justify-between pt-20 pb-16 md:pt-28 md:pb-20 border-t border-[var(--hairline)] overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          ref={stageRef}
-          className="relative rounded-3xl border border-[var(--hairline)] bg-[var(--surface-1)]/40 p-6 sm:p-10 lg:p-14 overflow-hidden"
-        >
-          {/* Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas Background */}
-          <canvas
-            ref={canvasRef}
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full pointer-events-none no-print"
-          />
+      {/* Full-Width Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas Background */}
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full pointer-events-none no-print"
+      />
 
-          <div className="relative z-10 space-y-12">
-            {/* Top Index & Live Saigon Clock */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-2.5 text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
-                <span className="font-mono tabular-nums">06</span>
-                <span className="opacity-40">·</span>
-                <span>{t.contact.eyebrow}</span>
-              </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-between gap-12 md:gap-16">
+        {/* Top Bar: Chapter Index & Live Saigon Clock */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--hairline)]">
+          <div className="flex items-center gap-2.5 text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+            <span className="font-mono tabular-nums">06</span>
+            <span className="opacity-40">·</span>
+            <span>{t.contact.eyebrow}</span>
+          </div>
 
-              <div className="no-print">
-                <SaigonLiveClock />
-              </div>
-            </div>
+          <div className="no-print">
+            <SaigonLiveClock />
+          </div>
+        </div>
 
-            {/* Scroll-Kinetic Poster Headline */}
-            <div className="space-y-5">
-              <div className="overflow-hidden py-1">
-                <motion.h2
-                  style={prefersReducedMotion ? undefined : { x: kineticGlideX }}
-                  className="font-serif font-bold text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] tracking-[-0.025em] text-[var(--text)] whitespace-nowrap uppercase select-none will-change-transform"
-                >
-                  {posterHeadline}
-                </motion.h2>
-              </div>
+        {/* Center: Scroll-Kinetic Poster Headline, Email & Action Buttons */}
+        <div className="space-y-7 my-auto py-4">
+          <div className="overflow-hidden py-1">
+            <motion.h2
+              style={prefersReducedMotion ? undefined : { x: kineticGlideX }}
+              className="font-serif font-bold text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-[-0.025em] text-[var(--text)] whitespace-nowrap uppercase select-none will-change-transform leading-[1.05]"
+            >
+              {posterHeadline}
+            </motion.h2>
+          </div>
 
-              {t.contact.subtitle && (
-                <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-                  {t.contact.subtitle}
-                </p>
-              )}
+          {t.contact.subtitle && (
+            <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+              {t.contact.subtitle}
+            </p>
+          )}
 
-              {/* Monumental Email with Sweeping Teal Underline */}
-              <div className="pt-2">
-                <div
-                  onMouseEnter={handleEmailHover}
-                  onMouseLeave={() => {
-                    lockTargetRef.current = null;
-                  }}
-                  className="relative group inline-block max-w-full"
-                >
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    className="text-left font-serif font-semibold text-2xl sm:text-4xl md:text-5xl tracking-[-0.02em] text-[var(--text)] hover:text-[var(--accent)] transition-colors break-all cursor-pointer"
-                  >
-                    {data.profile.email}
-                  </button>
-                  <span
-                    aria-hidden="true"
-                    className="block h-[2px] w-full origin-left scale-x-0 group-hover:scale-x-100 bg-[var(--accent)] transition-transform duration-300 ease-out mt-2"
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3.5 pt-2 no-print">
-                <MagneticButton strength={0.2}>
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer min-w-[136px]"
-                  >
-                    <AnimatePresence mode="wait" initial={false}>
-                      {copiedEmail ? (
-                        <motion.span
-                          key="copied"
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          transition={{ duration: 0.15 }}
-                          className="inline-flex items-center gap-1.5"
-                        >
-                          <Check size={15} strokeWidth={2} />
-                          <span>{t.contact.emailCopied}</span>
-                        </motion.span>
-                      ) : (
-                        <motion.span
-                          key="copy"
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          transition={{ duration: 0.15 }}
-                          className="inline-flex items-center gap-1.5"
-                        >
-                          <Copy size={15} strokeWidth={1.75} />
-                          <span>{t.contact.copyEmail}</span>
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                  </button>
-                </MagneticButton>
-
-                <MagneticButton strength={0.2}>
-                  <button
-                    type="button"
-                    onClick={handlePrintResume}
-                    title={t.contact.printHint}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
-                  >
-                    <Printer size={15} strokeWidth={1.75} className="text-[var(--accent)]" />
-                    <span>{t.contact.printResume}</span>
-                  </button>
-                </MagneticButton>
-              </div>
-            </div>
-
-            {/* Clean Single-Row Social Channels */}
-            <div className="pt-8 border-t border-[var(--hairline)] flex flex-wrap items-center justify-between gap-6 no-print">
-              <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-                {data.socials.map((soc) => {
-                  const isExternal = soc.url.startsWith('http');
-                  return (
-                    <a
-                      key={soc.label}
-                      href={soc.url}
-                      target={isExternal ? '_blank' : undefined}
-                      rel={isExternal ? 'noopener noreferrer' : undefined}
-                      className="group inline-flex items-baseline gap-2 transition-colors"
-                    >
-                      <span className="font-serif font-semibold text-base sm:text-lg text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
-                        {soc.label}
-                      </span>
-                      <span className="font-mono text-xs text-[var(--text-muted)] hidden sm:inline">
-                        {soc.handle}
-                      </span>
-                      <ArrowUpRight
-                        size={14}
-                        strokeWidth={1.75}
-                        className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform self-center"
-                      />
-                    </a>
-                  );
-                })}
-              </div>
-
-              <span className="text-xs text-[var(--text-muted)] font-mono">
-                {t.contact.saigonTime} · GMT+7
-              </span>
+          {/* Monumental Email with Sweeping Teal Underline */}
+          <div className="pt-2">
+            <div
+              onMouseEnter={handleEmailHover}
+              onMouseLeave={() => {
+                lockTargetRef.current = null;
+              }}
+              className="relative group inline-block max-w-full"
+            >
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="text-left font-serif font-semibold text-2xl sm:text-4xl md:text-5xl lg:text-6xl tracking-[-0.02em] text-[var(--text)] hover:text-[var(--accent)] transition-colors break-all cursor-pointer"
+              >
+                {data.profile.email}
+              </button>
+              <span
+                aria-hidden="true"
+                className="block h-[2px] w-full origin-left scale-x-0 group-hover:scale-x-100 bg-[var(--accent)] transition-transform duration-300 ease-out mt-2"
+              />
             </div>
           </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center gap-3.5 pt-2 no-print">
+            <MagneticButton strength={0.2}>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer min-w-[136px]"
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  {copiedEmail ? (
+                    <motion.span
+                      key="copied"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.15 }}
+                      className="inline-flex items-center gap-1.5"
+                    >
+                      <Check size={15} strokeWidth={2} />
+                      <span>{t.contact.emailCopied}</span>
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="copy"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.15 }}
+                      className="inline-flex items-center gap-1.5"
+                    >
+                      <Copy size={15} strokeWidth={1.75} />
+                      <span>{t.contact.copyEmail}</span>
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            </MagneticButton>
+
+            <MagneticButton strength={0.2}>
+              <button
+                type="button"
+                onClick={handlePrintResume}
+                title={t.contact.printHint}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
+              >
+                <Printer size={15} strokeWidth={1.75} className="text-[var(--accent)]" />
+                <span>{t.contact.printResume}</span>
+              </button>
+            </MagneticButton>
+          </div>
+        </div>
+
+        {/* Bottom Bar: Icon-Enhanced Social Channels + Location */}
+        <div className="pt-8 border-t border-[var(--hairline)] flex flex-wrap items-center justify-between gap-6 no-print">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            {data.socials.map((soc) => {
+              const isExternal = soc.url.startsWith('http');
+              return (
+                <a
+                  key={soc.label}
+                  href={soc.url}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                  className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/75 hover:bg-[var(--surface-2)] hover:border-[var(--accent)] text-[var(--text)] transition-all duration-200"
+                  title={`${soc.label}: ${soc.handle}`}
+                >
+                  <span className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:scale-110 transition-all">
+                    {getSocialIcon(soc.label)}
+                  </span>
+                  <span className="font-serif font-semibold text-sm sm:text-base group-hover:text-[var(--accent)] transition-colors">
+                    {soc.label}
+                  </span>
+                  <span className="font-mono text-xs text-[var(--text-muted)] hidden md:inline">
+                    {soc.handle}
+                  </span>
+                  {isExternal && (
+                    <ArrowUpRight
+                      size={13}
+                      strokeWidth={1.75}
+                      className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                    />
+                  )}
+                </a>
+              );
+            })}
+          </div>
+
+          <span className="text-xs text-[var(--text-muted)] font-mono">
+            {t.contact.saigonTime} · GMT+7
+          </span>
         </div>
       </div>
     </section>
