@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -10,7 +10,6 @@ const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 export function EducationSection() {
   const { data, t } = usePortfolio();
   const { education: edu, languages } = data;
-  const [activeCourseIdx, setActiveCourseIdx] = useState<number>(0);
 
   return (
     <section
@@ -25,10 +24,10 @@ export function EducationSection() {
           className="mb-14"
         />
 
-        {/* 2-Column Editorial Spread (Flat Hairlines, Zero Nested Boxes) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column (7 cols): Degree + Hairline Coursework Index */}
-          <div className="lg:col-span-7 space-y-8">
+        {/* 2-Column Editorial Spread */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          {/* Left Column (7 cols): Degree + Compact 2-Col Coursework Grid */}
+          <div className="lg:col-span-7 space-y-7">
             <div className="space-y-2 pb-6 border-b border-[var(--hairline)]">
               <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--text-muted)]">
                 <span className="font-mono tabular-nums text-[var(--accent)] font-medium">
@@ -51,41 +50,24 @@ export function EducationSection() {
             </div>
 
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-4">
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-3.5">
                 {t.education.courseworkTitle}
               </h4>
 
-              <div className="divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
-                {edu.coursework.map((course, idx) => {
-                  const isActive = activeCourseIdx === idx;
-                  return (
-                    <div
-                      key={course}
-                      onMouseEnter={() => setActiveCourseIdx(idx)}
-                      onFocus={() => setActiveCourseIdx(idx)}
-                      tabIndex={0}
-                      className="relative py-3.5 pl-5 pr-2 flex items-center gap-4 outline-none cursor-default"
-                    >
-                      {isActive && (
-                        <motion.span
-                          layoutId="courseworkActiveIndicator"
-                          transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
-                          className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-[var(--accent)]"
-                        />
-                      )}
-                      <span className="font-mono text-xs tabular-nums text-[var(--text-muted)] w-6 shrink-0">
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <span
-                        className={`text-sm transition-colors ${
-                          isActive ? 'text-[var(--text)] font-medium' : 'text-[var(--text-muted)]'
-                        }`}
-                      >
-                        {course}
-                      </span>
-                    </div>
-                  );
-                })}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {edu.coursework.map((course, idx) => (
+                  <div
+                    key={course}
+                    className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] hover:bg-[var(--surface-2)] transition-colors"
+                  >
+                    <span className="font-mono text-[11px] tabular-nums font-semibold text-[var(--accent)] shrink-0">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <span className="text-xs sm:text-[13px] font-medium text-[var(--text)] leading-snug">
+                      {course}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -114,7 +96,7 @@ export function EducationSection() {
                       {langItem.description}
                     </p>
 
-                    {/* GPU-composited scaleX bar (never animates raw width) */}
+                    {/* GPU-composited scaleX bar */}
                     <div className="relative w-full h-1.5 rounded-full bg-[var(--hairline)] overflow-hidden">
                       <motion.div
                         initial={{ scaleX: 0 }}
