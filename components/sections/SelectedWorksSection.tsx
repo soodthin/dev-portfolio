@@ -121,8 +121,8 @@ function HighlightExplorer({
         })}
       </div>
 
-      {/* Active Highlight Detail Panel */}
-      <SpotlightSurface className="rounded-xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 min-h-[118px]">
+      {/* Active Highlight Detail Panel with strictly fixed height to prevent layout shifts */}
+      <SpotlightSurface className="rounded-xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 h-[200px] sm:h-[175px] lg:h-[170px] overflow-hidden flex flex-col justify-start">
         <AnimatePresence mode="wait">
           <motion.div
             key={safeIdx}

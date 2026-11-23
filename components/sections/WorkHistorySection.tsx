@@ -148,8 +148,8 @@ export function WorkHistorySection() {
                   })}
                 </div>
 
-                {/* Active Stage Details (flat hairline divider, no nested card) */}
-                <div className="pt-4 border-t border-[var(--hairline)]">
+                {/* Active Stage Details (flat hairline divider, fixed minimum height to prevent jitter) */}
+                <div className="pt-4 border-t border-[var(--hairline)] min-h-[195px]">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeStage.step}
