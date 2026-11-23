@@ -4,8 +4,8 @@ import './globals.css';
 
 const newsreader = Newsreader({
   subsets: ['latin', 'vietnamese'],
-  weight: ['500', '600', '700'],
-  style: ['normal'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   variable: '--font-newsreader',
   display: 'swap',
 });
@@ -13,7 +13,7 @@ const newsreader = Newsreader({
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['latin', 'vietnamese'],
   weight: ['300', '400', '500', '600', '700'],
-  style: ['normal'],
+  style: ['normal', 'italic'],
   variable: '--font-sans',
   display: 'swap',
 });

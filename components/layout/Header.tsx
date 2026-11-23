@@ -17,7 +17,7 @@ const CHAPTER_MAP: Record<string, { number: string; labelEn: string; labelVi: st
 };
 
 export function Header() {
-  const { lang, toggleLang, theme, toggleTheme, activeSection, setIsCommandOpen, t, showToast } =
+  const { data, lang, toggleLang, theme, toggleTheme, activeSection, setIsCommandOpen, t, showToast } =
     usePortfolio();
   const { scrollTo } = useSmoothScroll();
   const [copiedShare, setCopiedShare] = useState(false);
@@ -50,7 +50,7 @@ export function Header() {
             aria-label="Scroll to top"
           >
             <span className="font-serif font-semibold text-lg sm:text-xl tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
-              Thai Do Thinh
+              {data.profile.name}
             </span>
           </button>
 
