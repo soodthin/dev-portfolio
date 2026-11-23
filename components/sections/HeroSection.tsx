@@ -510,7 +510,7 @@ export function HeroSection() {
         {/* 2. EDITORIAL STATEMENT & ACTIONS (FULL WIDTH)                     */}
         {/* ================================================================= */}
         <div className="py-10 sm:py-12 border-t border-[var(--hairline)] space-y-7 w-full">
-          <p className="text-base sm:text-lg lg:text-[19px] text-[var(--text-muted)] leading-[1.75] max-w-4xl">
+          <p className="text-base sm:text-lg lg:text-[19px] text-[var(--text-muted)] leading-[1.75] w-full">
             {lang === 'vi' ? (
               <>
                 Kỹ sư Khoa học Máy tính năm cuối chuyên sâu về{' '}
@@ -611,7 +611,7 @@ export function HeroSection() {
                 }}
                 className="overflow-hidden will-change-[height,opacity] pt-2"
               >
-                <div className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl">
+                <div className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 w-full">
                   {data.profile.aboutParagraphs.map((para, idx) => (
                     <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.75]">
                       {para}
