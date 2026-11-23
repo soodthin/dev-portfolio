@@ -400,18 +400,18 @@ export function HeroSection() {
             className="lg:col-span-4 flex flex-col lg:items-end lg:pt-1"
           >
             <div
-              className="group relative w-60 sm:w-64 lg:w-[270px] xl:w-[280px] h-[290px] sm:h-[310px] lg:h-[318px] overflow-hidden bg-[var(--surface-2)] shadow-xl"
+              className="group relative w-64 sm:w-72 lg:w-[280px] xl:w-[295px] h-[295px] sm:h-[315px] lg:h-[322px] overflow-hidden bg-[var(--surface-2)] shadow-xl"
               style={{
                 clipPath:
                   'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)',
               }}
             >
-              <div className="relative w-full h-full transition-transform duration-200 ease-out group-hover:scale-[1.03]">
+              <div className="relative w-full h-full scale-[1.16] origin-[50%_62%] transition-transform duration-300 ease-out group-hover:scale-[1.20]">
                 <Image
                   src={getAssetPath(data.profile.avatarUrl)}
                   alt={data.profile.name}
                   fill
-                  sizes="(max-width: 640px) 240px, (max-width: 1024px) 260px, 280px"
+                  sizes="(max-width: 640px) 260px, (max-width: 1024px) 280px, 300px"
                   priority
                   unoptimized
                   className="object-cover object-[50%_85%]"
