@@ -332,24 +332,13 @@ export function HeroSection() {
 
   const [bioOpen, setBioOpen] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [avatarOverride, setAvatarOverride] = useState<string | null>(null);
   const [pointerOffset, setPointerOffset] = useState({ x: 0, y: 0 });
 
   const sectionRef = useRef<HTMLElement>(null);
   const avatarStageRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const copyTimerRef = useRef<number | null>(null);
 
   const isDark = theme === 'dark';
-
-  // Revoke object URL on unmount or override change
-  useEffect(() => {
-    return () => {
-      if (avatarOverride && avatarOverride.startsWith('blob:')) {
-        URL.revokeObjectURL(avatarOverride);
-      }
-    };
-  }, [avatarOverride]);
 
   // Clean up clipboard feedback timer
   useEffect(() => {
@@ -400,13 +389,6 @@ export function HeroSection() {
     }
   };
 
-  const handleSelectLocalImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const objectUrl = URL.createObjectURL(file);
-    setAvatarOverride(objectUrl);
-  };
-
   const handleStagePointerMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = avatarStageRef.current;
     if (!el) return;
@@ -430,24 +412,12 @@ export function HeroSection() {
 
   const readStoryLabel = lang === 'vi' ? 'Tiểu sử' : 'Background';
 
-  const activeAvatarSrc = avatarOverride || getAssetPath(data.profile.avatarUrl);
-
   return (
     <section
       id="summary"
       ref={sectionRef}
       className="relative bg-[var(--bg)] min-h-[92vh] lg:min-h-[calc(100svh-4rem)] flex flex-col justify-start pt-20 sm:pt-24 pb-16 md:pb-20 border-b border-[var(--hairline)] overflow-x-clip"
     >
-      {/* Hidden local image upload input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleSelectLocalImage}
-        className="sr-only"
-        aria-label="Upload local avatar preview"
-      />
-
       <motion.div
         style={prefersReducedMotion ? undefined : { scale: contentScale, opacity: contentOpacity, y: contentY }}
         className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform w-full"
@@ -462,33 +432,28 @@ export function HeroSection() {
           className="flex flex-col items-center overflow-x-clip pt-2 pb-6"
         >
           {/* Orbital Avatar Stage with Dual Canvas */}
-          <div className="group relative z-10 flex items-center justify-center w-full h-[310px] sm:h-[370px] md:h-[410px] max-w-[620px]">
+          <div className="relative z-10 flex items-center justify-center w-full h-[310px] sm:h-[370px] md:h-[410px] max-w-[620px]">
             <OrbitalEllipses3D isDark={isDark} pointerOffset={pointerOffset} />
 
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              title={lang === 'vi' ? 'Bấm để thử ảnh từ máy tính' : 'Click to test local portrait image'}
+            {/* Static Sharp Circular Avatar Frame (No hover blur, no scale distortion) */}
+            <div
               style={{
-                transform: prefersReducedMotion
-                  ? undefined
-                  : `perspective(850px) rotateX(${-pointerOffset.y * 6}deg) rotateY(${pointerOffset.x * 6}deg)`,
                 boxShadow: isDark
                   ? '0 22px 50px -16px rgba(0, 0, 0, 0.85)'
                   : '0 22px 44px -18px rgba(17, 19, 24, 0.18)',
               }}
-              className="relative z-10 w-[220px] h-[220px] sm:w-[264px] sm:h-[264px] md:w-[294px] md:h-[294px] rounded-full overflow-hidden border border-[var(--hairline-strong)] bg-[var(--surface-1)] cursor-pointer transition-transform duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+              className="relative z-10 w-[220px] h-[220px] sm:w-[264px] sm:h-[264px] md:w-[294px] md:h-[294px] rounded-full overflow-hidden border border-[var(--hairline-strong)] bg-[var(--surface-1)] select-none pointer-events-none"
             >
-              {/* Avatar Image */}
+              {/* Avatar Image — Razor-sharp static framing */}
               <div className="relative w-full h-full">
                 <Image
-                  src={activeAvatarSrc}
+                  src={getAssetPath(data.profile.avatarUrl)}
                   alt={data.profile.name}
                   fill
                   sizes="(max-width: 640px) 240px, (max-width: 1024px) 280px, 320px"
                   priority
                   unoptimized
-                  className="w-full h-full object-cover object-[50%_80%] scale-[1.20] origin-[50%_72%] grayscale-[6%] contrast-[1.04] transition-all duration-300 ease-out group-hover:grayscale-0 group-hover:scale-[1.24]"
+                  className="w-full h-full object-cover object-[50%_80%] scale-[1.18] origin-[50%_72%]"
                 />
               </div>
 
@@ -511,7 +476,7 @@ export function HeroSection() {
                 }}
                 className="pointer-events-none absolute inset-0 rounded-full"
               />
-            </button>
+            </div>
           </div>
 
           {/* 2. Display Name Overlapping the Avatar Base */}
