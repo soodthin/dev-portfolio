@@ -7,6 +7,7 @@ import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { SpotlightSurface } from '@/components/ui/SpotlightSurface';
 import { TechIcon } from '@/components/ui/TechIcons';
 import { MagneticButton } from '@/components/motion/MagneticButton';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -28,28 +29,19 @@ export function WorkHistorySection() {
       className="relative py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Unified Clean Masked Wipe-Up Heading */}
-        <div className="mb-14 md:mb-20">
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)] mb-3">
-            {t.experience.eyebrow}
-          </p>
-
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ y: '100%', opacity: 0 }}
-              whileInView={{ y: '0%', opacity: 1 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
-              className="font-serif font-semibold text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] text-[var(--text)] leading-[1.08]"
-            >
-              {experience.company}
-            </motion.h2>
-          </div>
-
-          <p className="mt-3 text-base sm:text-lg text-[var(--text-muted)]">
-            {experience.role} · <span className="font-mono text-sm tabular-nums">{experience.period}</span> · {experience.location}
-          </p>
-        </div>
+        <SectionHeading
+          index="02"
+          eyebrow={t.experience.eyebrow}
+          title={experience.company}
+          subtitle={
+            <>
+              <span className="text-[var(--text)] font-medium">{experience.role}</span>
+              <span className="mx-2 opacity-40">·</span>
+              <span className="font-mono text-xs sm:text-sm tabular-nums">{experience.period}</span>
+              <span className="block text-xs mt-1">{experience.location}</span>
+            </>
+          }
+        />
 
         {/* Sticky Split-Screen */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">

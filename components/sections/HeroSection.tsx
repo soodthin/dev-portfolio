@@ -48,7 +48,7 @@ export function HeroSection() {
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform"
       >
         {/* Status Line */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-8 mb-10 border-b border-[var(--hairline)]">
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-7 mb-10 border-b border-[var(--hairline)]">
           <div className="inline-flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
             <span className="w-2 h-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
             <span className="font-medium tracking-wide">{data.profile.statusText}</span>
@@ -58,17 +58,16 @@ export function HeroSection() {
           </span>
         </div>
 
-        {/* Main Hero Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-          {/* Left Column: Typography & Bio */}
-          <div className="lg:col-span-8 space-y-7">
-            <div className="space-y-3">
+        {/* Main Hero Row: Balanced Height Between Headline+Lead and Circular Avatar */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          <div className="lg:col-span-8 space-y-6">
+            <div className="space-y-2.5">
               <div className="overflow-hidden">
                 <motion.h1
                   initial={{ y: '100%', opacity: 0 }}
                   animate={{ y: '0%', opacity: 1 }}
                   transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
-                  className="font-serif font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-0.02em] text-[var(--text)] leading-[1.04]"
+                  className="font-serif font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-0.025em] text-[var(--text)] leading-[1.03]"
                 >
                   {data.profile.name}
                 </motion.h1>
@@ -86,27 +85,20 @@ export function HeroSection() {
               </div>
             </div>
 
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.2, ease: EASE_OUT_EXPO }}
-              className="space-y-4 max-w-2xl"
+              transition={{ duration: 0.65, delay: 0.18, ease: EASE_OUT_EXPO }}
+              className="max-w-2xl text-base sm:text-lg text-[var(--text)]/90 font-normal leading-relaxed"
             >
-              <p className="text-base sm:text-lg text-[var(--text)] font-medium leading-relaxed">
-                {data.profile.roleDescription}
-              </p>
-              {data.profile.aboutParagraphs.map((para, idx) => (
-                <p key={idx} className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-                  {para}
-                </p>
-              ))}
-            </motion.div>
+              {data.profile.roleDescription}
+            </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: EASE_OUT_EXPO }}
-              className="flex flex-wrap items-center gap-3.5 pt-2"
+              transition={{ duration: 0.6, delay: 0.26, ease: EASE_OUT_EXPO }}
+              className="flex flex-wrap items-center gap-3.5 pt-1"
             >
               <MagneticButton strength={0.2}>
                 <button
@@ -129,11 +121,11 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right Column: Circular Avatar with Restrained Double-Hairline Frame */}
+          {/* Circular Avatar */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: EASE_OUT_EXPO }}
+            transition={{ duration: 0.7, delay: 0.14, ease: EASE_OUT_EXPO }}
             className="lg:col-span-4 flex justify-start lg:justify-end"
           >
             <div className="group p-1.5 rounded-full ring-1 ring-[var(--hairline)] hover:ring-[var(--hairline-strong)] bg-[var(--surface-1)] transition-all duration-300 ease-out">
@@ -154,13 +146,32 @@ export function HeroSection() {
           </motion.div>
         </div>
 
+        {/* 2-Column Editorial Bio Strip: Preserves 100% of aboutParagraphs without wall-of-text */}
+        {data.profile.aboutParagraphs.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.34, ease: EASE_OUT_EXPO }}
+            className="mt-14 pt-8 border-t border-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-12"
+          >
+            {data.profile.aboutParagraphs.map((para, idx) => (
+              <div key={idx} className="flex items-start gap-4">
+                <span className="font-mono text-xs tabular-nums text-[var(--accent)] pt-1 shrink-0">
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">{para}</p>
+              </div>
+            ))}
+          </motion.div>
+        )}
+
         {/* Clean Horizontal divide-x Metrics Strip */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
-          className="mt-16 pt-10 border-t border-[var(--hairline)]"
+          className="mt-12 pt-10 border-t border-[var(--hairline)]"
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--hairline)]">
             {data.metrics.map((metric, idx) => (

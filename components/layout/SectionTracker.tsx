@@ -53,10 +53,8 @@ export function SectionTracker() {
             aria-current={isActive ? 'true' : undefined}
           >
             <span
-              className={`absolute right-full mr-3 px-2.5 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--hairline)] text-[11px] font-medium whitespace-nowrap pointer-events-none transition-all duration-200 ${
-                isActive
-                  ? 'text-[var(--accent)] opacity-100 translate-x-0'
-                  : 'text-[var(--text-muted)] opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0'
+              className={`absolute right-full mr-3 px-2.5 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--hairline)] text-[11px] font-medium whitespace-nowrap pointer-events-none transition-all duration-200 opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 ${
+                isActive ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'
               }`}
             >
               <span className="font-mono tabular-nums mr-1.5">{sec.number}</span>· {label}

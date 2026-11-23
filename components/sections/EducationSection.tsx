@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -17,28 +18,13 @@ export function EducationSection() {
       className="relative py-16 md:py-24 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Unified Clean Masked Wipe-Up Heading */}
-        <div className="mb-14 max-w-3xl">
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)] mb-3">
-            {t.education.eyebrow}
-          </p>
-
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ y: '100%', opacity: 0 }}
-              whileInView={{ y: '0%', opacity: 1 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
-              className="font-serif font-semibold text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] text-[var(--text)] leading-[1.08]"
-            >
-              {t.education.title}
-            </motion.h2>
-          </div>
-
-          <p className="mt-4 text-base sm:text-lg text-[var(--text-muted)] leading-relaxed">
-            {t.education.subtitle}
-          </p>
-        </div>
+        <SectionHeading
+          index="05"
+          eyebrow={t.education.eyebrow}
+          title={t.education.title}
+          subtitle={t.education.subtitle}
+          className="mb-14"
+        />
 
         {/* 2-Column Editorial Spread (Flat Hairlines, Zero Nested Boxes) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">

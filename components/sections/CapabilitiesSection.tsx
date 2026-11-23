@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { SkillCategory, SkillItem } from '@/types/portfolio';
 import { TechIcon } from '@/components/ui/TechIcons';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -112,28 +113,13 @@ export function CapabilitiesSection() {
       className="relative py-20 md:py-28 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Unified Clean Masked Wipe-Up Heading */}
-        <div className="mb-12 max-w-3xl">
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)] mb-3">
-            {t.capabilities.eyebrow}
-          </p>
-
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ y: '100%', opacity: 0 }}
-              whileInView={{ y: '0%', opacity: 1 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
-              className="font-serif font-semibold text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] text-[var(--text)] leading-[1.08]"
-            >
-              {t.capabilities.title}
-            </motion.h2>
-          </div>
-
-          <p className="mt-4 text-base sm:text-lg text-[var(--text-muted)] leading-relaxed">
-            {t.capabilities.subtitle}
-          </p>
-        </div>
+        <SectionHeading
+          index="04"
+          eyebrow={t.capabilities.eyebrow}
+          title={t.capabilities.title}
+          subtitle={t.capabilities.subtitle}
+          className="mb-12"
+        />
 
         {/* Project Cross-Highlighter Bar (shared layoutId active pill) */}
         <div

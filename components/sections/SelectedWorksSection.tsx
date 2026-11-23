@@ -9,6 +9,8 @@ import { ProjectImage } from '@/types/portfolio';
 import { getAssetPath } from '@/lib/asset';
 import { GithubIcon } from '@/components/ui/Icons';
 import { SpotlightSurface } from '@/components/ui/SpotlightSurface';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { TechIcon } from '@/components/ui/TechIcons';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -25,12 +27,130 @@ function useIsDesktop(): boolean {
   );
 }
 
+function parseHighlight(raw: string): { title: string; body: string } {
+  const colonIdx = raw.indexOf(':');
+  if (colonIdx === -1) {
+    return { title: raw.slice(0, 32), body: raw };
+  }
+  return {
+    title: raw.slice(0, colonIdx).trim(),
+    body: raw.slice(colonIdx + 1).trim(),
+  };
+}
+
+/**
+ * Emphasizes numeric metrics & @annotations inside technical descriptions for rapid scanning.
+ */
+function renderScannableCopy(text: string): React.ReactNode {
+  const parts = text.split(/(@\w+|\b\d+(?:[.,–-]\d+)*(?:\+|%|fps)?\b)/g);
+  return parts.map((part, idx) => {
+    if (/^(@\w+|\d+(?:[.,–-]\d+)*(?:\+|%|fps)?)$/.test(part)) {
+      return (
+        <span key={idx} className="font-mono text-[13px] font-semibold text-[var(--text)]">
+          {part}
+        </span>
+      );
+    }
+    return <React.Fragment key={idx}>{part}</React.Fragment>;
+  });
+}
+
+interface HighlightExplorerProps {
+  highlights: string[];
+  layoutIdPrefix: string;
+  sectionLabel: string;
+}
+
+/**
+ * Displays ALL project highlights cleanly via interactive pill tabs + animated detail surface.
+ * Uses GPU-only transform & opacity transitions — zero content omitted, zero vertical text wall.
+ */
+function HighlightExplorer({
+  highlights,
+  layoutIdPrefix,
+  sectionLabel,
+}: HighlightExplorerProps) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const parsed = highlights.map(parseHighlight);
+  const safeIdx = Math.min(activeIdx, Math.max(0, parsed.length - 1));
+  const current = parsed[safeIdx];
+
+  if (!current) return null;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">
+          {sectionLabel}
+        </span>
+        <span className="font-mono text-xs tabular-nums text-[var(--accent)]">
+          {String(safeIdx + 1).padStart(2, '0')} / {String(parsed.length).padStart(2, '0')}
+        </span>
+      </div>
+
+      {/* Interactive Pill Tabs */}
+      <div role="tablist" aria-label={sectionLabel} className="flex flex-wrap gap-1.5">
+        {parsed.map((item, idx) => {
+          const isActive = idx === safeIdx;
+          return (
+            <button
+              key={item.title}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActiveIdx(idx)}
+              className={`relative px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                isActive
+                  ? 'text-[var(--text)]'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--hairline)] bg-[var(--surface-1)]'
+              }`}
+            >
+              {isActive && (
+                <motion.span
+                  layoutId={`${layoutIdPrefix}-active-tab`}
+                  transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
+                  className="absolute inset-0 rounded-full bg-[var(--accent-wash)] border border-[var(--hairline-strong)] -z-10"
+                />
+              )}
+              <span className="font-mono text-[10px] tabular-nums text-[var(--accent)] mr-1.5">
+                {String(idx + 1).padStart(2, '0')}
+              </span>
+              <span>{item.title}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Active Highlight Detail Panel */}
+      <SpotlightSurface className="rounded-xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 min-h-[118px]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={safeIdx}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
+            className="space-y-1.5"
+          >
+            <h4 className="font-serif font-semibold text-lg text-[var(--text)]">
+              {current.title}
+            </h4>
+            <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+              {renderScannableCopy(current.body)}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+      </SpotlightSurface>
+    </div>
+  );
+}
+
 interface SelectedWorksSectionProps {
   onOpenLightbox: (images: ProjectImage[], index: number, title: string) => void;
 }
 
 export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionProps) {
-  const { data, t } = usePortfolio();
+  const { data, t, lang } = usePortfolio();
   const prefersReducedMotion = useReducedMotion();
   const isDesktop = useIsDesktop();
 
@@ -39,6 +159,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
   // Project 01: Directional slide gallery state
   const [[p1Index, p1Direction], setP1Slide] = useState<[number, number]>([0, 1]);
   const p1Images = proj1?.imagesList || [];
+  const p1Current = p1Images[p1Index];
 
   const paginateP1 = (nextIndex: number, direction: number) => {
     if (p1Images.length === 0) return;
@@ -78,122 +199,103 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
       className="relative py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Unified Clean Masked Wipe-Up Heading */}
-        <div className="mb-16 md:mb-24 max-w-3xl">
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)] mb-3">
-            {t.works.eyebrow}
-          </p>
-
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ y: '100%', opacity: 0 }}
-              whileInView={{ y: '0%', opacity: 1 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
-              className="font-serif font-semibold text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] text-[var(--text)] leading-[1.08]"
-            >
-              {t.works.title}
-            </motion.h2>
-          </div>
-
-          <p className="mt-4 text-base sm:text-lg text-[var(--text-muted)] leading-relaxed">
-            {t.works.subtitle}
-          </p>
-        </div>
+        <SectionHeading
+          index="03"
+          eyebrow={t.works.eyebrow}
+          title={t.works.title}
+          subtitle={t.works.subtitle}
+          className="mb-16 md:mb-24"
+        />
 
         <div className="space-y-28 md:space-y-36">
           {/* ================================================================= */}
           {/* PROJECT 01: FlexiConnect Web                                      */}
           {/* ================================================================= */}
           {proj1 && (
-            <article id={proj1.id} className="scroll-mt-24">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-                {/* Left: Specs */}
-                <div className="lg:col-span-5 space-y-6">
-                  <div className="flex items-center gap-3 text-xs text-[var(--text-muted)]">
+            <article id={proj1.id} className="scroll-mt-24 space-y-8">
+              {/* Full-Width Project Header Bar */}
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[var(--hairline)]">
+                <div className="space-y-2.5 max-w-2xl">
+                  <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                     <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                       {proj1.number}
                     </span>
                     <span>·</span>
-                    <span>Spring Boot · React</span>
+                    <span>{proj1.subtitle}</span>
                   </div>
-
-                  <h3 className="font-serif font-semibold text-3xl sm:text-4xl tracking-[-0.02em] text-[var(--text)]">
+                  <h3 className="font-serif font-semibold text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] text-[var(--text)]">
                     {proj1.title}
                   </h3>
-
-                  <p className="text-base text-[var(--text-muted)] leading-relaxed">
+                  <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
                     {proj1.description}
                   </p>
+                </div>
 
-                  {/* Open Horizontal Metrics Strip */}
+                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  {proj1.githubUrl && (
+                    <MagneticButton strength={0.2}>
+                      <a
+                        href={proj1.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                      >
+                        <GithubIcon size={14} />
+                        <span>{t.works.sourceCodeBtn}</span>
+                      </a>
+                    </MagneticButton>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => onOpenLightbox(p1Images, p1Index, proj1.title)}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    <Maximize2 size={13} strokeWidth={2} />
+                    <span>
+                      {t.works.viewGallery} ({p1Images.length})
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Balanced 12-Col Showcase Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+                {/* Left (5 cols): Metrics + Interactive All-Highlights Switcher + Tech Stack */}
+                <div className="lg:col-span-5 space-y-7">
                   {proj1.metricsList && (
-                    <div className="grid grid-cols-4 divide-x divide-[var(--hairline)] py-4 border-y border-[var(--hairline)]">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-px rounded-xl overflow-hidden border border-[var(--hairline)] bg-[var(--hairline)]">
                       {proj1.metricsList.map((m, i) => (
-                        <div key={i} className="px-3 first:pl-0 last:pr-0">
-                          <div className="font-mono text-lg sm:text-xl font-bold tabular-nums text-[var(--text)]">
+                        <div key={i} className="bg-[var(--surface-1)] px-4 py-3.5">
+                          <div className="font-mono text-2xl font-bold tabular-nums text-[var(--text)]">
                             {m.value}
                           </div>
-                          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                            {m.label}
-                          </div>
+                          <div className="text-xs text-[var(--text-muted)] mt-0.5">{m.label}</div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {/* Architecture Highlights */}
-                  <ul className="space-y-2.5 text-sm text-[var(--text-muted)] leading-relaxed">
-                    {proj1.keyHighlights.slice(0, 3).map((hl, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-2 shrink-0" />
-                        <span>{hl}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <HighlightExplorer
+                    highlights={proj1.keyHighlights}
+                    layoutIdPrefix="proj1"
+                    sectionLabel={t.works.architectureTitle}
+                  />
 
-                  {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {proj1.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
                       >
-                        {tag}
+                        <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
+                        <span>{tag}</span>
                       </span>
                     ))}
                   </div>
-
-                  {/* Actions */}
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    {proj1.githubUrl && (
-                      <MagneticButton strength={0.2}>
-                        <a
-                          href={proj1.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
-                        >
-                          <GithubIcon size={14} />
-                          <span>{t.works.sourceCodeBtn}</span>
-                        </a>
-                      </MagneticButton>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() => onOpenLightbox(p1Images, p1Index, proj1.title)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
-                    >
-                      <Maximize2 size={13} strokeWidth={2} />
-                      <span>
-                        {t.works.viewGallery} ({p1Images.length})
-                      </span>
-                    </button>
-                  </div>
                 </div>
 
-                {/* Right: Perspective Browser Stage + Directional Gallery + Thumbnails */}
+                {/* Right (7 cols): Perspective Browser Stage + Synced Caption + Thumbnails */}
                 <div
                   ref={p1StageRef}
                   className="lg:col-span-7 space-y-3"
@@ -215,10 +317,11 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                         <span className="w-2.5 h-2.5 rounded-full bg-[var(--text-muted)]/30" />
                       </div>
                       <span className="font-mono text-[11px] text-[var(--text-muted)] truncate mx-3">
-                        {p1Images[p1Index]?.title}
+                        {p1Current?.title}
                       </span>
                       <span className="font-mono text-[11px] tabular-nums text-[var(--text-muted)] shrink-0">
-                        {String(p1Index + 1).padStart(2, '0')} / {String(p1Images.length).padStart(2, '0')}
+                        {String(p1Index + 1).padStart(2, '0')} /{' '}
+                        {String(p1Images.length).padStart(2, '0')}
                       </span>
                     </div>
 
@@ -235,10 +338,10 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                           onClick={() => onOpenLightbox(p1Images, p1Index, proj1.title)}
                           className="relative w-full h-full cursor-pointer"
                         >
-                          {p1Images[p1Index] && (
+                          {p1Current && (
                             <Image
-                              src={getAssetPath(p1Images[p1Index].src)}
-                              alt={p1Images[p1Index].title}
+                              src={getAssetPath(p1Current.src)}
+                              alt={p1Current.title}
                               fill
                               sizes="(max-width: 1024px) 100vw, 680px"
                               unoptimized
@@ -266,6 +369,27 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                         <ChevronRight size={16} />
                       </button>
                     </div>
+
+                    {/* Live Synced Caption Strip */}
+                    {p1Current && (
+                      <div className="px-4 py-3 border-t border-[var(--hairline)] bg-[var(--surface-1)]">
+                        <AnimatePresence mode="wait">
+                          <motion.p
+                            key={p1Index}
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            transition={{ duration: 0.2 }}
+                            className="text-xs text-[var(--text-muted)] leading-relaxed"
+                          >
+                            <span className="text-[var(--text)] font-medium mr-1.5">
+                              {p1Current.title}:
+                            </span>
+                            {lang === 'vi' ? p1Current.captionVi : p1Current.captionEn}
+                          </motion.p>
+                        </AnimatePresence>
+                      </div>
+                    )}
                   </motion.div>
 
                   {/* Thumbnail Strip */}
@@ -305,13 +429,62 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
           {/* PROJECT 02: Saigon Savory App (Media Left, Text Right)            */}
           {/* ================================================================= */}
           {proj2 && (
-            <article id={proj2.id} ref={p2StageRef} className="scroll-mt-24">
+            <article
+              id={proj2.id}
+              ref={p2StageRef}
+              className="scroll-mt-24 pt-12 border-t border-[var(--hairline)] space-y-8"
+            >
+              {/* Full-Width Project Header Bar */}
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[var(--hairline)]">
+                <div className="space-y-2.5 max-w-2xl">
+                  <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
+                    <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
+                      {proj2.number}
+                    </span>
+                    <span>·</span>
+                    <span>{proj2.subtitle}</span>
+                  </div>
+                  <h3 className="font-serif font-semibold text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] text-[var(--text)]">
+                    {proj2.title}
+                  </h3>
+                  <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+                    {proj2.description}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  {proj2.githubUrl && (
+                    <MagneticButton strength={0.2}>
+                      <a
+                        href={proj2.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                      >
+                        <GithubIcon size={14} />
+                        <span>{t.works.sourceCodeBtn}</span>
+                      </a>
+                    </MagneticButton>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => onOpenLightbox(p2Images, 0, proj2.title)}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    <Maximize2 size={13} strokeWidth={2} />
+                    <span>
+                      {t.works.viewGallery} ({p2Images.length})
+                    </span>
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-                {/* Left: 3-Phone Fan-Out on Desktop, Horizontal Snap Carousel on Mobile */}
+                {/* Left (6 cols): 3-Phone Fan-Out on Desktop, Horizontal Snap Carousel on Mobile */}
                 <div className="lg:col-span-6">
                   {isDesktop ? (
-                    <div className="relative flex items-center justify-center py-8">
-                      {/* Phone 0 (Left Fan) */}
+                    <div className="relative flex items-center justify-center py-6">
                       {p2Images[0] && (
                         <motion.button
                           type="button"
@@ -339,7 +512,6 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                         </motion.button>
                       )}
 
-                      {/* Phone 1 (Center Elevated) */}
                       {p2Images[1] && (
                         <motion.button
                           type="button"
@@ -363,7 +535,6 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                         </motion.button>
                       )}
 
-                      {/* Phone 2 (Right Fan) */}
                       {p2Images[2] && (
                         <motion.button
                           type="button"
@@ -392,7 +563,6 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                       )}
                     </div>
                   ) : (
-                    /* Mobile Touch Snap Carousel */
                     <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-4 px-4 no-scrollbar">
                       {p2Images.map((img, idx) => (
                         <button
@@ -418,84 +588,37 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                   )}
                 </div>
 
-                {/* Right: Specs */}
-                <div className="lg:col-span-6 space-y-6">
-                  <div className="flex items-center gap-3 text-xs text-[var(--text-muted)]">
-                    <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
-                      {proj2.number}
-                    </span>
-                    <span>·</span>
-                    <span>React Native · Django REST</span>
-                  </div>
-
-                  <h3 className="font-serif font-semibold text-3xl sm:text-4xl tracking-[-0.02em] text-[var(--text)]">
-                    {proj2.title}
-                  </h3>
-
-                  <p className="text-base text-[var(--text-muted)] leading-relaxed">
-                    {proj2.description}
-                  </p>
-
+                {/* Right (6 cols): Metrics + Interactive Highlights + Tech Stack */}
+                <div className="lg:col-span-6 space-y-7">
                   {proj2.metricsList && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--hairline)] py-4 border-y border-[var(--hairline)]">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-xl overflow-hidden border border-[var(--hairline)] bg-[var(--hairline)]">
                       {proj2.metricsList.map((m, i) => (
-                        <div key={i} className="py-2 sm:py-0 sm:px-3 first:sm:pl-0 last:sm:pr-0">
-                          <div className="font-mono text-lg sm:text-xl font-bold tabular-nums text-[var(--text)]">
+                        <div key={i} className="bg-[var(--surface-1)] px-4 py-3.5">
+                          <div className="font-mono text-xl font-bold tabular-nums text-[var(--text)]">
                             {m.value}
                           </div>
-                          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                            {m.label}
-                          </div>
+                          <div className="text-xs text-[var(--text-muted)] mt-0.5">{m.label}</div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  <ul className="space-y-2.5 text-sm text-[var(--text-muted)] leading-relaxed">
-                    {proj2.keyHighlights.slice(0, 3).map((hl, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-2 shrink-0" />
-                        <span>{hl}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <HighlightExplorer
+                    highlights={proj2.keyHighlights}
+                    layoutIdPrefix="proj2"
+                    sectionLabel={t.works.architectureTitle}
+                  />
 
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {proj2.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
                       >
-                        {tag}
+                        <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
+                        <span>{tag}</span>
                       </span>
                     ))}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    {proj2.githubUrl && (
-                      <MagneticButton strength={0.2}>
-                        <a
-                          href={proj2.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
-                        >
-                          <GithubIcon size={14} />
-                          <span>{t.works.sourceCodeBtn}</span>
-                        </a>
-                      </MagneticButton>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() => onOpenLightbox(p2Images, 0, proj2.title)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
-                    >
-                      <Maximize2 size={13} strokeWidth={2} />
-                      <span>
-                        {t.works.viewGallery} ({p2Images.length})
-                      </span>
-                    </button>
                   </div>
                 </div>
               </div>
@@ -509,20 +632,20 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
             <article id={proj3.id} className="scroll-mt-24 pt-12 border-t border-[var(--hairline)]">
               <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-10">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-[var(--hairline)]">
-                  <div className="space-y-3 max-w-2xl">
-                    <div className="flex items-center gap-3 text-xs text-[var(--text-muted)]">
+                  <div className="space-y-2.5 max-w-2xl">
+                    <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                       <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                         {proj3.number}
                       </span>
                       <span>·</span>
-                      <span>Next.js 16 · Static Export</span>
+                      <span>{proj3.subtitle}</span>
                     </div>
 
                     <h3 className="font-serif font-semibold text-3xl sm:text-4xl tracking-[-0.02em] text-[var(--text)]">
                       {proj3.title}
                     </h3>
 
-                    <p className="text-base text-[var(--text-muted)] leading-relaxed">
+                    <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
                       {proj3.description}
                     </p>
                   </div>
@@ -569,15 +692,16 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                   </div>
                 )}
 
-                {/* Open Architecture Rows with layoutId Hover Hairline */}
+                {/* Open Architecture Rows with Bold Split Titles & layoutId Indicator */}
                 <div className="divide-y divide-[var(--hairline)] mt-2">
                   {proj3.keyHighlights.map((hl, idx) => {
                     const isHovered = hoveredArchIndex === idx;
+                    const { title, body } = parseHighlight(hl);
                     return (
                       <div
                         key={idx}
                         onMouseEnter={() => setHoveredArchIndex(idx)}
-                        className="relative py-4 pl-5 pr-2 flex items-start gap-4 transition-colors"
+                        className="relative py-4 pl-5 pr-2 flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-4 transition-colors"
                       >
                         {isHovered && (
                           <motion.span
@@ -586,10 +710,15 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                             className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full bg-[var(--accent)]"
                           />
                         )}
-                        <span className="font-mono text-xs tabular-nums text-[var(--accent)] pt-0.5 shrink-0">
-                          {String(idx + 1).padStart(2, '0')}
-                        </span>
-                        <p className="text-sm text-[var(--text-muted)] leading-relaxed">{hl}</p>
+                        <div className="flex items-baseline gap-3 sm:w-64 shrink-0">
+                          <span className="font-mono text-xs tabular-nums text-[var(--accent)]">
+                            {String(idx + 1).padStart(2, '0')}
+                          </span>
+                          <span className="text-sm font-semibold text-[var(--text)]">{title}</span>
+                        </div>
+                        <p className="text-sm text-[var(--text-muted)] leading-relaxed flex-1">
+                          {body}
+                        </p>
                       </div>
                     );
                   })}
