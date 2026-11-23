@@ -22,7 +22,6 @@ export function EducationSection() {
           index="05"
           eyebrow={t.education.eyebrow}
           title={t.education.title}
-          subtitle={t.education.subtitle}
           className="mb-14"
         />
 

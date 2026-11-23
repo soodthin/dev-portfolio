@@ -166,8 +166,7 @@ export const translations: Record<Locale, Translations> = {
     education: {
       eyebrow: 'Education',
       title: 'Academic Foundation',
-      subtitle:
-        'Computer Science fundamentals combined with hands-on systems engineering and bilingual collaboration.',
+      subtitle: '',
       degreeTitle: 'Computer Science Curriculum',
       courseworkTitle: 'Core Coursework',
       languagesTitle: 'Languages',
@@ -268,8 +267,7 @@ export const translations: Record<Locale, Translations> = {
     education: {
       eyebrow: 'Học vấn',
       title: 'Nền tảng Học vấn',
-      subtitle:
-        'Kiến thức nền tảng Khoa học Máy tính kết hợp kinh nghiệm triển khai hệ thống và làm việc song ngữ.',
+      subtitle: '',
       degreeTitle: 'Chương trình Khoa học Máy tính',
       courseworkTitle: 'Môn học Trọng tâm',
       languagesTitle: 'Ngoại ngữ',
