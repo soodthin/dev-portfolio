@@ -121,7 +121,7 @@ export function ContactSection() {
     target: sectionRef,
     offset: ['start end', 'end end'],
   });
-  const kineticGlideX = useTransform(scrollYProgress, [0, 1], [-32, 24]);
+  const kineticGlideX = useTransform(scrollYProgress, [0, 1], [-20, 16]);
 
   // Mount Full-Width Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas 2D engine
   useEffect(() => {
@@ -394,7 +394,17 @@ export function ContactSection() {
   };
 
   const posterHeadline =
-    lang === 'vi' ? 'SẴN SÀNG KIẾN TẠO ĐỘT PHÁ MỚI.' : "READY TO ARCHITECT WHAT'S NEXT.";
+    lang === 'vi' ? (
+      <>
+        SẴN SÀNG KIẾN TẠO <br className="hidden sm:inline" />
+        ĐỘT PHÁ MỚI.
+      </>
+    ) : (
+      <>
+        READY TO ARCHITECT <br className="hidden sm:inline" />
+        WHAT&apos;S NEXT.
+      </>
+    );
 
   return (
     <section
@@ -425,10 +435,10 @@ export function ContactSection() {
 
         {/* Center: Scroll-Kinetic Poster Headline & Action Buttons */}
         <div className="space-y-8 my-auto py-8">
-          <div className="overflow-hidden py-1">
+          <div className="py-1">
             <motion.h2
               style={prefersReducedMotion ? undefined : { x: kineticGlideX }}
-              className="font-serif font-bold text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-[-0.025em] text-[var(--text)] whitespace-nowrap uppercase select-none will-change-transform leading-[1.05]"
+              className="font-serif font-bold text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.5rem] tracking-[-0.025em] text-[var(--text)] uppercase select-none will-change-transform leading-[1.06] text-balance max-w-5xl"
             >
               {posterHeadline}
             </motion.h2>
