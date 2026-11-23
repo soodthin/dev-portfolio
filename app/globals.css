@@ -1,8 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-serif: var(--font-newsreader), "Newsreader", "Times New Roman", serif;
+  --font-sans: var(--font-sans), "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-accent-wash: var(--accent-wash);
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -12,57 +22,39 @@ html {
 }
 
 :root {
-  /* Ruza Teal & Cyan System (Light Mode: Slate-50 Canvas, White Cards, Teal Accents) */
-  --surface-0: #f8fafc;
-  --surface-1: #ffffff;
-  --surface-2: #f1f5f9;
-  --surface-3: #e2e8f0;
-  
-  --accent-primary: #14b8a6; /* Vibrant Teal */
-  --accent-secondary: #0d9488; /* Deep Jewel Teal */
-  --accent-tint: #f0fdfa; /* Seafoam Tint */
+  /* Swiss Editorial — Light Mode */
+  --bg: #F5F2EB;
+  --surface-1: #FDFCF8;
+  --surface-2: #F0ECE1;
+  --text: #121214;
+  --text-muted: #5A574F;
+  --hairline: rgba(18, 18, 20, 0.12);
+  --accent: #1D4ED8;
+  --accent-wash: rgba(29, 78, 216, 0.08);
 
-  --border-subtle: #e2e8f0;
-  --border-mid: #cbd5e1;
-  --border-highlight: rgba(13, 148, 136, 0.35);
-
-  --bg-main: #f8fafc;
-  --text-main: #020617;
+  --bg-main: var(--bg);
+  --text-main: var(--text);
 }
 
 html.dark {
-  /* Ruza Teal & Cyan System (Dark Mode: Deep Obsidian #080d12 Canvas, #0d131a Cards, Electric Cyan #2dd4bf) */
-  --surface-0: #080d12;
-  --surface-1: #0d131a;
-  --surface-2: #131a24;
-  --surface-3: #1a2330;
-  
-  --accent-primary: #2dd4bf; /* Electric Cyan */
-  --accent-secondary: #14b8a6; /* Vibrant Teal */
-  --accent-tint: rgba(45, 212, 191, 0.10);
+  /* Swiss Editorial — Dark Mode (Default) */
+  --bg: #0B0B0D;
+  --surface-1: #131317;
+  --surface-2: #19191F;
+  --text: #F3F0E8;
+  --text-muted: #9A968E;
+  --hairline: rgba(243, 240, 232, 0.10);
+  --accent: #4F7CFF;
+  --accent-wash: rgba(79, 124, 255, 0.12);
 
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-mid: rgba(255, 255, 255, 0.12);
-  --border-highlight: rgba(45, 212, 191, 0.45);
-
-  --bg-main: #080d12;
-  --text-main: #ffffff;
+  --bg-main: var(--bg);
+  --text-main: var(--text);
 }
 
 body {
-  background-color: var(--bg-main);
-  color: var(--text-main);
-}
-
-/* Slide Deck presentation utilities */
-.snap-deck-container {
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
-}
-
-.snap-card {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -76,8 +68,8 @@ body {
 
 /* Subtle, slim scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -85,109 +77,88 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #28324e;
+  background: var(--hairline);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b4970;
+  background: var(--text-muted);
 }
 
-/* Animation utilities for animate-in, fade-in, zoom-in, slide-in (Tailwind v4 compatibility) */
-@keyframes enter {
-  from {
-    opacity: var(--tw-enter-opacity, 1);
-    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
+/* Kinetic Dual-Track Marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-@keyframes exit {
-  to {
-    opacity: var(--tw-exit-opacity, 1);
-    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
   }
 }
 
-.animate-in {
-  animation-name: enter;
-  animation-duration: 150ms;
-  --tw-enter-opacity: initial;
-  --tw-enter-scale: initial;
-  --tw-enter-rotate: initial;
-  --tw-enter-translate-x: initial;
-  --tw-enter-translate-y: initial;
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
 }
 
-.animate-out {
-  animation-name: exit;
-  animation-duration: 150ms;
-  --tw-exit-opacity: initial;
-  --tw-exit-scale: initial;
-  --tw-exit-rotate: initial;
-  --tw-exit-translate-x: initial;
-  --tw-exit-translate-y: initial;
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse 35s linear infinite;
 }
 
-.fade-in {
-  --tw-enter-opacity: 0;
-}
-.fade-in-0 {
-  --tw-enter-opacity: 0;
-}
-.fade-out {
-  --tw-exit-opacity: 0;
-}
-.fade-out-0 {
-  --tw-exit-opacity: 0;
+.animate-marquee:hover,
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
 }
 
-.zoom-in-90 {
-  --tw-enter-scale: 0.9;
-}
-.zoom-in-95 {
-  --tw-enter-scale: 0.95;
-}
-.zoom-in-100 {
-  --tw-enter-scale: 1;
-}
-.zoom-out-95 {
-  --tw-exit-scale: 0.95;
-}
+/* Print Stylesheet for clean 2-page CV export */
+@media print {
+  header,
+  aside,
+  footer,
+  .no-print,
+  [role="dialog"],
+  button,
+  .fixed,
+  nav {
+    display: none !important;
+  }
 
-.slide-in-from-top-1 {
-  --tw-enter-translate-y: -0.25rem;
-}
-.slide-in-from-top-2 {
-  --tw-enter-translate-y: -0.5rem;
-}
-.slide-in-from-top-4 {
-  --tw-enter-translate-y: -1rem;
-}
-.slide-in-from-bottom-2 {
-  --tw-enter-translate-y: 0.5rem;
-}
-.slide-in-from-left-2 {
-  --tw-enter-translate-x: -0.5rem;
-}
-.slide-in-from-right-2 {
-  --tw-enter-translate-x: 0.5rem;
-}
+  html,
+  body,
+  main {
+    background: #ffffff !important;
+    color: #121214 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
 
-.duration-75 {
-  animation-duration: 75ms;
-}
-.duration-100 {
-  animation-duration: 100ms;
-}
-.duration-150 {
-  animation-duration: 150ms;
-}
-.duration-200 {
-  animation-duration: 200ms;
-}
-.duration-300 {
-  animation-duration: 300ms;
-}
-.duration-500 {
-  animation-duration: 500ms;
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 1rem 0 !important;
+    border-bottom: 1px solid #d1d5db !important;
+  }
+
+  a {
+    text-decoration: underline !important;
+    color: #121214 !important;
+  }
+
+  .print-page-break {
+    page-break-before: always;
+    break-before: page;
+  }
 }

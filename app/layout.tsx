@@ -1,25 +1,43 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import { portfolioData } from '@/data/portfolio-data';
+import { Newsreader, Be_Vietnam_Pro, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
-const geistSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist-sans',
+const newsreader = Newsreader({
+  subsets: ['latin', 'vietnamese'],
+  style: ['normal', 'italic'],
+  variable: '--font-newsreader',
   display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  style: ['normal', 'italic'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-mono',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: portfolioData.profile.meta.title,
-  description: portfolioData.profile.meta.description,
-  keywords: portfolioData.profile.meta.keywords,
-  authors: [{ name: portfolioData.profile.name }],
+  title: 'Thai Do Thinh — Software Engineer & FinTech Automation Specialist',
+  description: 'Portfolio of Thai Do Thinh (Sood). Specializing in FinTech automation, AI-driven reconciliation pipelines, high-throughput backend systems with FastAPI, Django REST, React, and Next.js.',
+  keywords: [
+    'Thai Do Thinh',
+    'Do Thinh Thai',
+    'Software Engineer',
+    'FinTech Automation',
+    'FastAPI',
+    'Django REST Framework',
+    'Next.js',
+    'React',
+    'Vietnam Developer',
+  ],
+  authors: [{ name: 'Thai Do Thinh' }],
 };
 
 const themeScript = `
@@ -31,7 +49,9 @@ const themeScript = `
       } else {
         document.documentElement.classList.add('dark');
       }
-    } catch (e) {}
+    } catch (e) {
+      document.documentElement.classList.add('dark');
+    }
   })();
 `;
 
@@ -41,11 +61,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark min-h-full ${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`dark min-h-full ${newsreader.variable} ${beVietnamPro.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-screen antialiased selection:bg-teal-500/20 selection:text-teal-200 font-sans">
+      <body className="min-h-screen antialiased bg-[var(--bg)] text-[var(--text)] selection:bg-[var(--accent)] selection:text-white font-sans">
         {children}
       </body>
     </html>

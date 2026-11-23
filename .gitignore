@@ -45,3 +45,4 @@ AGENTS.md
 CLAUDE.md
 .taste-skill/
 *.zip
+/dist/
