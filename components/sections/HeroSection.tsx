@@ -2,126 +2,97 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { getAssetPath } from '@/lib/asset';
 import { RollingCounter } from '@/components/motion/RollingCounter';
 import { MagneticButton } from '@/components/motion/MagneticButton';
-import { ArrowRightIcon } from '@/components/ui/Icons';
+
+const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 export function HeroSection() {
   const { data, t, lang } = usePortfolio();
   const { scrollTo } = useSmoothScroll();
+  const prefersReducedMotion = useReducedMotion();
 
-  // Mouse 3D tilt physics for editorial portrait
-  const cardRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), {
-    damping: 20,
-    stiffness: 120,
-  });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), {
-    damping: 20,
-    stiffness: 120,
-  });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
-
-  // Scroll parallax for portrait
-  const containerRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: sectionRef,
     offset: ['start start', 'end start'],
   });
-  const portraitParallaxY = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
-  // Staggered title lines for Curtain Split-Line Masked Rise
-  const titleLine1 = data.profile.name.toUpperCase();
-  const titleLine2 = lang === 'vi' ? 'Kỹ sư Phần mềm &' : 'Software Engineer &';
-  const titleLine3 = lang === 'vi' ? 'Tự động hóa FinTech' : 'FinTech Automation';
+  // Subtle GPU-only scroll-out depth recede
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.45]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 28]);
+
+  const roleHeadline =
+    lang === 'vi'
+      ? 'Kỹ sư Phần mềm & Tự động hóa FinTech'
+      : 'Software Engineer & FinTech Automation';
 
   return (
     <section
       id="summary"
-      ref={containerRef}
-      className="relative min-h-[92vh] pt-24 pb-16 md:pt-32 md:pb-24 border-b border-[var(--hairline)] flex flex-col justify-between overflow-hidden"
+      ref={sectionRef}
+      className="relative pt-28 pb-20 md:pt-36 md:pb-28 border-b border-[var(--hairline)] overflow-x-clip"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center">
-        {/* Top Editorial Eyebrow & Status Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-[var(--hairline)]">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs font-semibold tracking-widest text-[var(--accent)] uppercase px-2 py-0.5 border border-[var(--hairline)] bg-[var(--surface-1)]">
-              01
-            </span>
-            <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
-              {t.hero.eyebrow}
-            </span>
-          </div>
-
-          {/* Calm Status Indicator (Anti-AI-Slop: No neon ping) */}
-          <div className="flex items-center gap-2 font-mono text-[11px] text-[var(--text-muted)]">
+      <motion.div
+        style={
+          prefersReducedMotion
+            ? undefined
+            : { scale: contentScale, opacity: contentOpacity, y: contentY }
+        }
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform"
+      >
+        {/* Status Line */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-8 mb-10 border-b border-[var(--hairline)]">
+          <div className="inline-flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
             <span className="w-2 h-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-            <span className="tracking-wide">{data.profile.statusText}</span>
+            <span className="font-medium tracking-wide">{data.profile.statusText}</span>
           </div>
+          <span className="font-mono text-xs text-[var(--text-muted)] tabular-nums">
+            {data.profile.location}
+          </span>
         </div>
 
-        {/* Main Swiss Magazine Cover Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
-          {/* Left Column: Curtain Split-Line Masked Rise + Manifesto (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col justify-between">
-            {/* Title Choreography: Curtain Split-Line Rise */}
-            <div className="space-y-1 mb-8">
-              {/* Line 1: Name */}
-              <div className="overflow-hidden py-0.5">
+        {/* Main Hero Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+          {/* Left Column: Typography & Bio */}
+          <div className="lg:col-span-8 space-y-7">
+            <div className="space-y-3">
+              <div className="overflow-hidden">
                 <motion.h1
-                  initial={{ y: '110%', rotate: 1.5, opacity: 0 }}
-                  animate={{ y: '0%', rotate: 0, opacity: 1 }}
-                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-serif font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[var(--text)] leading-[0.95]"
+                  initial={{ y: '100%', opacity: 0 }}
+                  animate={{ y: '0%', opacity: 1 }}
+                  transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
+                  className="font-serif font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-0.02em] text-[var(--text)] leading-[1.04]"
                 >
-                  {titleLine1}
+                  {data.profile.name}
                 </motion.h1>
               </div>
 
-              {/* Line 2: Role Blend (Sans + Newsreader Italic) */}
-              <div className="overflow-hidden py-1">
-                <motion.div
-                  initial={{ y: '110%', rotate: 1.5, opacity: 0 }}
-                  animate={{ y: '0%', rotate: 0, opacity: 1 }}
-                  transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight text-[var(--text)] leading-tight"
+              <div className="overflow-hidden">
+                <motion.p
+                  initial={{ y: '100%', opacity: 0 }}
+                  animate={{ y: '0%', opacity: 1 }}
+                  transition={{ duration: 0.75, delay: 0.1, ease: EASE_OUT_EXPO }}
+                  className="font-serif font-semibold text-2xl sm:text-3xl lg:text-4xl tracking-[-0.02em] text-[var(--accent)] leading-tight"
                 >
-                  <span className="font-sans font-semibold text-[var(--text)]">{titleLine2} </span>
-                  <span className="font-serif italic font-normal text-[var(--accent)]">
-                    {titleLine3}
-                  </span>
-                </motion.div>
+                  {roleHeadline}
+                </motion.p>
               </div>
             </div>
 
-            {/* Sub-headline & Bio Paragraphs */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4 max-w-2xl text-[var(--text-muted)] text-base sm:text-lg leading-relaxed mb-8"
+              transition={{ duration: 0.65, delay: 0.2, ease: EASE_OUT_EXPO }}
+              className="space-y-4 max-w-2xl"
             >
-              <p className="font-sans text-[var(--text)] font-medium text-lg sm:text-xl leading-snug">
+              <p className="text-base sm:text-lg text-[var(--text)] font-medium leading-relaxed">
                 {data.profile.roleDescription}
               </p>
               {data.profile.aboutParagraphs.map((para, idx) => (
@@ -131,27 +102,26 @@ export function HeroSection() {
               ))}
             </motion.div>
 
-            {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-wrap items-center gap-4 pt-2"
+              transition={{ duration: 0.6, delay: 0.3, ease: EASE_OUT_EXPO }}
+              className="flex flex-wrap items-center gap-3.5 pt-2"
             >
-              <MagneticButton>
+              <MagneticButton strength={0.2}>
                 <button
                   onClick={() => scrollTo('#works')}
-                  className="flex items-center gap-2.5 px-6 py-3 bg-[var(--accent)] text-white hover:brightness-110 font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-sm cursor-pointer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer"
                 >
                   <span>{t.hero.viewWork}</span>
-                  <ArrowRightIcon size={14} />
+                  <ArrowRight size={15} strokeWidth={2} />
                 </button>
               </MagneticButton>
 
-              <MagneticButton>
+              <MagneticButton strength={0.2}>
                 <button
                   onClick={() => scrollTo('#contact')}
-                  className="flex items-center gap-2 px-6 py-3 border border-[var(--hairline)] bg-[var(--surface-1)] hover:bg-[var(--surface-2)] text-[var(--text)] font-mono text-xs uppercase tracking-wider font-medium transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
                 >
                   <span>{t.hero.contactMe}</span>
                 </button>
@@ -159,82 +129,51 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right Column: Editorial Portrait Frame (5 cols) */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <motion.div
-              ref={cardRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                rotateX,
-                rotateY,
-                y: portraitParallaxY,
-                transformStyle: 'preserve-3d',
-              }}
-              className="relative w-full max-w-sm sm:max-w-md aspect-[3/4] p-3 border border-[var(--hairline)] bg-[var(--surface-1)] shadow-2xl transition-shadow duration-300 group"
-            >
-              {/* Inner Frame */}
-              <div className="relative w-full h-full overflow-hidden border border-[var(--hairline)] bg-[var(--surface-2)]">
-                <Image
-                  src={getAssetPath(data.profile.avatarUrl)}
-                  alt={data.profile.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 420px"
-                  priority
-                  unoptimized
-                  className="object-cover object-center filter grayscale-[15%] contrast-[105%] group-hover:scale-102 transition-transform duration-700 ease-out"
-                />
-
-                {/* Subtle dark gradient overlay at base for editorial typography */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-
-                {/* Frame Monogram & Location Caption */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white/90 font-mono text-[11px] pointer-events-none">
-                  <span className="tracking-widest uppercase font-semibold">SAIGON // VN</span>
-                  <span className="opacity-75">10.8231° N, 106.6297° E</span>
+          {/* Right Column: Circular Avatar with Restrained Double-Hairline Frame */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: EASE_OUT_EXPO }}
+            className="lg:col-span-4 flex justify-start lg:justify-end"
+          >
+            <div className="group p-1.5 rounded-full ring-1 ring-[var(--hairline)] hover:ring-[var(--hairline-strong)] bg-[var(--surface-1)] transition-all duration-300 ease-out">
+              <div className="relative w-44 h-44 sm:w-52 sm:h-52 lg:w-60 lg:h-60 rounded-full overflow-hidden ring-1 ring-[var(--hairline)] bg-[var(--surface-2)]">
+                <div className="relative w-full h-full transition-transform duration-300 ease-out group-hover:scale-[1.03]">
+                  <Image
+                    src={getAssetPath(data.profile.avatarUrl)}
+                    alt={data.profile.name}
+                    fill
+                    sizes="(max-width: 640px) 176px, (max-width: 1024px) 208px, 240px"
+                    priority
+                    unoptimized
+                    className="object-cover object-[50%_70%] scale-[1.2]"
+                  />
                 </div>
               </div>
-
-              {/* Decorative Corner Accents */}
-              <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t border-l border-[var(--accent)]" />
-              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t border-r border-[var(--accent)]" />
-              <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b border-l border-[var(--accent)]" />
-              <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b border-r border-[var(--accent)]" />
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Bottom Asymmetric Impact Strip (Odometer Counter) */}
+        {/* Clean Horizontal divide-x Metrics Strip */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-14 pt-8 border-t border-[var(--hairline)]"
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
+          className="mt-16 pt-10 border-t border-[var(--hairline)]"
         >
-          <div className="flex items-center justify-between mb-4">
-            <span className="font-mono text-xs uppercase tracking-widest text-[var(--accent)] font-semibold">
-              {"// "}{t.hero.metricsCaption}
-            </span>
-            <span className="font-mono text-[11px] text-[var(--text-muted)]">
-              Audited Production Data
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--hairline)]">
             {data.metrics.map((metric, idx) => (
               <div
                 key={idx}
-                className="p-4 sm:p-5 border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--accent)] transition-colors flex flex-col justify-between"
+                className="py-5 lg:py-0 lg:px-7 first:lg:pl-0 last:lg:pr-0 flex flex-col justify-between gap-2"
               >
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-mono font-bold text-[var(--text)] tracking-tight mb-2">
+                <div className="text-3xl sm:text-4xl font-mono font-bold text-[var(--text)] tracking-tight tabular-nums">
                   <RollingCounter value={metric.value} suffix={metric.suffix} />
                 </div>
-                <div>
-                  <h4 className="font-sans font-semibold text-xs sm:text-sm text-[var(--text)] mb-1">
-                    {metric.label}
-                  </h4>
-                  <p className="font-mono text-[11px] text-[var(--text-muted)] line-clamp-2 leading-relaxed">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-semibold text-[var(--text)]">{metric.label}</h3>
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                     {metric.description}
                   </p>
                 </div>
@@ -242,7 +181,7 @@ export function HeroSection() {
             ))}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

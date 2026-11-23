@@ -6,10 +6,10 @@ import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 
 const SECTIONS = [
   { id: 'summary', number: '01', labelEn: 'Summary', labelVi: 'Tổng quan' },
-  { id: 'experience', number: '02', labelEn: 'Work History', labelVi: 'Kinh nghiệm' },
+  { id: 'experience', number: '02', labelEn: 'Experience', labelVi: 'Kinh nghiệm' },
   { id: 'works', number: '03', labelEn: 'Selected Works', labelVi: 'Dự án' },
   { id: 'skills', number: '04', labelEn: 'Capabilities', labelVi: 'Năng lực' },
-  { id: 'education', number: '05', labelEn: 'Academic', labelVi: 'Học vấn' },
+  { id: 'education', number: '05', labelEn: 'Education', labelVi: 'Học vấn' },
   { id: 'contact', number: '06', labelEn: 'Contact', labelVi: 'Liên hệ' },
 ];
 
@@ -19,15 +19,12 @@ export function SectionTracker() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+      const scrollPosition = window.scrollY + 220;
       for (let i = SECTIONS.length - 1; i >= 0; i--) {
         const section = document.getElementById(SECTIONS[i].id);
-        if (section) {
-          const top = section.offsetTop;
-          if (scrollPosition >= top) {
-            setActiveSection(SECTIONS[i].id);
-            break;
-          }
+        if (section && scrollPosition >= section.offsetTop) {
+          setActiveSection(SECTIONS[i].id);
+          break;
         }
       }
     };
@@ -38,9 +35,10 @@ export function SectionTracker() {
   }, [setActiveSection]);
 
   return (
+    /* Restricted to 2xl (1536px+) so it never overlaps the max-w-7xl content grid at 1280px–1440px */
     <aside
       aria-label="Section Tracker"
-      className="hidden xl:flex fixed right-3 top-1/2 -translate-y-1/2 z-30 flex-col gap-2 p-1 bg-[var(--surface-1)]/85 backdrop-blur-md border border-[var(--hairline)] select-none no-print shadow-md"
+      className="hidden 2xl:flex fixed right-6 top-1/2 -translate-y-1/2 z-30 flex-col gap-2 py-2.5 px-1.5 rounded-full bg-[var(--surface-1)] border border-[var(--hairline)] select-none no-print"
     >
       {SECTIONS.map((sec) => {
         const isActive = activeSection === sec.id;
@@ -49,27 +47,26 @@ export function SectionTracker() {
         return (
           <button
             key={sec.id}
-            onClick={() => scrollTo(`#${sec.id}`, { offset: -60 })}
+            onClick={() => scrollTo(`#${sec.id}`, { offset: -64 })}
             className="group relative flex items-center justify-center cursor-pointer"
-            aria-label={`Jump to section ${sec.number} ${label}`}
+            aria-label={`Jump to ${label}`}
+            aria-current={isActive ? 'true' : undefined}
           >
-            {/* Tooltip Label on Hover floating to the left */}
             <span
-              className={`absolute right-full mr-2.5 px-2 py-0.5 bg-[var(--surface-1)] border border-[var(--hairline)] font-mono text-[10px] tracking-wider uppercase whitespace-nowrap shadow-lg pointer-events-none transition-all duration-200 ${
+              className={`absolute right-full mr-3 px-2.5 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--hairline)] text-[11px] font-medium whitespace-nowrap pointer-events-none transition-all duration-200 ${
                 isActive
-                  ? 'text-[var(--accent)] font-semibold opacity-100'
-                  : 'text-[var(--text-muted)] opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0'
+                  ? 'text-[var(--accent)] opacity-100 translate-x-0'
+                  : 'text-[var(--text-muted)] opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0'
               }`}
             >
-              {sec.number} {"//"} {label}
+              <span className="font-mono tabular-nums mr-1.5">{sec.number}</span>· {label}
             </span>
 
-            {/* Monospace Indicator Box */}
             <span
-              className={`w-6 h-6 flex items-center justify-center font-mono text-[10px] font-semibold transition-all ${
+              className={`w-7 h-7 rounded-full flex items-center justify-center font-mono text-[10px] tabular-nums font-semibold transition-colors ${
                 isActive
-                  ? 'bg-[var(--accent)] text-white border border-[var(--accent)] shadow-sm'
-                  : 'bg-[var(--surface-2)] text-[var(--text-muted)] border border-[var(--hairline)] group-hover:text-[var(--text)] group-hover:border-[var(--accent)]'
+                  ? 'bg-[var(--accent-deep)] text-[var(--accent-cta-text)]'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-2)]'
               }`}
             >
               {sec.number}

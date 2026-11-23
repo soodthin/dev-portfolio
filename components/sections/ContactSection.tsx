@@ -1,27 +1,23 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import { Copy, Check, Printer, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
-import {
-  CopyIcon,
-  CheckIcon,
-  PrinterIcon,
-} from '@/components/ui/Icons';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 import { SaigonLiveClock } from '@/components/ui/SaigonLiveClock';
 
 export function ContactSection() {
   const { data, t, lang } = usePortfolio();
+  const prefersReducedMotion = useReducedMotion();
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  // Scroll-linked kinetic drift for monumental poster headline
-  const containerRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: sectionRef,
     offset: ['start end', 'end end'],
   });
-  const kineticDriftX = useTransform(scrollYProgress, [0, 1], [-40, 20]);
+  const kineticGlideX = useTransform(scrollYProgress, [0, 1], [-32, 24]);
 
   const handleCopyEmail = async () => {
     try {
@@ -31,7 +27,7 @@ export function ContactSection() {
         setTimeout(() => setCopiedEmail(false), 2200);
       }
     } catch {
-      // Fallback
+      // Clipboard fallback ignored
     }
   };
 
@@ -41,134 +37,122 @@ export function ContactSection() {
     }
   };
 
-  const posterHeadline = lang === 'vi' ? "LET'S BUILD TOGETHER." : "LET'S BUILD TOGETHER.";
+  const posterHeadline = lang === 'vi' ? 'CÙNG XÂY DỰNG NHÉ.' : "LET'S BUILD TOGETHER.";
 
   return (
     <section
       id="contact"
-      ref={containerRef}
-      className="relative pt-24 pb-20 md:pt-36 md:pb-28 overflow-hidden"
+      ref={sectionRef}
+      className="relative pt-24 pb-20 md:pt-36 md:pb-28 overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Eyebrow */}
-        <div className="flex items-center gap-3 mb-6">
-          <span className="font-mono text-xs font-semibold tracking-widest text-[var(--accent)] uppercase px-2 py-0.5 border border-[var(--hairline)] bg-[var(--surface-1)]">
-            06
-          </span>
-          <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
-            {t.contact.eyebrow}
-          </span>
-        </div>
+        <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)] mb-5">
+          {t.contact.eyebrow}
+        </p>
 
-        {/* Title Choreography: Scroll-Linked Kinetic Drift */}
+        {/* Scroll-Kinetic Horizontal Glide on Localized Poster Headline */}
         <div className="overflow-hidden py-2 mb-12 md:mb-16">
           <motion.h2
-            style={{ x: kineticDriftX }}
-            className="font-serif font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl tracking-tight text-[var(--text)] whitespace-nowrap uppercase opacity-90 select-none"
+            style={prefersReducedMotion ? undefined : { x: kineticGlideX }}
+            className="font-serif font-bold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-[-0.02em] text-[var(--text)] whitespace-nowrap uppercase select-none will-change-transform"
           >
             {posterHeadline}
           </motion.h2>
         </div>
 
-        {/* Main Swiss Poster Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column (7 cols): Massive Email, Copy Button & Print Resume */}
-          <div className="lg:col-span-7 space-y-10">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-wider text-[var(--accent)] font-semibold mb-3">
-                {"// "}{t.contact.subtitle}
+          {/* Left Column (7 cols): Email with Sweeping Teal Underline + Copy & Print */}
+          <div className="lg:col-span-7 space-y-8">
+            <div className="space-y-4">
+              <p className="text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+                {t.contact.subtitle}
               </p>
 
-              {/* Massive Email Display with Sweeping Kinetic Underline */}
               <div className="relative group inline-block max-w-full">
                 <a
                   href={`mailto:${data.profile.email}`}
-                  className="font-serif font-bold text-2xl sm:text-4xl md:text-5xl text-[var(--text)] tracking-tight hover:text-[var(--accent)] transition-colors break-all"
+                  className="font-serif font-semibold text-2xl sm:text-4xl md:text-5xl tracking-[-0.02em] text-[var(--text)] hover:text-[var(--accent)] transition-colors break-all"
                 >
                   {data.profile.email}
                 </a>
-                <span className="block h-[2px] w-0 bg-[var(--accent)] transition-all duration-300 group-hover:w-full mt-2" />
+                <span
+                  aria-hidden="true"
+                  className="block h-[2px] w-full origin-left scale-x-0 group-hover:scale-x-100 bg-[var(--accent)] transition-transform duration-300 ease-out mt-2"
+                />
               </div>
             </div>
 
-            {/* Action Buttons: Copy Email & Print Resume */}
-            <div className="flex flex-wrap items-center gap-4 pt-2 no-print">
-              {/* Copy Email Button with AnimatePresence morph */}
-              <MagneticButton>
+            <div className="flex flex-wrap items-center gap-3.5 pt-2 no-print">
+              <MagneticButton strength={0.2}>
                 <button
+                  type="button"
                   onClick={handleCopyEmail}
-                  className="flex items-center gap-2.5 px-6 py-3.5 bg-[var(--accent)] text-white hover:brightness-110 font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-md cursor-pointer min-w-[170px] justify-center"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer min-w-[136px]"
                 >
                   <AnimatePresence mode="wait" initial={false}>
                     {copiedEmail ? (
-                      <motion.div
+                      <motion.span
                         key="copied"
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.15 }}
-                        className="flex items-center gap-2"
+                        className="inline-flex items-center gap-1.5"
                       >
-                        <CheckIcon size={15} />
+                        <Check size={15} strokeWidth={2} />
                         <span>{t.contact.emailCopied}</span>
-                      </motion.div>
+                      </motion.span>
                     ) : (
-                      <motion.div
+                      <motion.span
                         key="copy"
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.15 }}
-                        className="flex items-center gap-2"
+                        className="inline-flex items-center gap-1.5"
                       >
-                        <CopyIcon size={15} />
+                        <Copy size={15} strokeWidth={1.75} />
                         <span>{t.contact.copyEmail}</span>
-                      </motion.div>
+                      </motion.span>
                     )}
                   </AnimatePresence>
                 </button>
               </MagneticButton>
 
-              {/* Print / Save Resume CTA */}
-              <MagneticButton>
+              <MagneticButton strength={0.2}>
                 <button
+                  type="button"
                   onClick={handlePrintResume}
                   title={t.contact.printHint}
-                  className="flex items-center gap-2.5 px-6 py-3.5 border border-[var(--hairline)] bg-[var(--surface-1)] hover:bg-[var(--surface-2)] text-[var(--text)] font-mono text-xs uppercase tracking-wider font-medium transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
                 >
-                  <PrinterIcon size={15} className="text-[var(--accent)]" />
+                  <Printer size={15} strokeWidth={1.75} className="text-[var(--accent)]" />
                   <span>{t.contact.printResume}</span>
                 </button>
               </MagneticButton>
             </div>
-
-            {/* Print Notice Hint */}
-            <p className="font-mono text-[11px] text-[var(--text-muted)] no-print">
-              › {t.contact.printHint}
-            </p>
           </div>
 
-          {/* Right Column (5 cols): Social Links Index List & Saigon Live Clock */}
+          {/* Right Column (5 cols): Full-Width Hairline Social Rows & Saigon Live Clock */}
           <div className="lg:col-span-5 space-y-8 no-print">
-            {/* Social Index List */}
-            <div className="border border-[var(--hairline)] bg-[var(--surface-1)] p-6">
-              <h4 className="font-mono text-xs uppercase tracking-widest text-[var(--accent)] font-semibold pb-3 border-b border-[var(--hairline)] mb-2">
-                {"// "}{t.contact.networkTitle}
-              </h4>
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] pb-3 border-b border-[var(--hairline)]">
+                {t.contact.networkTitle}
+              </h3>
 
-              <div className="divide-y divide-[var(--hairline)]">
-                {data.socials.map((soc, idx) => {
+              <div className="divide-y divide-[var(--hairline)] border-b border-[var(--hairline)]">
+                {data.socials.map((soc) => {
                   const isExternal = soc.url.startsWith('http');
                   return (
                     <a
-                      key={idx}
+                      key={soc.label}
                       href={soc.url}
                       target={isExternal ? '_blank' : undefined}
                       rel={isExternal ? 'noopener noreferrer' : undefined}
-                      className="group flex items-center justify-between py-3.5 px-2 hover:bg-[var(--surface-2)] transition-colors"
+                      className="group flex items-center justify-between py-4 transition-colors"
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="font-serif font-bold text-base text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                      <div className="flex items-baseline gap-3">
+                        <span className="font-serif font-semibold text-lg text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
                           {soc.label}
                         </span>
                         <span className="font-mono text-xs text-[var(--text-muted)]">
@@ -176,23 +160,24 @@ export function ContactSection() {
                         </span>
                       </div>
 
-                      <span className="font-mono text-xs text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:translate-x-1 transition-all">
-                        ↗
-                      </span>
+                      <ArrowUpRight
+                        size={16}
+                        strokeWidth={1.75}
+                        className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                      />
                     </a>
                   );
                 })}
               </div>
             </div>
 
-            {/* Saigon Live Clock Box */}
-            <div className="p-5 border border-[var(--hairline)] bg-[var(--surface-1)] flex items-center justify-between">
-              <div className="space-y-1">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--accent)] font-semibold block">
+            <div className="flex items-center justify-between pt-2">
+              <div className="space-y-0.5">
+                <span className="text-xs font-semibold text-[var(--text)] block">
                   {t.contact.saigonTime}
                 </span>
-                <span className="font-sans text-xs text-[var(--text-muted)]">
-                  Vietnam Standard Time (UTC+07:00)
+                <span className="text-xs text-[var(--text-muted)]">
+                  Vietnam Standard Time (GMT+7)
                 </span>
               </div>
               <SaigonLiveClock />

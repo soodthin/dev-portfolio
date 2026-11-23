@@ -1,241 +1,291 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { SkillCategory, SkillItem } from '@/types/portfolio';
-import { ContextInspectorDock } from '@/components/ui/ContextInspectorDock';
+import { TechIcon } from '@/components/ui/TechIcons';
+
+const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+type ProjectFilterKey =
+  | 'all'
+  | 'bw-industrial'
+  | 'flexiconnect'
+  | 'saigon-savory'
+  | 'dev-portfolio';
+
+interface ProjectFilterOption {
+  key: ProjectFilterKey;
+  labelEn: string;
+  labelVi: string;
+  matchTokens: string[];
+}
+
+const PROJECT_FILTERS: ProjectFilterOption[] = [
+  { key: 'all', labelEn: 'All', labelVi: 'Tất cả', matchTokens: [] },
+  {
+    key: 'bw-industrial',
+    labelEn: 'BW Industrial',
+    labelVi: 'BW Industrial',
+    matchTokens: ['bw industrial', 'bwid'],
+  },
+  {
+    key: 'flexiconnect',
+    labelEn: 'FlexiConnect Web',
+    labelVi: 'FlexiConnect Web',
+    matchTokens: ['flexiconnect'],
+  },
+  {
+    key: 'saigon-savory',
+    labelEn: 'Saigon Savory App',
+    labelVi: 'Saigon Savory App',
+    matchTokens: ['saigon savory'],
+  },
+  {
+    key: 'dev-portfolio',
+    labelEn: 'Dev Portfolio',
+    labelVi: 'Dev Portfolio',
+    matchTokens: ['dev portfolio', 'soodfolio'],
+  },
+];
+
+function skillMatchesFilter(skill: SkillItem, filter: ProjectFilterOption): boolean {
+  if (filter.key === 'all') return true;
+  if (!skill.contexts || skill.contexts.length === 0) return false;
+  return skill.contexts.some((ctx) => {
+    const lower = ctx.label.toLowerCase();
+    return filter.matchTokens.some((token) => lower.includes(token));
+  });
+}
 
 export function CapabilitiesSection() {
-  const { data, t } = usePortfolio();
-  const [selectedCategory, setSelectedCategory] = useState<SkillCategory | 'All'>('All');
-  const [selectedSkill, setSelectedSkill] = useState<SkillItem | null>(null);
+  const { data, t, lang } = usePortfolio();
+  const [activeFilterKey, setActiveFilterKey] = useState<ProjectFilterKey>('all');
 
-  const categories: (SkillCategory | 'All')[] = [
-    'All',
-    'Languages',
-    'Frameworks & Platforms',
-    'Databases',
-    'Tools & DevOps',
-    'AI-Assisted Engineering',
-  ];
+  const allSkills = useMemo(
+    () => data.skills.flatMap((group) => group.skills),
+    [data.skills]
+  );
 
-  // Title words for Staggered Word Wave Cascade
-  const titleWords = t.capabilities.title.split(' ');
+  // Default to the first skill so the Context Inspector Bar communicates interactivity natively
+  const [selectedSkillName, setSelectedSkillName] = useState<string>(
+    () => allSkills[0]?.name ?? 'Java'
+  );
 
-  // Filter skills based on selected category
-  const displayedSkills = useMemo(() => {
-    if (selectedCategory === 'All') {
-      return data.skills.flatMap((group) => group.skills);
-    }
-    const foundGroup = data.skills.find((group) => group.category === selectedCategory);
-    return foundGroup ? foundGroup.skills : [];
-  }, [selectedCategory, data.skills]);
+  const selectedSkill = useMemo(
+    () => allSkills.find((s) => s.name === selectedSkillName) ?? allSkills[0] ?? null,
+    [allSkills, selectedSkillName]
+  );
 
-  const handleSkillClick = (skill: SkillItem) => {
-    if (selectedSkill?.name === skill.name) {
-      setSelectedSkill(null);
-    } else {
-      setSelectedSkill(skill);
-      if (typeof window !== 'undefined' && window.innerWidth < 768) {
-        setTimeout(() => {
-          document.getElementById('skill-context-dock')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
-      }
+  const activeFilter = useMemo(
+    () => PROJECT_FILTERS.find((f) => f.key === activeFilterKey) ?? PROJECT_FILTERS[0],
+    [activeFilterKey]
+  );
+
+  const getCategoryLabel = (category: SkillCategory): string => {
+    switch (category) {
+      case 'Languages':
+        return t.capabilities.filterLanguages;
+      case 'Frameworks & Platforms':
+        return t.capabilities.filterFrameworks;
+      case 'Databases':
+        return t.capabilities.filterDatabases;
+      case 'Tools & DevOps':
+        return t.capabilities.filterTools;
+      case 'AI-Assisted Engineering':
+        return t.capabilities.filterAi;
+      default:
+        return category;
     }
   };
 
-  // Marquee keywords
-  const marqueeKeywords1 = [
-    'Java & Spring Boot',
-    'FastAPI & Python',
-    'TypeScript & React',
-    'Next.js 16 SSG',
-    'PostgreSQL & Redis',
-    'Docker & CI/CD',
-    'Atomic Transactions',
-    'AI Agent Workflows',
-  ];
-
-  const marqueeKeywords2 = [
-    'Financial Ledger Reconciliation',
-    'Multi-Bank Statement OCR',
-    'Zero-Slop Swiss Editorial',
-    'RESTful API Architecture',
-    'Stateless JWT & RBAC',
-    'JUnit 5 & Mockito Coverage',
-  ];
+  const contextCount = selectedSkill?.contexts?.length ?? 0;
+  const countLabel =
+    contextCount === 1
+      ? `1 ${t.capabilities.projectSingular}`
+      : `${contextCount} ${t.capabilities.projectPlural}`;
 
   return (
     <section
       id="skills"
-      className="relative py-24 md:py-32 border-b border-[var(--hairline)] overflow-hidden"
+      className="relative py-20 md:py-28 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title Choreography: Staggered Word Wave Cascade */}
-        <div className="mb-14 md:mb-18">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="font-mono text-xs font-semibold tracking-widest text-[var(--accent)] uppercase px-2 py-0.5 border border-[var(--hairline)] bg-[var(--surface-1)]">
-              04
-            </span>
-            <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
-              {t.capabilities.eyebrow}
-            </span>
+        {/* Unified Clean Masked Wipe-Up Heading */}
+        <div className="mb-12 max-w-3xl">
+          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)] mb-3">
+            {t.capabilities.eyebrow}
+          </p>
+
+          <div className="overflow-hidden">
+            <motion.h2
+              initial={{ y: '100%', opacity: 0 }}
+              whileInView={{ y: '0%', opacity: 1 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
+              className="font-serif font-semibold text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] text-[var(--text)] leading-[1.08]"
+            >
+              {t.capabilities.title}
+            </motion.h2>
           </div>
 
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-1">
-            {titleWords.map((word, idx) => (
-              <div key={idx} className="overflow-hidden py-1">
-                <motion.span
-                  initial={{ y: 40, rotate: 3, opacity: 0 }}
-                  whileInView={{ y: 0, rotate: 0, opacity: 1 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{
-                    duration: 0.7,
-                    delay: idx * 0.08,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="font-serif text-3xl sm:text-5xl md:text-6xl text-[var(--text)] font-bold tracking-tight inline-block"
-                >
-                  {word}
-                </motion.span>
-              </div>
-            ))}
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base sm:text-lg text-[var(--text-muted)] mt-2 font-sans max-w-2xl"
-          >
+          <p className="mt-4 text-base sm:text-lg text-[var(--text-muted)] leading-relaxed">
             {t.capabilities.subtitle}
-          </motion.p>
-
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="h-[1px] bg-[var(--hairline)] mt-6 origin-left w-full"
-          />
+          </p>
         </div>
 
-        {/* Dual-Track Kinetic Marquee */}
-        <div className="mb-12 py-3 border-y border-[var(--hairline)] bg-[var(--surface-1)] overflow-hidden select-none space-y-2">
-          {/* Track 1: Moves Left */}
-          <div className="flex w-max animate-marquee gap-8 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
-            {[...marqueeKeywords1, ...marqueeKeywords1].map((text, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <span className="text-[var(--accent)]">✦</span>
-                <span className={i % 2 === 0 ? 'font-serif italic capitalize text-sm text-[var(--text)]' : ''}>
-                  {text}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Track 2: Moves Right */}
-          <div className="flex w-max animate-marquee-reverse gap-8 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)] opacity-80">
-            {[...marqueeKeywords2, ...marqueeKeywords2].map((text, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <span className="text-[var(--accent)] font-bold">›</span>
-                <span className={i % 2 === 1 ? 'font-serif italic capitalize text-sm text-[var(--text)]' : ''}>
-                  {text}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Category Filter Pills (layoutId indicator) */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat;
+        {/* Project Cross-Highlighter Bar (shared layoutId active pill) */}
+        <div
+          role="tablist"
+          aria-label="Filter skills by project"
+          className="flex flex-wrap items-center gap-2 pb-8 border-b border-[var(--hairline)]"
+        >
+          {PROJECT_FILTERS.map((filter) => {
+            const isActive = activeFilterKey === filter.key;
+            const label = lang === 'vi' ? filter.labelVi : filter.labelEn;
             return (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`relative px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer border ${
-                  isSelected
-                    ? 'text-white border-[var(--accent)]'
-                    : 'text-[var(--text-muted)] hover:text-[var(--text)] border-[var(--hairline)] bg-[var(--surface-1)]'
+                key={filter.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActiveFilterKey(filter.key)}
+                className={`relative px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                  isActive
+                    ? 'text-[var(--accent-cta-text)]'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--hairline)] bg-[var(--surface-1)]'
                 }`}
               >
-                {isSelected && (
-                  <motion.div
-                    layoutId="activeSkillTab"
-                    className="absolute inset-0 bg-[var(--accent)] -z-10"
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
+                {isActive && (
+                  <motion.span
+                    layoutId="projectCrossHighlightPill"
+                    transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
+                    className="absolute inset-0 rounded-full bg-[var(--accent-deep)] -z-10"
                   />
                 )}
-                <span>
-                  {cat === 'All'
-                    ? t.capabilities.filterAll
-                    : cat === 'Languages'
-                    ? t.capabilities.filterLanguages
-                    : cat === 'Frameworks & Platforms'
-                    ? t.capabilities.filterFrameworks
-                    : cat === 'Databases'
-                    ? t.capabilities.filterDatabases
-                    : cat === 'Tools & DevOps'
-                    ? t.capabilities.filterTools
-                    : t.capabilities.filterAi}
-                </span>
+                <span>{label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Skills Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {displayedSkills.map((skill, idx) => {
-            const isSelected = selectedSkill?.name === skill.name;
-            const hasContext = skill.contexts && skill.contexts.length > 0;
+        {/* Editorial Grouped Rows (1px horizontal hairlines, zero nested cards) */}
+        <div className="divide-y divide-[var(--hairline)]">
+          {data.skills.map((group) => (
+            <div
+              key={group.category}
+              className="py-6 md:py-7 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start"
+            >
+              <div className="md:col-span-3 pt-1">
+                <h3 className="text-sm font-semibold text-[var(--text)]">
+                  {getCategoryLabel(group.category)}
+                </h3>
+              </div>
 
-            return (
-              <motion.button
-                key={skill.name}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.2, delay: idx * 0.02 }}
-                onClick={() => handleSkillClick(skill)}
-                className={`p-3.5 text-left border transition-all cursor-pointer flex flex-col justify-between min-h-[90px] relative group ${
-                  isSelected
-                    ? 'border-[var(--accent)] bg-[var(--surface-2)] shadow-md ring-1 ring-[var(--accent)]'
-                    : 'border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--text-muted)] hover:bg-[var(--surface-2)]'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--accent)] font-semibold">
-                      {skill.level || 'TECH'}
-                    </span>
-                    {hasContext && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" title="Has production context" />
-                    )}
-                  </div>
-                  <h4 className="font-sans font-semibold text-xs sm:text-sm text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
-                    {skill.name}
-                  </h4>
-                </div>
+              <div className="md:col-span-9 flex flex-wrap gap-2.5">
+                {group.skills.map((skill) => {
+                  const isHighlighted =
+                    activeFilterKey !== 'all' && skillMatchesFilter(skill, activeFilter);
+                  const isDimmed =
+                    activeFilterKey !== 'all' && !skillMatchesFilter(skill, activeFilter);
+                  const isSelected = selectedSkill?.name === skill.name;
 
-                <div className="font-mono text-[10px] text-[var(--text-muted)] pt-2 border-t border-[var(--hairline)] flex items-center justify-between">
-                  <span>{hasContext ? `${skill.contexts?.length} contexts` : 'Standard'}</span>
-                  <span className="text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity">›</span>
-                </div>
-              </motion.button>
-            );
-          })}
+                  return (
+                    <motion.button
+                      key={skill.name}
+                      type="button"
+                      onClick={() => setSelectedSkillName(skill.name)}
+                      animate={{
+                        opacity: isDimmed ? 0.25 : 1,
+                        scale: isHighlighted ? 1.03 : 1,
+                      }}
+                      transition={{ duration: 0.22, ease: EASE_OUT_EXPO }}
+                      aria-pressed={isSelected}
+                      className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-medium border transition-colors cursor-pointer will-change-transform ${
+                        isSelected
+                          ? 'border-[var(--accent)] bg-[var(--accent-wash)] text-[var(--text)]'
+                          : isHighlighted
+                          ? 'border-[var(--hairline-strong)] bg-[var(--surface-2)] text-[var(--text)]'
+                          : 'border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                      }`}
+                    >
+                      <TechIcon
+                        name={skill.name}
+                        size={15}
+                        className={
+                          isSelected || isHighlighted
+                            ? 'text-[var(--accent)]'
+                            : 'text-[var(--text-muted)]'
+                        }
+                      />
+                      <span>{skill.name}</span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Context Inspector Dock (Fixed Below Grid, ZERO Tooltip Cutoff on Mobile) */}
-        <ContextInspectorDock
-          selectedSkill={selectedSkill}
-          onClear={() => setSelectedSkill(null)}
-        />
+        {/* Context Inspector Bar */}
+        {selectedSkill && (
+          <div className="mt-8 rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 sm:p-6">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedSkill.name}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
+                className="flex flex-col md:flex-row md:items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-full bg-[var(--accent-wash)] border border-[var(--hairline-strong)] flex items-center justify-center text-[var(--accent)] shrink-0">
+                    <TechIcon name={selectedSkill.name} size={17} />
+                  </span>
+                  <div>
+                    <div className="flex items-center gap-2.5">
+                      <h4 className="font-serif font-semibold text-xl text-[var(--text)]">
+                        {selectedSkill.name}
+                      </h4>
+                      {contextCount > 0 && (
+                        <span className="font-mono text-xs tabular-nums text-[var(--text-muted)]">
+                          · {countLabel}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {selectedSkill.contexts && selectedSkill.contexts.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    {selectedSkill.contexts.map((ctx, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs border border-[var(--hairline)] bg-[var(--surface-2)] text-[var(--text)]"
+                      >
+                        <span className="text-[var(--accent)] font-medium">
+                          {ctx.type === 'exp'
+                            ? lang === 'vi'
+                              ? 'Thực tế'
+                              : 'Work'
+                            : ctx.type === 'project'
+                            ? lang === 'vi'
+                              ? 'Dự án'
+                              : 'System'
+                            : 'Workflow'}
+                        </span>
+                        <span className="opacity-40">·</span>
+                        <span>{ctx.label}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </section>
   );

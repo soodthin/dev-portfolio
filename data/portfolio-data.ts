@@ -45,6 +45,7 @@ const COMMON_SKILL_CONTEXTS = {
   ReactJS: [
     { type: 'project' as const, label: 'FlexiConnect Web' },
     { type: 'exp' as const, label: 'BW Industrial Dev JSC' },
+    { type: 'project' as const, label: 'Dev Portfolio Engine' },
   ],
   'React Native (Expo)': [
     { type: 'project' as const, label: 'Saigon Savory App' },
@@ -80,7 +81,9 @@ const COMMON_SKILL_CONTEXTS = {
   ],
   Git: [
     { type: 'exp' as const, label: 'BW Industrial Dev JSC' },
-    { type: 'project' as const, label: 'All Production Repositories' },
+    { type: 'project' as const, label: 'FlexiConnect Web' },
+    { type: 'project' as const, label: 'Saigon Savory App' },
+    { type: 'project' as const, label: 'Dev Portfolio Engine' },
   ],
   'GitHub Actions': [
     { type: 'project' as const, label: 'Dev Portfolio Engine (CI/CD)' },
@@ -93,13 +96,14 @@ const COMMON_SKILL_CONTEXTS = {
     { type: 'project' as const, label: 'FlexiConnect Web (Cloud Host)' },
   ],
   'Claude Code': [
-    { type: 'tool' as const, label: 'AI Architecture & Workflows' },
+    { type: 'project' as const, label: 'Dev Portfolio Engine' },
+    { type: 'exp' as const, label: 'BW Industrial Dev JSC' },
   ],
   Codex: [
-    { type: 'tool' as const, label: 'AI Pair Programming' },
+    { type: 'project' as const, label: 'Dev Portfolio Engine' },
   ],
   'Antigravity (IDE)': [
-    { type: 'tool' as const, label: 'SoodFolio Platform Development' },
+    { type: 'project' as const, label: 'Dev Portfolio Engine' },
   ],
   'Prompt Engineering': [
     { type: 'exp' as const, label: 'BWID Bank Statement OCR Fallback' },
@@ -175,7 +179,7 @@ const COMMON_PROJECT_SCREENSHOTS = {
     },
     {
       src: '/images/restaurant/3-cart-checkout.png',
-      captionEn: 'Seamless dual-mode ordering supporting immediate delivery and advance dining table reservation.',
+      captionEn: 'Dual-mode ordering supporting immediate delivery and advance dining table reservation.',
       captionVi: 'Đặt hàng linh hoạt hai chế độ: giao hàng tận nơi hoặc đặt bàn trước tại nhà hàng.',
       title: 'Cart & Table Reservation Engine',
     },
@@ -203,17 +207,16 @@ const COMMON_PROJECT_SCREENSHOTS = {
 export const portfolioDataEn: PortfolioData = {
   profile: {
     name: 'Thai Do Thinh',
-    title: 'Software Engineer // FinTech Automation Specialist',
-    roleDescription: 'Final-year Computer Science student specializing in robust full-stack systems, automated financial pipelines, and high-concurrency RESTful backends. Experienced with Java, Python, TypeScript, Spring Boot, FastAPI, and React.',
-    statusText: 'AVAILABLE FOR SOFTWARE ENGINEERING ROLES // HO CHI MINH CITY',
+    title: 'Software Engineer · FinTech Automation',
+    roleDescription: 'Final-year Computer Science student specializing in full-stack systems, automated financial pipelines, and high-concurrency RESTful backends. Experienced with Java, Python, TypeScript, Spring Boot, FastAPI, and React.',
+    statusText: 'Available for Software Engineering Roles · Ho Chi Minh City',
     location: 'Ho Chi Minh City, Vietnam (GMT+7)',
     email: 'thinhthai963@gmail.com',
     phone: '(+84) 869 922 096',
-    // resumeUrl: Set to a static PDF path (e.g., '/docs/resume.pdf') when hosted.
-    // When left empty (""), the Resume CTA automatically triggers window.print()
-    // with a crisp, tailored 2-page print stylesheet.
+    // resumeUrl: Set to a static PDF path (e.g., '/docs/version2.1.pdf') when hosted.
+    // When left empty (""), the Resume CTA triggers window.print() with a 2-page print stylesheet.
     resumeUrl: '',
-    avatarUrl: '/images/avatar.png',
+    avatarUrl: '/images/avatar.webp', // Switch back to '/images/avatar.png' if WebP not yet generated
     aboutParagraphs: [
       'I am a final-year Computer Science engineer at Ho Chi Minh City Open University. Throughout my academic foundation and production work, I have architected full-stack web and mobile systems spanning relational database design, high-throughput REST APIs, secure RBAC authentication, and reactive interfaces.',
       'At BW Industrial Development Joint Stock Company, I engineered automated financial pipelines and concurrent AI-driven OCR parsers, cutting daily statement reconciliation turnaround from 1 full day down to 2 hours. I combine core software engineering principles with modern AI velocity to build reliable, maintainable systems.',
@@ -239,10 +242,10 @@ export const portfolioDataEn: PortfolioData = {
       description: 'Accelerated accounting reconciliation cycle from 1 full business day down to 2 hours.',
     },
     {
-      value: 26,
-      suffix: '',
+      value: 104,
+      suffix: '+',
       label: 'Production REST APIs',
-      description: 'Engineered high-throughput endpoints across multi-role enterprise & consumer apps.',
+      description: '78 FlexiConnect Spring Boot, 26 Saigon Savory Django REST, and BWID FastAPI endpoints.',
     },
     {
       value: 3,
@@ -477,28 +480,29 @@ export const portfolioDataEn: PortfolioData = {
       id: 'project-03',
       number: '03',
       title: 'Dev Portfolio Engine',
-      subtitle: 'Authentic Swiss Editorial Typography & Static Architecture',
-      description: 'Zero-slop developer portfolio engine built with Next.js 16, React 19, and Tailwind CSS v4. Compiled to static SSG export with zero-runtime latency and deployed via GitHub Actions.',
+      subtitle: 'Static-Export Architecture & Bilingual Typography',
+      description: 'Static-export developer portfolio built with Next.js 16, React 19, and Tailwind CSS v4. Compiled to static HTML/CSS/JS bundles and deployed automatically via GitHub Actions.',
       tags: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS v4', 'Lenis', 'Motion', 'GitHub Actions', 'GitHub Pages'],
       demoUrl: 'https://soodthin.github.io/dev-portfolio/',
       githubUrl: 'https://github.com/soodthin/dev-portfolio',
       featured: true,
       metricsList: [
-        { label: 'TypeScript Strictness', value: '0 any' },
-        { label: 'Smooth Scroll', value: 'Lenis 60fps' },
-        { label: 'Static Export', value: '100% SSG' },
-        { label: 'AI Slop Count', value: '0' },
+        { label: 'Framework', value: 'Next.js 16' },
+        { label: 'UI Library', value: 'React 19' },
+        { label: 'Type Safety', value: 'Strict TS' },
+        { label: 'Delivery', value: 'Static SSG' },
+        { label: 'Localization', value: 'EN / VI' },
       ],
       keyHighlights: [
-        '100% Static Export: Fully compatible with Next.js static output (output: export) and GitHub Pages subpath routing via automated asset prefixing.',
-        'Swiss Editorial Design System: Custom editorial typography using Newsreader serif, Be Vietnam Pro sans, and JetBrains Mono with full Vietnamese diacritics support.',
-        'Hardware-Accelerated Motion: Built with motion and Lenis smooth scrolling, featuring modal pause hooks and prefers-reduced-motion accessibility.',
-        'Single Source of Truth: 100% bilingual parity across all domain sections with zero hardcoded UI strings.',
+        'Static Export Pipeline: Configured with Next.js static output (output: export) and automatic GitHub Pages subpath prefixing via getAssetPath.',
+        'Bilingual Typography & Themes: Pairs Newsreader display headings, Be Vietnam Pro UI copy, and JetBrains Mono indices across WCAG AA/AAA dark and light themes.',
+        'GPU-Composited Motion: Uses motion/react and Lenis smooth scrolling with reduced-motion fallbacks and modal scroll-lock synchronization.',
+        'Structured Data Layer: Centralized EN/VI portfolio data and translation dictionaries with strict TypeScript interfaces.',
       ],
       architectureNotes: [
-        'Custom Tailwind CSS v4 @theme design tokens in dark and light modes.',
-        'Anti-FOUC theme hydration script preventing layout flashes on page load.',
-        'Procedural SVG film-grain noise overlay with pointer-events-none.',
+        'Tailwind CSS v4 @theme tokens for dark and light modes.',
+        'Inline pre-hydration theme script preventing flash of unstyled theme.',
+        'Automated CI/CD deployment to GitHub Pages.',
       ],
     },
   ],
@@ -530,16 +534,14 @@ export const portfolioDataEn: PortfolioData = {
 export const portfolioDataVi: PortfolioData = {
   profile: {
     name: 'Thái Đỗ Thịnh',
-    title: 'Kỹ sư Phần mềm // Chuyên gia Tự động hóa FinTech',
-    roleDescription: 'Sinh viên năm cuối ngành Khoa học Máy tính chuyên sâu xây dựng các hệ thống full-stack tối ưu, đường ống tự động hóa tài chính và backend RESTful chịu tải cao. Thành thạo Java, Python, TypeScript, Spring Boot, FastAPI và React.',
-    statusText: 'SẴN SÀNG NHẬN VIỆC KỸ SƯ PHẦN MỀM // TP. HỒ CHÍ MINH',
+    title: 'Kỹ sư Phần mềm · Tự động hóa FinTech',
+    roleDescription: 'Sinh viên năm cuối ngành Khoa học Máy tính chuyên xây dựng các hệ thống full-stack, đường ống tự động hóa tài chính và backend RESTful chịu tải cao. Thành thạo Java, Python, TypeScript, Spring Boot, FastAPI và React.',
+    statusText: 'Sẵn sàng cho vị trí Kỹ sư Phần mềm · TP. Hồ Chí Minh',
     location: 'TP. Hồ Chí Minh, Việt Nam (GMT+7)',
     email: 'thinhthai963@gmail.com',
     phone: '(+84) 869 922 096',
-    // resumeUrl: Đường dẫn tới file PDF tải lên (ví dụ '/docs/resume.pdf').
-    // Khi để trống (""), nút CV sẽ kích hoạt window.print() với giao diện in ấn 2 trang chuẩn xác.
     resumeUrl: '',
-    avatarUrl: '/images/avatar.png',
+    avatarUrl: '/images/avatar.webp', // Giữ '/images/avatar.png' nếu chưa chuyển sang WebP
     aboutParagraphs: [
       'Tôi là sinh viên năm cuối chuyên ngành Khoa học Máy tính tại Trường Đại học Mở TP. Hồ Chí Minh. Xuyên suốt quá trình học tập và làm việc thực tế, tôi đã thiết kế và triển khai nhiều hệ thống web và mobile hoàn chỉnh từ thiết kế cơ sở dữ liệu quan hệ, xây dựng REST API hiệu năng cao, phân quyền bảo mật RBAC đến giao diện người dùng mượt mà.',
       'Tại Công ty Cổ phần Phát triển Công nghiệp BW, tôi đảm nhiệm kỹ thuật xây dựng đường ống tự động hóa tài chính và parser bóc tách OCR bằng AI song song, giúp rút ngắn thời gian đối soát sao kê từ 1 ngày làm việc xuống còn 2 giờ. Tôi kết hợp nền tảng kỹ thuật vững vàng với các công cụ AI hiện đại để phát triển phần mềm tin cậy, chuẩn mực và nhanh chóng.',
@@ -565,10 +567,10 @@ export const portfolioDataVi: PortfolioData = {
       description: 'Đẩy nhanh chu kỳ đối soát kế toán từ 1 ngày làm việc xuống còn 2 giờ.',
     },
     {
-      value: 26,
-      suffix: '',
+      value: 104,
+      suffix: '+',
       label: 'REST API Production',
-      description: 'Thiết kế các endpoint hiệu năng cao cho ứng dụng doanh nghiệp và người tiêu dùng.',
+      description: '78 endpoint FlexiConnect Spring Boot, 26 endpoint Saigon Savory Django REST và hệ thống BWID FastAPI.',
     },
     {
       value: 3,
@@ -803,28 +805,29 @@ export const portfolioDataVi: PortfolioData = {
       id: 'project-03',
       number: '03',
       title: 'Dev Portfolio Engine',
-      subtitle: 'Kiến trúc Portfolio Tĩnh Phong cách Swiss Editorial Chuẩn mực',
-      description: 'Cỗ máy portfolio cá nhân xây dựng bằng Next.js 16, React 19 và Tailwind CSS v4 không dùng các hiệu ứng thị giác thừa thãi. Biên dịch tĩnh 100% SSG với độ trễ phản hồi bằng 0 trên GitHub Pages.',
+      subtitle: 'Kiến trúc Xuất Tĩnh & Thiết kế Song ngữ',
+      description: 'Portfolio cá nhân xây dựng bằng Next.js 16, React 19 và Tailwind CSS v4, biên dịch tĩnh SSG hoàn toàn và triển khai tự động qua GitHub Actions.',
       tags: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS v4', 'Lenis', 'Motion', 'GitHub Actions', 'GitHub Pages'],
       demoUrl: 'https://soodthin.github.io/dev-portfolio/',
       githubUrl: 'https://github.com/soodthin/dev-portfolio',
       featured: true,
       metricsList: [
-        { label: 'Định kiểu TypeScript', value: '0 any' },
-        { label: 'Cuộn mượt Lenis', value: '60fps' },
-        { label: 'Xuất tĩnh SSG', value: '100%' },
-        { label: 'Hiệu ứng slop thừa', value: '0' },
+        { label: 'Framework', value: 'Next.js 16' },
+        { label: 'Thư viện UI', value: 'React 19' },
+        { label: 'Kiểu dữ liệu', value: 'Strict TS' },
+        { label: 'Triển khai', value: 'Static SSG' },
+        { label: 'Ngôn ngữ', value: 'EN / VI' },
       ],
       keyHighlights: [
-        'Xuất tĩnh 100%: Tương thích hoàn toàn với chế độ static export của Next.js (output: export) và tiền tố subpath GitHub Pages qua bộ xử lý đường dẫn tự động.',
-        'Hệ thống Thiết kế Swiss Editorial: Kiểu chữ tinh tế kết hợp serif Newsreader, sans Be Vietnam Pro và monospace JetBrains Mono hỗ trợ trọn vẹn dấu tiếng Việt.',
-        'Chuyển động Tối ưu Phần cứng: Tích hợp motion và Lenis mượt mà, hỗ trợ tạm dừng khi mở modal và tôn trọng tùy chọn giảm chuyển động của người dùng.',
-        'Dữ liệu Tập trung Tuyệt đối: Đồng bộ song ngữ 100% giữa tiếng Anh và tiếng Việt, loại bỏ hoàn toàn các chuỗi ký tự gán cứng.',
+        'Xuất tĩnh Static Export: Tương thích hoàn toàn với output: export của Next.js và tự động ghép subpath GitHub Pages qua getAssetPath.',
+        'Kiểu chữ & Chủ đề Song ngữ: Kết hợp Newsreader, Be Vietnam Pro và JetBrains Mono đầy đủ dấu tiếng Việt với 2 chế độ Sáng/Tối đạt chuẩn tương phản.',
+        'Chuyển động Tối ưu GPU: Sử dụng motion/react và Lenis cuộn mượt, tự động tạm dừng khi mở modal và tôn trọng cài đặt giảm chuyển động.',
+        'Dữ liệu Tập trung: Quản lý đồng bộ song ngữ EN/VI với TypeScript strict, không có chuỗi văn bản gán cứng.',
       ],
       architectureNotes: [
-        'Hệ thống token thiết kế Tailwind CSS v4 @theme với 2 chế độ Sáng/Tối.',
-        'Script chống chớp màn hình (anti-FOUC) đồng bộ lớp dark mode trước khi render.',
-        'Lớp phủ nhiễu hạt SVG film-grain siêu nhẹ không chiếm tài nguyên mạng.',
+        'Hệ thống token Tailwind CSS v4 @theme cho 2 chế độ Sáng/Tối.',
+        'Script đồng bộ dark mode trước khi render giúp tránh chớp giao diện.',
+        'Quy trình CI/CD triển khai tự động lên GitHub Pages.',
       ],
     },
   ],

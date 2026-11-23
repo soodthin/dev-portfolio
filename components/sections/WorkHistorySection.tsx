@@ -1,261 +1,282 @@
 'use client';
 
 import React, { useState } from 'react';
+import { ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
-import { ExternalLinkIcon } from '@/components/ui/Icons';
+import { SpotlightSurface } from '@/components/ui/SpotlightSurface';
+import { TechIcon } from '@/components/ui/TechIcons';
 import { MagneticButton } from '@/components/motion/MagneticButton';
+
+const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 export function WorkHistorySection() {
   const { data, t } = usePortfolio();
-  const experience = data.experiences[0]; // BW Industrial Dev JSC
+  const experience = data.experiences[0];
   const stages = experience?.pipelineStages || [];
-  const [activeStageIndex, setActiveStageIndex] = useState<number>(0);
 
-  const activeStage = stages[activeStageIndex] || stages[0];
+  // Stage 01 active by default — 2-way synced with Deliverables 01–05 on the right
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  if (!experience) return null;
+
+  const activeStage = stages[activeIndex] || stages[0];
 
   return (
     <section
       id="experience"
-      className="relative py-24 md:py-32 border-b border-[var(--hairline)] overflow-hidden"
+      className="relative py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title Choreography: Architectural Rule Draw + Horizontal Tracking Settle */}
+        {/* Unified Clean Masked Wipe-Up Heading */}
         <div className="mb-14 md:mb-20">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="font-mono text-xs font-semibold tracking-widest text-[var(--accent)] uppercase px-2 py-0.5 border border-[var(--hairline)] bg-[var(--surface-1)]">
-              02
-            </span>
-            <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
-              {t.experience.eyebrow}
-            </span>
-          </div>
+          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)] mb-3">
+            {t.experience.eyebrow}
+          </p>
 
-          <div className="overflow-hidden py-1">
+          <div className="overflow-hidden">
             <motion.h2
-              initial={{ x: -40, opacity: 0, letterSpacing: '0.08em' }}
-              whileInView={{ x: 0, opacity: 1, letterSpacing: '-0.02em' }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="font-serif text-3xl sm:text-5xl md:text-6xl text-[var(--text)] font-bold tracking-tight"
+              initial={{ y: '100%', opacity: 0 }}
+              whileInView={{ y: '0%', opacity: 1 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
+              className="font-serif font-semibold text-3xl sm:text-5xl md:text-6xl tracking-[-0.02em] text-[var(--text)] leading-[1.08]"
             >
               {experience.company}
             </motion.h2>
           </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base sm:text-lg text-[var(--text-muted)] mt-2 font-sans max-w-2xl"
-          >
-            {experience.role} — {experience.period} ({experience.location})
-          </motion.p>
-
-          {/* Architectural Rule Draw */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="h-[1px] bg-[var(--hairline)] mt-6 origin-left w-full"
-          />
+          <p className="mt-3 text-base sm:text-lg text-[var(--text-muted)]">
+            {experience.role} · <span className="font-mono text-sm tabular-nums">{experience.period}</span> · {experience.location}
+          </p>
         </div>
 
-        {/* 2-Column Asymmetric Layout (Sticky Split-Screen) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-start">
-          {/* Left Column (Sticky 5 cols): Company Metadata, Live Link & 5-Stage AI Pipeline */}
+        {/* Sticky Split-Screen */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          {/* Left Sticky Column (5 cols): Overview + Live SVG 5-Stage Pipeline */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 lg:self-start space-y-6">
-            {/* Company Badge & Live App Link */}
-            <div className="p-6 border border-[var(--hairline)] bg-[var(--surface-1)]">
-              <div className="flex items-center justify-between gap-3 mb-3">
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[var(--accent)] px-2 py-0.5 border border-[var(--accent)]/30 bg-[var(--accent)]/10">
+            <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-7">
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-[var(--accent)] bg-[var(--accent-wash)] border border-[var(--hairline-strong)]">
                   {t.experience.companyBadge}
                 </span>
-                <span className="font-mono text-xs text-[var(--text-muted)]">
-                  {experience.period}
+                <span className="font-mono text-xs text-[var(--text-muted)] tabular-nums">
+                  {experience.teamSize}
                 </span>
               </div>
 
-              <h3 className="font-serif text-2xl font-bold text-[var(--text)] mb-2">
-                {experience.projectTitle || experience.company}
+              <h3 className="font-serif font-semibold text-2xl tracking-[-0.02em] text-[var(--text)] mb-2.5">
+                {experience.projectTitle}
               </h3>
 
-              <p className="font-sans text-sm text-[var(--text-muted)] leading-relaxed mb-6">
+              <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-6">
                 {experience.description}
               </p>
 
-              {/* Live App CTA Button */}
               {experience.projectUrl && (
-                <MagneticButton className="w-full">
+                <MagneticButton strength={0.18} className="w-full">
                   <a
                     href={experience.projectUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2.5 w-full py-3 px-4 bg-[var(--accent)] text-white hover:brightness-110 font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-sm cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all"
                   >
                     <span>{t.experience.liveAppBtn}</span>
-                    <ExternalLinkIcon size={14} />
+                    <ExternalLink size={14} strokeWidth={2} />
                   </a>
                 </MagneticButton>
               )}
-            </div>
+            </SpotlightSurface>
 
-            {/* Interactive 5-Stage Fintech AI Pipeline */}
-            <div className="p-6 border border-[var(--hairline)] bg-[var(--surface-1)]">
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--hairline)] mb-4">
-                <div>
-                  <h4 className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">
+            {/* 5-Stage Pipeline with Live SVG Data Stream */}
+            {stages.length > 0 && (
+              <div className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6">
+                <div className="flex items-center justify-between gap-2 pb-4 border-b border-[var(--hairline)] mb-5">
+                  <h4 className="text-sm font-semibold text-[var(--text)]">
                     {t.experience.pipelineTitle}
                   </h4>
-                  <p className="font-mono text-[10px] text-[var(--text-muted)] mt-0.5">
-                    {t.experience.pipelineClickHint}
-                  </p>
+                  <span className="font-mono text-xs tabular-nums text-[var(--accent)]">
+                    {activeStage.step} / 0{stages.length}
+                  </span>
+                </div>
+
+                {/* Stage Nodes + Animated SVG Data Stream */}
+                <div className="relative flex items-center justify-between py-2 mb-6">
+                  <svg
+                    aria-hidden="true"
+                    className="absolute left-5 right-5 top-1/2 -translate-y-1/2 w-[calc(100%-2.5rem)] h-3 pointer-events-none"
+                    preserveAspectRatio="none"
+                    viewBox="0 0 200 12"
+                  >
+                    <line
+                      x1="0"
+                      y1="6"
+                      x2="200"
+                      y2="6"
+                      stroke="var(--hairline)"
+                      strokeWidth="1.5"
+                    />
+                    <line
+                      x1="0"
+                      y1="6"
+                      x2="200"
+                      y2="6"
+                      stroke="var(--accent)"
+                      strokeWidth="1.5"
+                      strokeDasharray="6 10"
+                      className="animate-pipeline-flow opacity-80"
+                    />
+                  </svg>
+
+                  {stages.map((stg, idx) => {
+                    const isActive = activeIndex === idx;
+                    return (
+                      <button
+                        key={stg.step}
+                        type="button"
+                        onClick={() => setActiveIndex(idx)}
+                        onMouseEnter={() => setActiveIndex(idx)}
+                        aria-pressed={isActive}
+                        aria-label={`${stg.step} ${stg.name}`}
+                        className="relative z-10 flex flex-col items-center cursor-pointer group"
+                      >
+                        <motion.span
+                          animate={{ scale: isActive ? 1.08 : 1 }}
+                          transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center font-mono text-xs tabular-nums font-semibold border transition-colors ${
+                            isActive
+                              ? 'bg-[var(--accent-deep)] text-[var(--accent-cta-text)] border-[var(--accent)]'
+                              : 'bg-[var(--surface-2)] text-[var(--text-muted)] border-[var(--hairline)] group-hover:border-[var(--hairline-strong)] group-hover:text-[var(--text)]'
+                          }`}
+                        >
+                          {stg.step}
+                        </motion.span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Active Stage Details (flat hairline divider, no nested card) */}
+                <div className="pt-4 border-t border-[var(--hairline)]">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeStage.step}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.22, ease: EASE_OUT_EXPO }}
+                      className="space-y-2.5"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-[var(--accent)]">
+                          {activeStage.name}
+                        </span>
+                        {activeStage.metric && (
+                          <span className="font-mono text-xs tabular-nums font-semibold text-[var(--text)] px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--hairline)]">
+                            {activeStage.metric}
+                          </span>
+                        )}
+                      </div>
+
+                      <h5 className="font-serif font-semibold text-lg text-[var(--text)]">
+                        {activeStage.title}
+                      </h5>
+
+                      <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                        {activeStage.description}
+                      </p>
+
+                      <p className="text-xs text-[var(--text-muted)] pt-2 border-t border-[var(--hairline)] leading-relaxed">
+                        {activeStage.detail}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
-
-              {/* Pipeline Nodes Navigator */}
-              <div className="relative flex items-center justify-between gap-1 py-3 mb-6">
-                {/* Horizontal Connector Line */}
-                <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[2px] bg-[var(--hairline)] z-0" />
-
-                {stages.map((stg, idx) => {
-                  const isActive = activeStageIndex === idx;
-                  return (
-                    <button
-                      key={stg.step}
-                      onClick={() => setActiveStageIndex(idx)}
-                      className="relative z-10 flex flex-col items-center gap-1.5 cursor-pointer group"
-                      aria-label={`Select pipeline stage ${stg.step}: ${stg.name}`}
-                    >
-                      <motion.div
-                        animate={{
-                          scale: isActive ? 1.15 : 1,
-                          backgroundColor: isActive ? 'var(--accent)' : 'var(--surface-2)',
-                          borderColor: isActive ? 'var(--accent)' : 'var(--hairline)',
-                        }}
-                        transition={{ duration: 0.2 }}
-                        className={`w-9 h-9 rounded-sm flex items-center justify-center border font-mono text-xs font-bold transition-colors ${
-                          isActive
-                            ? 'text-white shadow-md'
-                            : 'text-[var(--text-muted)] group-hover:text-[var(--text)] group-hover:border-[var(--accent)]'
-                        }`}
-                      >
-                        {stg.step}
-                      </motion.div>
-                      <span
-                        className={`font-mono text-[9px] uppercase tracking-wider whitespace-nowrap hidden sm:block ${
-                          isActive ? 'text-[var(--accent)] font-semibold' : 'text-[var(--text-muted)]'
-                        }`}
-                      >
-                        {stg.name.split(' ')[0]}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Stage Telemetry Inspector Card */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeStage.step}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.25 }}
-                  className="p-4 border border-[var(--hairline)] bg-[var(--surface-2)] space-y-2"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono text-[11px] text-[var(--accent)] font-bold uppercase">
-                      STAGE {activeStage.step} {"//"} {activeStage.name}
-                    </span>
-                    {activeStage.metric && (
-                      <span className="font-mono text-[11px] font-semibold px-2 py-0.5 bg-[var(--surface-1)] border border-[var(--hairline)] text-[var(--text)]">
-                        {activeStage.metric}
-                      </span>
-                    )}
-                  </div>
-
-                  <h5 className="font-serif text-lg font-bold text-[var(--text)]">
-                    {activeStage.title}
-                  </h5>
-
-                  <p className="font-sans text-xs text-[var(--text-muted)] leading-relaxed">
-                    {activeStage.description}
-                  </p>
-
-                  <p className="font-mono text-[11px] text-[var(--accent)]/90 pt-1 border-t border-[var(--hairline)] leading-normal">
-                    › {activeStage.detail}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+            )}
           </div>
 
-          {/* Right Column (Scrollable 7 cols): Editorial Index Rows & Applied Tech Stack */}
+          {/* Right Column (7 cols): 2-Way Synced Deliverables & Core Stack */}
           <div className="lg:col-span-7 space-y-10">
-            {/* Key Deliverables (Editorial Index Rows) */}
             <div>
-              <div className="flex items-center justify-between pb-3 border-b border-[var(--hairline)] mb-6">
-                <h4 className="font-mono text-xs uppercase tracking-widest text-[var(--accent)] font-semibold">
-                  {"// "}{t.experience.deliverablesTitle}
+              <div className="flex items-baseline justify-between pb-3 border-b border-[var(--hairline)] mb-4">
+                <h4 className="text-sm font-semibold text-[var(--text)]">
+                  {t.experience.deliverablesTitle}
                 </h4>
-                <span className="font-mono text-[11px] text-[var(--text-muted)]">
-                  {experience.highlights.length} Deliverables
+                <span className="font-mono text-xs tabular-nums text-[var(--text-muted)]">
+                  01–0{experience.highlights.length}
                 </span>
               </div>
 
-              <div className="space-y-4">
+              <div className="divide-y divide-[var(--hairline)]">
                 {experience.highlights.map((highlight, idx) => {
-                  // Split title from description if formatted as "Title: Description"
                   const colonIndex = highlight.indexOf(':');
                   const itemTitle = colonIndex > -1 ? highlight.slice(0, colonIndex) : null;
-                  const itemBody = colonIndex > -1 ? highlight.slice(colonIndex + 1).trim() : highlight;
+                  const itemBody =
+                    colonIndex > -1 ? highlight.slice(colonIndex + 1).trim() : highlight;
+                  const isSynced = activeIndex === idx;
 
                   return (
-                    <motion.div
+                    <button
                       key={idx}
-                      initial={{ opacity: 0, x: -12 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: '-20px' }}
-                      transition={{ duration: 0.5, delay: idx * 0.08 }}
-                      whileHover={{ x: 6 }}
-                      className="p-5 border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--accent)] transition-all duration-200 group flex items-start gap-4"
+                      type="button"
+                      onClick={() => setActiveIndex(idx)}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      className={`w-full text-left py-5 px-4 -mx-4 rounded-xl transition-colors cursor-pointer flex items-start gap-4 relative ${
+                        isSynced
+                          ? 'bg-[var(--surface-1)]'
+                          : 'hover:bg-[var(--surface-1)]/60'
+                      }`}
                     >
-                      <span className="font-mono text-xs font-bold text-[var(--accent)] px-2 py-0.5 border border-[var(--hairline)] bg-[var(--surface-2)] shrink-0">
+                      {/* Active Left Indicator */}
+                      <span
+                        aria-hidden="true"
+                        className={`w-0.5 self-stretch rounded-full transition-colors shrink-0 ${
+                          isSynced ? 'bg-[var(--accent)]' : 'bg-transparent'
+                        }`}
+                      />
+
+                      <span
+                        className={`font-mono text-xs tabular-nums font-semibold pt-0.5 shrink-0 transition-colors ${
+                          isSynced ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'
+                        }`}
+                      >
                         {String(idx + 1).padStart(2, '0')}
                       </span>
 
                       <div className="space-y-1.5 flex-1">
                         {itemTitle && (
-                          <h5 className="font-serif text-base sm:text-lg font-bold text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                          <h5
+                            className={`font-serif font-semibold text-lg tracking-[-0.01em] transition-colors ${
+                              isSynced ? 'text-[var(--accent)]' : 'text-[var(--text)]'
+                            }`}
+                          >
                             {itemTitle}
                           </h5>
                         )}
-                        <p className="font-sans text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+                        <p className="text-sm text-[var(--text-muted)] leading-relaxed">
                           {itemBody}
                         </p>
                       </div>
-                    </motion.div>
+                    </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Core Applied Technologies */}
+            {/* Core Stack Applied */}
             <div className="pt-6 border-t border-[var(--hairline)]">
-              <h4 className="font-mono text-xs uppercase tracking-widest text-[var(--accent)] font-semibold mb-4">
-                {"// "}{t.experience.techStackTitle}
+              <h4 className="text-sm font-semibold text-[var(--text)] mb-4">
+                {t.experience.techStackTitle}
               </h4>
-
               <div className="flex flex-wrap gap-2">
-                {experience.technologies.map((tech, idx) => (
+                {experience.technologies.map((tech) => (
                   <span
-                    key={idx}
-                    className="font-mono text-xs px-3 py-1.5 border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text)] hover:border-[var(--accent)] transition-colors"
+                    key={tech}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text)]"
                   >
-                    {tech}
+                    <TechIcon name={tech} size={13} className="text-[var(--accent)]" />
+                    <span>{tech}</span>
                   </span>
                 ))}
               </div>

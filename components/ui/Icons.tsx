@@ -1,315 +1,89 @@
 import React from 'react';
+import {
+  ExternalLink,
+  Sun,
+  Moon,
+  Search,
+  Check,
+  Copy,
+  ArrowUp,
+  ArrowRight,
+  Printer,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Share2,
+} from 'lucide-react';
+import { siGithub } from 'simple-icons';
 
-interface IconProps extends React.SVGProps<SVGSVGElement> {
+interface IconProps {
   className?: string;
   size?: number;
 }
 
-export function GithubIcon({ className = '', size = 18, ...props }: IconProps) {
+export function GithubIcon({ className = '', size = 16 }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor"
       className={className}
-      {...props}
+      aria-hidden="true"
     >
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
+      <path d={siGithub.path} />
     </svg>
   );
 }
 
-export function LinkedinIcon({ className = '', size = 18, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect width="4" height="12" x="2" y="9" />
-      <circle cx="4" cy="4" r="2" />
-    </svg>
-  );
+export function ExternalLinkIcon({ className = '', size = 16 }: IconProps) {
+  return <ExternalLink size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function ExternalLinkIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" y1="14" x2="21" y2="3" />
-    </svg>
-  );
+export function SunIcon({ className = '', size = 16 }: IconProps) {
+  return <Sun size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function SunIcon({ className = '', size = 18, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2" />
-      <path d="M12 20v2" />
-      <path d="m4.93 4.93 1.41 1.41" />
-      <path d="m17.66 17.66 1.41 1.41" />
-      <path d="M2 12h2" />
-      <path d="M20 12h2" />
-      <path d="m6.34 17.66-1.41 1.41" />
-      <path d="m19.07 4.93-1.41 1.41" />
-    </svg>
-  );
+export function MoonIcon({ className = '', size = 16 }: IconProps) {
+  return <Moon size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function MoonIcon({ className = '', size = 18, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </svg>
-  );
+export function SearchIcon({ className = '', size = 16 }: IconProps) {
+  return <Search size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function SearchIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
+export function CheckIcon({ className = '', size = 16 }: IconProps) {
+  return <Check size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function CheckIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
+export function CopyIcon({ className = '', size = 16 }: IconProps) {
+  return <Copy size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function CopyIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-    </svg>
-  );
+export function ArrowUpIcon({ className = '', size = 16 }: IconProps) {
+  return <ArrowUp size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function ArrowUpIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <line x1="12" y1="19" x2="12" y2="5" />
-      <polyline points="5 12 12 5 19 12" />
-    </svg>
-  );
+export function ArrowRightIcon({ className = '', size = 16 }: IconProps) {
+  return <ArrowRight size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function ArrowRightIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <polyline points="12 5 19 12 12 19" />
-    </svg>
-  );
+export function PrinterIcon({ className = '', size = 16 }: IconProps) {
+  return <Printer size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function PrinterIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <polyline points="6 9 6 2 18 2 18 9" />
-      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-      <rect width="12" height="8" x="6" y="14" />
-    </svg>
-  );
+export function XIcon({ className = '', size = 18 }: IconProps) {
+  return <X size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function XIcon({ className = '', size = 18, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
+export function ChevronLeftIcon({ className = '', size = 18 }: IconProps) {
+  return <ChevronLeft size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function ChevronLeftIcon({ className = '', size = 18, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <polyline points="15 18 9 12 15 6" />
-    </svg>
-  );
+export function ChevronRightIcon({ className = '', size = 18 }: IconProps) {
+  return <ChevronRight size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }
 
-export function ChevronRightIcon({ className = '', size = 18, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
-
-export function ShareIcon({ className = '', size = 16, ...props }: IconProps) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <circle cx="18" cy="5" r="3" />
-      <circle cx="6" cy="12" r="3" />
-      <circle cx="18" cy="19" r="3" />
-      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-    </svg>
-  );
+export function ShareIcon({ className = '', size = 16 }: IconProps) {
+  return <Share2 size={size} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }

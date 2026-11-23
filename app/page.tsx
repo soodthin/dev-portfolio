@@ -14,7 +14,6 @@ import { CommandPalette } from '@/components/ui/CommandPalette';
 import { ProjectLightbox } from '@/components/ui/ProjectLightbox';
 import { ProjectImage } from '@/types/portfolio';
 
-// 6 Standalone Editorial Sections
 import { HeroSection } from '@/components/sections/HeroSection';
 import { WorkHistorySection } from '@/components/sections/WorkHistorySection';
 import { SelectedWorksSection } from '@/components/sections/SelectedWorksSection';
@@ -54,18 +53,13 @@ function PortfolioApp() {
 
   return (
     <div className="relative min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors duration-300">
-      {/* Tactile Editorial Grain Overlay */}
       <GrainOverlay />
-
-      {/* Masthead Header & Hairline Scroll Progress */}
       <Header />
       <ScrollProgress />
-
-      {/* Floating Monospace Section Tracker (xl:block) */}
       <SectionTracker />
 
-      {/* Main 6 Distinct Editorial Sections */}
-      <main className="relative z-10 w-full overflow-x-hidden">
+      {/* overflow-x-clip preserves position: sticky inside WorkHistorySection */}
+      <main className="relative z-10 w-full overflow-x-clip">
         <HeroSection />
         <WorkHistorySection />
         <SelectedWorksSection onOpenLightbox={handleOpenLightbox} />
@@ -74,13 +68,9 @@ function PortfolioApp() {
         <ContactSection />
       </main>
 
-      {/* Colophon Footer */}
       <Footer />
-
-      {/* Back to top magnetic trigger */}
       <BackToTop />
 
-      {/* Global Interactive Lightbox with Key Navigation & Zoom */}
       <ProjectLightbox
         isOpen={lightboxState.isOpen}
         onClose={handleCloseLightbox}
@@ -89,7 +79,6 @@ function PortfolioApp() {
         projectTitle={lightboxState.projectTitle}
       />
 
-      {/* Synchronized Command Palette (⌘K) */}
       <CommandPalette />
     </div>
   );
