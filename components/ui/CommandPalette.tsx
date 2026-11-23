@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { Search, X, ArrowRight, Sun, Moon } from 'lucide-react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
@@ -157,6 +157,16 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
   }, [allItems, query]);
 
   const safeSelectedIndex = Math.min(selectedIndex, Math.max(0, filteredItems.length - 1));
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const selectedEl = list.querySelector<HTMLElement>('[data-selected="true"]');
+    if (selectedEl) {
+      selectedEl.scrollIntoView({ block: 'nearest' });
+    }
+  }, [safeSelectedIndex]);
 
   const handleKeyDownInList = (e: React.KeyboardEvent) => {
     if (filteredItems.length === 0) return;
@@ -211,7 +221,11 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Results */}
-        <div className="flex-1 overflow-y-auto p-2 no-scrollbar space-y-0.5">
+        <div
+          ref={listRef}
+          data-lenis-prevent
+          className="flex-1 overflow-y-auto max-h-[50vh] sm:max-h-[55vh] p-2 pr-3 space-y-0.5 overscroll-contain custom-scrollbar"
+        >
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-sm text-[var(--text-muted)]">
               {t.commandPalette.noResults}
@@ -223,6 +237,7 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
                 <button
                   key={item.id}
                   type="button"
+                  data-selected={isSelected ? 'true' : undefined}
                   onClick={() => item.action()}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer text-left transition-colors border ${
