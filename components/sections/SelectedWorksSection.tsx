@@ -12,6 +12,7 @@ import { SpotlightSurface } from '@/components/ui/SpotlightSurface';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { TechIcon } from '@/components/ui/TechIcons';
 import { MagneticButton } from '@/components/motion/MagneticButton';
+import { ScrollDepthWrapper } from '@/components/motion/ScrollDepthWrapper';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -196,23 +197,26 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
   return (
     <section
       id="works"
-      className="relative py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg)] chapter-divider-sheen py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          index="03"
-          eyebrow={t.works.eyebrow}
-          title={t.works.title}
-          subtitle={t.works.subtitle}
-          className="mb-16 md:mb-24"
-        />
+        <ScrollDepthWrapper sectionId="works">
+          <SectionHeading
+            index="03"
+            eyebrow={t.works.eyebrow}
+            title={t.works.title}
+            subtitle={t.works.subtitle}
+            className="mb-16 md:mb-24"
+          />
+        </ScrollDepthWrapper>
 
         <div className="space-y-28 md:space-y-36">
           {/* ================================================================= */}
           {/* PROJECT 01: FlexiConnect Web                                      */}
           {/* ================================================================= */}
           {proj1 && (
-            <article id={proj1.id} className="scroll-mt-24 space-y-8">
+            <ScrollDepthWrapper sectionId={proj1.id}>
+              <article id={proj1.id} className="scroll-mt-24 space-y-8">
               {/* Full-Width Project Header Bar */}
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[var(--hairline)]">
                 <div className="space-y-2.5 max-w-2xl">
@@ -435,17 +439,19 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 </div>
               </div>
             </article>
+          </ScrollDepthWrapper>
           )}
 
           {/* ================================================================= */}
           {/* PROJECT 02: Saigon Savory App (Media Left, Text Right)            */}
           {/* ================================================================= */}
           {proj2 && (
-            <article
-              id={proj2.id}
-              ref={p2StageRef}
-              className="scroll-mt-24 pt-12 border-t border-[var(--hairline)] space-y-8"
-            >
+            <ScrollDepthWrapper sectionId={proj2.id}>
+              <article
+                id={proj2.id}
+                ref={p2StageRef}
+                className="scroll-mt-24 pt-12 border-t border-[var(--hairline)] space-y-8"
+              >
               {/* Full-Width Project Header Bar */}
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[var(--hairline)]">
                 <div className="space-y-2.5 max-w-2xl">
@@ -647,14 +653,16 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 </div>
               </div>
             </article>
+          </ScrollDepthWrapper>
           )}
 
           {/* ================================================================= */}
           {/* PROJECT 03: Dev Portfolio Engine (Open Horizontal Strip, No Nest) */}
           {/* ================================================================= */}
           {proj3 && (
-            <article id={proj3.id} className="scroll-mt-24 pt-12 border-t border-[var(--hairline)]">
-              <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-10">
+            <ScrollDepthWrapper sectionId={proj3.id}>
+              <article id={proj3.id} className="scroll-mt-24 pt-12 border-t border-[var(--hairline)]">
+                <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-10">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-[var(--hairline)]">
                   <div className="space-y-2.5 max-w-2xl">
                     <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
@@ -749,6 +757,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 </div>
               </SpotlightSurface>
             </article>
+          </ScrollDepthWrapper>
           )}
         </div>
       </div>

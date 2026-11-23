@@ -29,6 +29,8 @@ interface PortfolioContextValue {
 
 const PortfolioContext = createContext<PortfolioContextValue | null>(null);
 
+const TRACKED_SECTIONS = ['summary', 'experience', 'works', 'skills', 'education', 'contact'];
+
 export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Locale>('en');
   const [theme, setThemeState] = useState<'dark' | 'light'>('dark');
@@ -36,6 +38,25 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [isCommandOpen, setIsCommandOpen] = useState<boolean>(false);
   const [toast, setToast] = useState<ToastState | null>(null);
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Centralized scroll-spy keeping Header and SectionTracker 100% in sync across all screens
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 220;
+      for (let i = TRACKED_SECTIONS.length - 1; i >= 0; i--) {
+        const id = TRACKED_SECTIONS[i];
+        const section = document.getElementById(id);
+        if (section && scrollPosition >= section.offsetTop) {
+          setActiveSection((prev) => (prev !== id ? id : prev));
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Initialize theme and lang from document / localStorage after mount
   useEffect(() => {

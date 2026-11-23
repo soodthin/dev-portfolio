@@ -58,7 +58,7 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
       {
         id: 'nav-03',
         index: '03',
-        title: lang === 'vi' ? 'Dự án Tiêu biểu' : 'Work Experience',
+        title: lang === 'vi' ? 'Dự án Tiêu biểu' : 'Selected Works',
         subtitle: 'FlexiConnect Web · Saigon Savory App · Dev Portfolio Engine',
         group: t.commandPalette.navigationGroup,
         action: () => jumpTo('#works'),

@@ -66,7 +66,8 @@ export function HeroSection() {
     target: sectionRef,
     offset: ['start start', 'end start'],
   });
-  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 24]);
 
   // Ultra-subtle upper sky starfield tying Hero softly to Contact Deep Starfield
@@ -240,7 +241,7 @@ export function HeroSection() {
     <section
       id="summary"
       ref={sectionRef}
-      className="relative pt-24 pb-16 md:pt-32 md:pb-20 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg)] min-h-[92vh] lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center pt-24 pb-16 md:pt-32 md:pb-20 border-b border-[var(--hairline)] overflow-x-clip"
     >
       {/* Subtle Starfield Echo */}
       <canvas
@@ -250,7 +251,7 @@ export function HeroSection() {
       />
 
       <motion.div
-        style={prefersReducedMotion ? undefined : { scale: contentScale, y: contentY }}
+        style={prefersReducedMotion ? undefined : { scale: contentScale, opacity: contentOpacity, y: contentY }}
         className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform"
       >
         {/* Upper Open Composition */}

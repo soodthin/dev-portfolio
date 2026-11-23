@@ -104,7 +104,7 @@ export const translations: Record<Locale, Translations> = {
     nav: {
       summary: 'Summary',
       experience: 'Experience',
-      works: 'Work Experience',
+      works: 'Selected Works',
       skills: 'Capabilities',
       education: 'Education',
       contact: 'Contact',

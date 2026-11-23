@@ -8,6 +8,7 @@ import { SpotlightSurface } from '@/components/ui/SpotlightSurface';
 import { TechIcon } from '@/components/ui/TechIcons';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { ScrollDepthWrapper } from '@/components/motion/ScrollDepthWrapper';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -26,9 +27,9 @@ export function WorkHistorySection() {
   return (
     <section
       id="experience"
-      className="relative py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg-alt)] chapter-divider-sheen py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <ScrollDepthWrapper stickySafe sectionId="experience" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           index="02"
           eyebrow={t.experience.eyebrow}
@@ -275,7 +276,7 @@ export function WorkHistorySection() {
             </div>
           </div>
         </div>
-      </div>
+      </ScrollDepthWrapper>
     </section>
   );
 }

@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { ScrollDepthWrapper } from '@/components/motion/ScrollDepthWrapper';
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -14,9 +15,9 @@ export function EducationSection() {
   return (
     <section
       id="education"
-      className="relative py-16 md:py-24 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg)] chapter-divider-sheen lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center py-16 md:py-24 border-b border-[var(--hairline)] overflow-x-clip"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <ScrollDepthWrapper sectionId="education" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <SectionHeading
           index="05"
           eyebrow={t.education.eyebrow}
@@ -116,7 +117,7 @@ export function EducationSection() {
             </div>
           </div>
         </div>
-      </div>
+      </ScrollDepthWrapper>
     </section>
   );
 }

@@ -1,38 +1,21 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 
 const SECTIONS = [
   { id: 'summary', number: '01', labelEn: 'Summary', labelVi: 'Tổng quan' },
   { id: 'experience', number: '02', labelEn: 'Experience', labelVi: 'Kinh nghiệm' },
-  { id: 'works', number: '03', labelEn: 'Work Experience', labelVi: 'Dự án' },
+  { id: 'works', number: '03', labelEn: 'Selected Works', labelVi: 'Dự án' },
   { id: 'skills', number: '04', labelEn: 'Capabilities', labelVi: 'Năng lực' },
   { id: 'education', number: '05', labelEn: 'Education', labelVi: 'Học vấn' },
   { id: 'contact', number: '06', labelEn: 'Contact', labelVi: 'Liên hệ' },
 ];
 
 export function SectionTracker() {
-  const { activeSection, setActiveSection, lang } = usePortfolio();
+  const { activeSection, lang } = usePortfolio();
   const { scrollTo } = useSmoothScroll();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 220;
-      for (let i = SECTIONS.length - 1; i >= 0; i--) {
-        const section = document.getElementById(SECTIONS[i].id);
-        if (section && scrollPosition >= section.offsetTop) {
-          setActiveSection(SECTIONS[i].id);
-          break;
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [setActiveSection]);
 
   return (
     /* Restricted to 2xl (1536px+) so it never overlaps the max-w-7xl content grid at 1280px–1440px */

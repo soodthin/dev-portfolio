@@ -7,6 +7,7 @@ import { siGithub } from 'simple-icons';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 import { SaigonLiveClock } from '@/components/ui/SaigonLiveClock';
+import { ScrollDepthWrapper } from '@/components/motion/ScrollDepthWrapper';
 
 interface DepthStar {
   x: number;
@@ -410,7 +411,7 @@ export function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-[75vh] lg:min-h-[85vh] w-full flex flex-col justify-between pt-20 pb-16 md:pt-28 md:pb-24 border-t border-[var(--hairline)] overflow-hidden"
+      className="relative bg-[var(--bg-alt)] chapter-divider-sheen min-h-[75vh] lg:min-h-[85vh] w-full flex flex-col justify-between pt-20 pb-16 md:pt-28 md:pb-24 border-t border-[var(--hairline)] overflow-x-clip"
     >
       {/* Full-Width Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas Background */}
       <canvas
@@ -419,7 +420,7 @@ export function ContactSection() {
         className="absolute inset-0 w-full h-full pointer-events-none no-print"
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-between gap-12 md:gap-16">
+      <ScrollDepthWrapper sectionId="contact" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-between gap-12 md:gap-16">
         {/* Top Bar: Chapter Index & Live Ho Chi Minh City Clock */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--hairline)]">
           <div className="flex items-center gap-2.5 text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
@@ -540,7 +541,7 @@ export function ContactSection() {
             </div>
           </div>
         </div>
-      </div>
+      </ScrollDepthWrapper>
     </section>
   );
 }

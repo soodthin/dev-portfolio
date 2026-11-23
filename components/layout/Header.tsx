@@ -2,12 +2,23 @@
 
 import React, { useState } from 'react';
 import { Sun, Moon, Search, Share2, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 
+const CHAPTER_MAP: Record<string, { number: string; labelEn: string; labelVi: string }> = {
+  summary: { number: '01', labelEn: 'Summary', labelVi: 'Tổng quan' },
+  experience: { number: '02', labelEn: 'BW Industrial', labelVi: 'BW Industrial' },
+  works: { number: '03', labelEn: 'Selected Works', labelVi: 'Dự án' },
+  skills: { number: '04', labelEn: 'Technical Matrix', labelVi: 'Ma trận Công nghệ' },
+  education: { number: '05', labelEn: 'Education', labelVi: 'Học vấn' },
+  contact: { number: '06', labelEn: 'Contact', labelVi: 'Liên hệ' },
+};
+
 export function Header() {
-  const { lang, toggleLang, theme, toggleTheme, setIsCommandOpen, t, showToast } = usePortfolio();
+  const { lang, toggleLang, theme, toggleTheme, activeSection, setIsCommandOpen, t, showToast } =
+    usePortfolio();
   const { scrollTo } = useSmoothScroll();
   const [copiedShare, setCopiedShare] = useState(false);
 
@@ -31,19 +42,56 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 h-16 bg-[var(--bg)]/95 border-b border-[var(--hairline)] transition-colors">
       <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-        {/* Left: Clean Brand Identity */}
-        <button
-          onClick={() => scrollTo('#summary')}
-          className="flex items-baseline gap-2.5 group text-left cursor-pointer"
-          aria-label="Scroll to top"
-        >
-          <span className="font-serif font-semibold text-lg sm:text-xl tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
-            Thai Do Thinh
-          </span>
-          <span className="hidden sm:inline text-xs text-[var(--text-muted)]">
-            · {t.header.role}
-          </span>
-        </button>
+        {/* Left: Clean Brand Identity + Interactive Rolling Chapter Pill */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => scrollTo('#summary')}
+            className="group text-left cursor-pointer"
+            aria-label="Scroll to top"
+          >
+            <span className="font-serif font-semibold text-lg sm:text-xl tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+              Thai Do Thinh
+            </span>
+          </button>
+
+          <div className="hidden sm:inline-flex items-center overflow-hidden h-6">
+            <AnimatePresence mode="wait" initial={false}>
+              {activeSection === 'summary' ? (
+                <motion.span
+                  key="role"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  className="text-xs text-[var(--text-muted)]"
+                >
+                  · {t.header.role}
+                </motion.span>
+              ) : (
+                <motion.button
+                  key={activeSection}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  type="button"
+                  onClick={() => setIsCommandOpen(true)}
+                  className="inline-flex items-center gap-2 pl-3 border-l border-[var(--hairline)] text-xs text-left cursor-pointer group/pill"
+                  title={lang === 'vi' ? 'Chuyển chương nhanh (⌘K)' : 'Quick chapter jump (⌘K)'}
+                >
+                  <span className="font-mono text-[11px] font-semibold text-[var(--accent)] tabular-nums">
+                    {CHAPTER_MAP[activeSection]?.number || '01'}
+                  </span>
+                  <span className="text-[var(--text-muted)] group-hover/pill:text-[var(--text)] transition-colors">
+                    {lang === 'vi'
+                      ? CHAPTER_MAP[activeSection]?.labelVi
+                      : CHAPTER_MAP[activeSection]?.labelEn}
+                  </span>
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
 
         {/* Center: Command Palette Trigger */}
         <button
