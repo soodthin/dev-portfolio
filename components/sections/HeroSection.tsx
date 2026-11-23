@@ -1,62 +1,292 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
+import { ArrowRight, Check } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { getAssetPath } from '@/lib/asset';
 import { RollingCounter } from '@/components/motion/RollingCounter';
 import { MagneticButton } from '@/components/motion/MagneticButton';
-import { SpotlightSurface } from '@/components/ui/SpotlightSurface';
 
-const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
+interface SkyStar {
+  x: number;
+  y: number;
+  r: number;
+  depth: number;
+  teal: boolean;
+  alpha: number;
+}
 
+const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+/**
+ * HeroSection — Open Horizon Edition
+ * Drop-in replacement for Next.js 16 static export (Obsidian + Teal, EN/VI, Dark/Light).
+ * Features:
+ * - Unboxed open layout with strict design tokens (no rounded cards, no glassmorphism, no eyebrows).
+ * - Compact chamfered portrait (5:4 aspect ratio) with quiet live GMT+7 timestamp.
+ * - Ultra-subtle sky starfield canvas synced to ContactSection Deep Starfield (auto-paused off-screen).
+ * - Progressive disclosure for full background paragraphs & clean 4-metric strip without subscripts.
+ */
 export function HeroSection() {
-  const { data, t, lang } = usePortfolio();
+  const { data, t, lang, theme, showToast } = usePortfolio();
   const { scrollTo } = useSmoothScroll();
   const prefersReducedMotion = useReducedMotion();
 
+  const [bioOpen, setBioOpen] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [saigonTime, setSaigonTime] = useState<string>('');
+
   const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const themeRef = useRef<'dark' | 'light'>(theme);
+  const redrawStaticRef = useRef<(() => void) | null>(null);
+  const copyTimerRef = useRef<number | null>(null);
+
+  // Keep canvas palette in sync with Dark/Light mode
+  useEffect(() => {
+    themeRef.current = theme;
+    if (prefersReducedMotion) {
+      redrawStaticRef.current?.();
+    }
+  }, [theme, prefersReducedMotion]);
+
+  // Clean up clipboard feedback timer on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Client-only Saigon live clock (HH:MM GMT+7) to prevent SSR/SSG hydration mismatch
+  useEffect(() => {
+    const updateClock = () => {
+      try {
+        const formatted = new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Asia/Ho_Chi_Minh',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        }).format(new Date());
+        setSaigonTime(formatted);
+      } catch {
+        setSaigonTime('');
+      }
+    };
+
+    updateClock();
+    const interval = window.setInterval(updateClock, 15000);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  // Subtle GPU-only scroll-out depth recede
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
   });
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.97]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 24]);
 
-  // Subtle GPU-only scroll-out depth recede
-  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 28]);
+  // Ultra-subtle upper sky starfield tying Hero softly to Contact Deep Starfield
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = sectionRef.current;
+    if (!canvas || !container) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let rafId: number | null = null;
+    let isInView = true;
+    let stars: SkyStar[] = [];
+
+    let targetNormX = 0;
+    let targetNormY = 0;
+    let smoothNormX = 0;
+    let smoothNormY = 0;
+
+    const initStars = () => {
+      const count = Math.min(48, Math.max(24, Math.floor((width * height) / 24000)));
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height * 0.65,
+        r: Math.random() < 0.75 ? 0.8 : 1.3,
+        depth: Math.random() < 0.6 ? 6 : 16,
+        teal: Math.random() < 0.25,
+        alpha: 0.14 + Math.random() * 0.28,
+      }));
+    };
+
+    const drawFrame = () => {
+      ctx.clearRect(0, 0, width, height);
+      const isDark = themeRef.current === 'dark';
+      const baseRgb = isDark ? '226, 232, 240' : '15, 23, 42';
+      const accentRgb = isDark ? '45, 212, 191' : '13, 148, 136';
+
+      smoothNormX += (targetNormX - smoothNormX) * 0.05;
+      smoothNormY += (targetNormY - smoothNormY) * 0.05;
+
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        const px = s.x - smoothNormX * s.depth;
+        const py = s.y - smoothNormY * s.depth;
+        // Fade softly toward lower half so typography remains unobstructed
+        const fade = Math.max(0, 1 - py / Math.max(1, height * 0.72));
+
+        ctx.beginPath();
+        ctx.arc(px, py, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = s.teal
+          ? `rgba(${accentRgb}, ${s.alpha * fade * 1.2})`
+          : `rgba(${baseRgb}, ${s.alpha * fade})`;
+        ctx.fill();
+      }
+    };
+
+    redrawStaticRef.current = drawFrame;
+
+    const resize = () => {
+      const rect = container.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.max(1, Math.floor(width * dpr));
+      canvas.height = Math.max(1, Math.floor(height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      initStars();
+      if (prefersReducedMotion) {
+        drawFrame();
+      }
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      targetNormX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      targetNormY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    };
+
+    const onMouseLeave = () => {
+      targetNormX = 0;
+      targetNormY = 0;
+    };
+
+    const tick = () => {
+      if (!isInView) {
+        rafId = null;
+        return;
+      }
+      drawFrame();
+      rafId = requestAnimationFrame(tick);
+    };
+
+    resize();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isInView = entries[0]?.isIntersecting ?? true;
+        if (isInView && !prefersReducedMotion && rafId === null) {
+          rafId = requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
+    if (prefersReducedMotion) {
+      drawFrame();
+    } else {
+      rafId = requestAnimationFrame(tick);
+    }
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(container);
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('mouseleave', onMouseLeave);
+
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      redrawStaticRef.current = null;
+      observer.disconnect();
+      resizeObserver.disconnect();
+      container.removeEventListener('mousemove', onMouseMove);
+      container.removeEventListener('mouseleave', onMouseLeave);
+    };
+  }, [prefersReducedMotion]);
+
+  const handleCopyEmail = async () => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(data.profile.email);
+      } else if (typeof document !== 'undefined') {
+        const textarea = document.createElement('textarea');
+        textarea.value = data.profile.email;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      setCopiedEmail(true);
+      showToast(
+        lang === 'vi'
+          ? `Đã sao chép ${data.profile.email} vào bộ nhớ tạm`
+          : `Copied ${data.profile.email} to clipboard`
+      );
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = window.setTimeout(() => setCopiedEmail(false), 2000);
+    } catch {
+      // Clipboard access unavailable
+    }
+  };
 
   const roleHeadline =
     lang === 'vi'
       ? 'Kỹ sư Phần mềm & Tự động hóa FinTech'
       : 'Software Engineer & FinTech Automation';
 
+  const cityLabel = lang === 'vi' ? 'TP. Hồ Chí Minh' : 'Ho Chi Minh City';
+  const readStoryLabel = lang === 'vi' ? 'Đọc thêm quá trình làm việc' : 'Read full background';
+  const hideStoryLabel = lang === 'vi' ? 'Thu gọn' : 'Collapse background';
+
   return (
     <section
       id="summary"
       ref={sectionRef}
-      className="relative pt-24 pb-20 md:pt-32 md:pb-28 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative pt-24 pb-16 md:pt-32 md:pb-20 border-b border-[var(--hairline)] overflow-x-clip"
     >
+      {/* Subtle Starfield Echo */}
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full pointer-events-none no-print"
+      />
+
       <motion.div
-        style={
-          prefersReducedMotion
-            ? undefined
-            : { scale: contentScale, y: contentY }
-        }
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform"
+        style={prefersReducedMotion ? undefined : { scale: contentScale, y: contentY }}
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform"
       >
-        {/* Main Hero Row: Balanced Height Between Headline+Lead and Circular Avatar */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          <div className="lg:col-span-8 space-y-6">
-            <div className="space-y-2.5">
+        {/* Upper Open Composition */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          {/* Left Column (8 cols): Display Scale + Statement + Actions */}
+          <div className="lg:col-span-8 space-y-7">
+            <div className="space-y-3">
               <div className="overflow-hidden">
                 <motion.h1
                   initial={{ y: '100%', opacity: 0 }}
                   animate={{ y: '0%', opacity: 1 }}
-                  transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
-                  className="font-serif font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-0.025em] text-[var(--text)] leading-[1.03]"
+                  transition={{ duration: 0.7, ease: EASE_OUT }}
+                  className="font-serif font-bold text-4xl sm:text-6xl lg:text-[5rem] tracking-[-0.025em] leading-[1.0] text-[var(--text)]"
                 >
                   {data.profile.name}
                 </motion.h1>
@@ -66,8 +296,8 @@ export function HeroSection() {
                 <motion.p
                   initial={{ y: '100%', opacity: 0 }}
                   animate={{ y: '0%', opacity: 1 }}
-                  transition={{ duration: 0.75, delay: 0.1, ease: EASE_OUT_EXPO }}
-                  className="font-serif font-semibold text-2xl sm:text-3xl lg:text-4xl tracking-[-0.02em] text-[var(--accent)] leading-tight"
+                  transition={{ duration: 0.7, delay: 0.08, ease: EASE_OUT }}
+                  className="font-serif font-semibold text-2xl sm:text-3xl lg:text-[2.2rem] tracking-[-0.02em] text-[var(--accent)] leading-tight"
                 >
                   {roleHeadline}
                 </motion.p>
@@ -75,113 +305,163 @@ export function HeroSection() {
             </div>
 
             <motion.p
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.18, ease: EASE_OUT_EXPO }}
-              className="max-w-2xl text-base sm:text-lg text-[var(--text)]/90 font-normal leading-relaxed"
+              transition={{ duration: 0.55, delay: 0.16, ease: EASE_OUT }}
+              className="max-w-xl text-base sm:text-[17px] text-[var(--text-muted)] leading-[1.68]"
             >
               {data.profile.roleDescription}
             </motion.p>
 
+            {/* Primary CTA + Direct Email Copy + Progressive Background Toggle */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.26, ease: EASE_OUT_EXPO }}
-              className="flex flex-wrap items-center gap-3.5 pt-1"
+              transition={{ duration: 0.5, delay: 0.22, ease: EASE_OUT }}
+              className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-1 no-print"
             >
-              <MagneticButton strength={0.2}>
+              <MagneticButton strength={0.18}>
                 <button
-                  onClick={() => scrollTo('#works')}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer"
+                  type="button"
+                  onClick={() => scrollTo('#works', { offset: -64 })}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
                 >
                   <span>{t.hero.viewWork}</span>
-                  <ArrowRight size={15} strokeWidth={2} />
+                  <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
                 </button>
               </MagneticButton>
 
-              <MagneticButton strength={0.2}>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="group relative inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text)] hover:text-[var(--accent)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+                aria-label={`Copy email ${data.profile.email}`}
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  {copiedEmail ? (
+                    <motion.span
+                      key="copied"
+                      initial={{ opacity: 0, y: 3 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -3 }}
+                      transition={{ duration: 0.15 }}
+                      className="inline-flex items-center gap-1.5 text-[var(--accent)] font-mono text-xs"
+                    >
+                      <Check size={14} strokeWidth={2} aria-hidden="true" />
+                      <span>{t.contact.emailCopied}</span>
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="email"
+                      initial={{ opacity: 0, y: 3 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -3 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      {data.profile.email}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 -bottom-1 h-px w-full origin-left scale-x-0 group-hover:scale-x-100 bg-[var(--accent)] transition-transform duration-200 ease-out"
+                />
+              </button>
+
+              {data.profile.aboutParagraphs.length > 0 && (
                 <button
-                  onClick={() => scrollTo('#contact')}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
+                  type="button"
+                  onClick={() => setBioOpen((prev) => !prev)}
+                  aria-expanded={bioOpen}
+                  className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
                 >
-                  <span>{t.hero.contactMe}</span>
+                  {bioOpen ? `${hideStoryLabel} −` : `${readStoryLabel} +`}
                 </button>
-              </MagneticButton>
+              )}
             </motion.div>
+
+            {/* Expandable Full Background (Clean 2-Column Editorial Disclosure) */}
+            <AnimatePresence initial={false}>
+              {bioOpen && data.profile.aboutParagraphs.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-2xl"
+                >
+                  {data.profile.aboutParagraphs.map((para, idx) => (
+                    <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.7]">
+                      {para}
+                    </p>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Circular Avatar */}
+          {/* Right Column (4 cols): Compact Chamfered Portrait (Reduced Height 5:4) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.14, ease: EASE_OUT_EXPO }}
-            className="lg:col-span-4 flex justify-start lg:justify-end"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.12, ease: EASE_OUT }}
+            className="lg:col-span-4 flex flex-col lg:items-end gap-3.5 lg:pt-1"
           >
-            <div className="group p-1.5 rounded-full ring-1 ring-[var(--hairline)] hover:ring-[var(--hairline-strong)] bg-[var(--surface-1)] transition-all duration-300 ease-out">
-              <div className="relative w-44 h-44 sm:w-52 sm:h-52 lg:w-60 lg:h-60 rounded-full overflow-hidden ring-1 ring-[var(--hairline)] bg-[var(--surface-2)]">
-                <div className="relative w-full h-full transition-transform duration-300 ease-out group-hover:scale-[1.03]">
-                  <Image
-                    src={getAssetPath(data.profile.avatarUrl)}
-                    alt={data.profile.name}
-                    fill
-                    sizes="(max-width: 640px) 176px, (max-width: 1024px) 208px, 240px"
-                    priority
-                    unoptimized
-                    className="object-cover object-[50%_70%] scale-[1.2]"
-                  />
-                </div>
+            <div
+              className="group relative w-52 sm:w-60 lg:w-64 aspect-[5/4] overflow-hidden bg-[var(--surface-2)]"
+              style={{
+                clipPath:
+                  'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)',
+              }}
+            >
+              <div className="relative w-full h-full transition-transform duration-200 ease-out group-hover:scale-[1.03]">
+                <Image
+                  src={getAssetPath(data.profile.avatarUrl)}
+                  alt={data.profile.name}
+                  fill
+                  sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 256px"
+                  priority
+                  unoptimized
+                  className="object-cover object-[50%_70%] scale-[1.2]"
+                />
               </div>
+            </div>
+
+            <div className="font-mono text-xs text-[var(--text-muted)] tabular-nums lg:text-right">
+              {cityLabel}
+              {saigonTime ? ` · ${saigonTime} GMT+7` : ' · GMT+7'}
             </div>
           </motion.div>
         </div>
 
-        {/* 2-Column Editorial Bio Strip: Preserves 100% of aboutParagraphs without wall-of-text */}
-        {data.profile.aboutParagraphs.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.34, ease: EASE_OUT_EXPO }}
-            className="mt-14 pt-8 border-t border-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-12"
-          >
-            {data.profile.aboutParagraphs.map((para, idx) => (
-              <div key={idx} className="flex items-start gap-4">
-                <span className="font-mono text-xs tabular-nums text-[var(--accent)] pt-1 shrink-0">
-                  {String(idx + 1).padStart(2, '0')}
-                </span>
-                <p className="text-sm text-[var(--text-muted)] leading-relaxed">{para}</p>
-              </div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Clean Elevated Metrics Strip */}
+        {/* Bottom Open Typographic Metrics Strip (Clean Figures Only — Zero Subscripts) */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
-          className="mt-12"
+          transition={{ duration: 0.55, ease: EASE_OUT }}
+          className="mt-14 md:mt-16 pt-8 border-t border-[var(--hairline)]"
         >
-          <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[var(--hairline)]">
-              {data.metrics.map((metric, idx) => (
-                <div
-                  key={idx}
-                  className="py-5 lg:py-0 lg:px-7 first:lg:pl-0 last:lg:pr-0 flex flex-col justify-between gap-3"
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6">
+            {data.metrics.map((metric, idx) => {
+              const targetSection = idx < 2 ? '#experience' : '#works';
+              return (
+                <button
+                  key={metric.label}
+                  type="button"
+                  onClick={() => scrollTo(targetSection, { offset: -64 })}
+                  className="group text-left pb-2 border-b border-transparent hover:border-[var(--accent)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
                 >
-                  <div className="text-3xl sm:text-4xl font-mono font-bold text-[var(--text)] tracking-tight tabular-nums">
+                  <div className="font-mono text-3xl sm:text-4xl font-semibold tabular-nums text-[var(--text)] tracking-tight">
                     <RollingCounter value={metric.value} suffix={metric.suffix} />
                   </div>
-                  <div className="space-y-1.5">
-                    <h3 className="text-sm font-semibold text-[var(--text)]">{metric.label}</h3>
-                    <p className="text-xs text-[var(--text)]/80 leading-relaxed">
-                      {metric.description}
-                    </p>
+                  <div className="text-xs sm:text-sm text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors duration-150 ease-out mt-1.5">
+                    {metric.label}
                   </div>
-                </div>
-              ))}
-            </div>
-          </SpotlightSurface>
+                </button>
+              );
+            })}
+          </div>
         </motion.div>
       </motion.div>
     </section>
