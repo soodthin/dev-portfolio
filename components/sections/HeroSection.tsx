@@ -357,21 +357,36 @@ export function HeroSection() {
               )}
             </motion.div>
 
-            {/* Expandable Full Background (Clean 2-Column Editorial Disclosure) */}
+            {/* Expandable Full Background (Smooth Kinetic Accordion Disclosure) */}
             <AnimatePresence initial={false}>
               {bioOpen && data.profile.aboutParagraphs.length > 0 && (
                 <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
-                  className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-2xl"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{
+                    height: 'auto',
+                    opacity: 1,
+                    transition: {
+                      height: { duration: 0.42, ease: EASE_OUT },
+                      opacity: { duration: 0.28, delay: 0.08, ease: 'easeOut' },
+                    },
+                  }}
+                  exit={{
+                    height: 0,
+                    opacity: 0,
+                    transition: {
+                      height: { duration: 0.32, ease: EASE_OUT },
+                      opacity: { duration: 0.18, ease: 'easeIn' },
+                    },
+                  }}
+                  className="overflow-hidden"
                 >
-                  {data.profile.aboutParagraphs.map((para, idx) => (
-                    <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.7]">
-                      {para}
-                    </p>
-                  ))}
+                  <div className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-2xl">
+                    {data.profile.aboutParagraphs.map((para, idx) => (
+                      <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.7]">
+                        {para}
+                      </p>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
