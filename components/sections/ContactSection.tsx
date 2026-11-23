@@ -94,7 +94,6 @@ export function ContactSection() {
 
   // Shared refs for the Canvas 2D animation loop (zero React re-renders on mousemove)
   const themeRef = useRef<'dark' | 'light'>(theme);
-  const lockTargetRef = useRef<{ x: number; y: number } | null>(null);
   const spawnMeteorRef = useRef<((fromX?: number, fromY?: number) => void) | null>(null);
   const redrawStaticRef = useRef<(() => void) | null>(null);
   const meteorTimersRef = useRef<number[]>([]);
@@ -140,7 +139,7 @@ export function ContactSection() {
     let time = 0;
     let nextMeteorAt = 1.6;
 
-    const mouse = { x: 0, y: 0, tx: 0, ty: 0, active: false };
+    const mouse = { tx: 0, ty: 0, active: false };
     let smoothNormX = 0;
     let smoothNormY = 0;
 
@@ -193,10 +192,9 @@ export function ContactSection() {
       const baseRgb = isDark ? '226, 232, 240' : '15, 23, 42';
       const accentRgb = isDark ? '45, 212, 191' : '13, 148, 136';
 
-      const lock = lockTargetRef.current;
-      const hasTarget = Boolean(lock || mouse.active);
-      const targetX = lock ? lock.x : mouse.tx;
-      const targetY = lock ? lock.y : mouse.ty;
+      const hasTarget = mouse.active;
+      const targetX = mouse.tx;
+      const targetY = mouse.ty;
 
       const targetNormX = hasTarget && width > 0 ? (targetX / width - 0.5) * 2 : 0;
       const targetNormY = hasTarget && height > 0 ? (targetY / height - 0.5) * 2 : 0;
@@ -389,30 +387,20 @@ export function ContactSection() {
     }
   };
 
-  const handleEmailHover = (e: React.MouseEvent<HTMLElement>) => {
-    const container = sectionRef.current;
-    if (!container) return;
-    const targetRect = e.currentTarget.getBoundingClientRect();
-    const wrapRect = container.getBoundingClientRect();
-    lockTargetRef.current = {
-      x: targetRect.left - wrapRect.left + targetRect.width * 0.4,
-      y: targetRect.top - wrapRect.top + targetRect.height / 2,
-    };
-  };
-
   const handlePrintResume = () => {
     if (typeof window !== 'undefined') {
       window.print();
     }
   };
 
-  const posterHeadline = lang === 'vi' ? 'CÙNG XÂY DỰNG NHÉ.' : "LET'S BUILD TOGETHER.";
+  const posterHeadline =
+    lang === 'vi' ? 'SẴN SÀNG KIẾN TẠO ĐỘT PHÁ MỚI.' : "READY TO ARCHITECT WHAT'S NEXT.";
 
   return (
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-[85vh] lg:min-h-screen w-full flex flex-col justify-between pt-20 pb-16 md:pt-28 md:pb-20 border-t border-[var(--hairline)] overflow-hidden"
+      className="relative min-h-[80vh] lg:min-h-screen w-full flex flex-col justify-between pt-20 pb-16 md:pt-28 md:pb-20 border-t border-[var(--hairline)] overflow-hidden"
     >
       {/* Full-Width Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas Background */}
       <canvas
@@ -435,8 +423,8 @@ export function ContactSection() {
           </div>
         </div>
 
-        {/* Center: Scroll-Kinetic Poster Headline, Email & Action Buttons */}
-        <div className="space-y-7 my-auto py-4">
+        {/* Center: Scroll-Kinetic Poster Headline & Action Buttons */}
+        <div className="space-y-8 my-auto py-8">
           <div className="overflow-hidden py-1">
             <motion.h2
               style={prefersReducedMotion ? undefined : { x: kineticGlideX }}
@@ -452,36 +440,13 @@ export function ContactSection() {
             </p>
           )}
 
-          {/* Monumental Email with Sweeping Teal Underline */}
-          <div className="pt-2">
-            <div
-              onMouseEnter={handleEmailHover}
-              onMouseLeave={() => {
-                lockTargetRef.current = null;
-              }}
-              className="relative group inline-block max-w-full"
-            >
-              <button
-                type="button"
-                onClick={handleCopyEmail}
-                className="text-left font-serif font-semibold text-2xl sm:text-4xl md:text-5xl lg:text-6xl tracking-[-0.02em] text-[var(--text)] hover:text-[var(--accent)] transition-colors break-all cursor-pointer"
-              >
-                {data.profile.email}
-              </button>
-              <span
-                aria-hidden="true"
-                className="block h-[2px] w-full origin-left scale-x-0 group-hover:scale-x-100 bg-[var(--accent)] transition-transform duration-300 ease-out mt-2"
-              />
-            </div>
-          </div>
-
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-3.5 pt-2 no-print">
+          <div className="flex flex-wrap items-center gap-4 pt-2 no-print">
             <MagneticButton strength={0.2}>
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer min-w-[136px]"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer shadow-lg shadow-[var(--accent)]/10 min-w-[150px]"
               >
                 <AnimatePresence mode="wait" initial={false}>
                   {copiedEmail ? (
@@ -491,9 +456,9 @@ export function ContactSection() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.15 }}
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                     >
-                      <Check size={15} strokeWidth={2} />
+                      <Check size={16} strokeWidth={2.5} />
                       <span>{t.contact.emailCopied}</span>
                     </motion.span>
                   ) : (
@@ -503,9 +468,9 @@ export function ContactSection() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.15 }}
-                      className="inline-flex items-center gap-1.5"
+                      className="inline-flex items-center gap-2"
                     >
-                      <Copy size={15} strokeWidth={1.75} />
+                      <Copy size={16} strokeWidth={1.75} />
                       <span>{t.contact.copyEmail}</span>
                     </motion.span>
                   )}
@@ -518,9 +483,9 @@ export function ContactSection() {
                 type="button"
                 onClick={handlePrintResume}
                 title={t.contact.printHint}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
               >
-                <Printer size={15} strokeWidth={1.75} className="text-[var(--accent)]" />
+                <Printer size={16} strokeWidth={1.75} className="text-[var(--accent)]" />
                 <span>{t.contact.printResume}</span>
               </button>
             </MagneticButton>
@@ -546,9 +511,6 @@ export function ContactSection() {
                   </span>
                   <span className="font-serif font-semibold text-sm sm:text-base group-hover:text-[var(--accent)] transition-colors">
                     {soc.label}
-                  </span>
-                  <span className="font-mono text-xs text-[var(--text-muted)] hidden md:inline">
-                    {soc.handle}
                   </span>
                   {isExternal && (
                     <ArrowUpRight
