@@ -232,6 +232,18 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  {proj1.demoUrl && (
+                    <a
+                      href={proj1.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                    >
+                      <span>{t.works.liveDemoBtn}</span>
+                      <ExternalLink size={13} />
+                    </a>
+                  )}
+
                   {proj1.githubUrl && (
                     <MagneticButton strength={0.2}>
                       <a
@@ -453,6 +465,18 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  {proj2.demoUrl && (
+                    <a
+                      href={proj2.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                    >
+                      <span>{t.works.liveDemoBtn}</span>
+                      <ExternalLink size={13} />
+                    </a>
+                  )}
+
                   {proj2.githubUrl && (
                     <MagneticButton strength={0.2}>
                       <a
