@@ -1,9 +1,14 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { Locale, PortfolioData } from '@/types/portfolio';
 import { portfolioData } from '@/data/portfolio-data';
 import { translations, Translations } from '@/lib/i18n';
+
+export interface ToastState {
+  id: number;
+  message: string;
+}
 
 interface PortfolioContextValue {
   lang: Locale;
@@ -15,6 +20,9 @@ interface PortfolioContextValue {
   setActiveSection: (id: string) => void;
   isCommandOpen: boolean;
   setIsCommandOpen: (open: boolean) => void;
+  toast: ToastState | null;
+  showToast: (message: string) => void;
+  hideToast: () => void;
   data: PortfolioData;
   t: Translations;
 }
@@ -26,6 +34,8 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<'dark' | 'light'>('dark');
   const [activeSection, setActiveSection] = useState<string>('summary');
   const [isCommandOpen, setIsCommandOpen] = useState<boolean>(false);
+  const [toast, setToast] = useState<ToastState | null>(null);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Initialize theme and lang from document / localStorage after mount
   useEffect(() => {
@@ -46,6 +56,28 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Ignore localStorage access failures in restricted environments
     }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const hideToast = useCallback(() => {
+    setToast(null);
+  }, []);
+
+  const showToast = useCallback((message: string) => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast({ id: Date.now(), message });
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 2600);
   }, []);
 
   const setLang = useCallback((newLang: Locale) => {
@@ -90,6 +122,9 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       setActiveSection,
       isCommandOpen,
       setIsCommandOpen,
+      toast,
+      showToast,
+      hideToast,
       data: currentData,
       t: currentTranslations,
     }),
@@ -101,6 +136,9 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       toggleTheme,
       activeSection,
       isCommandOpen,
+      toast,
+      showToast,
+      hideToast,
       currentData,
       currentTranslations,
     ]

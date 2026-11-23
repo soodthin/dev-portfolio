@@ -7,7 +7,7 @@ import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 
 export function Header() {
-  const { lang, toggleLang, theme, toggleTheme, setIsCommandOpen, t } = usePortfolio();
+  const { lang, toggleLang, theme, toggleTheme, setIsCommandOpen, t, showToast } = usePortfolio();
   const { scrollTo } = useSmoothScroll();
   const [copiedShare, setCopiedShare] = useState(false);
 
@@ -16,6 +16,11 @@ export function Header() {
       if (typeof window !== 'undefined') {
         await navigator.clipboard.writeText(window.location.href);
         setCopiedShare(true);
+        showToast(
+          lang === 'vi'
+            ? 'Đã sao chép liên kết hồ sơ vào bộ nhớ tạm'
+            : 'Copied portfolio link to clipboard'
+        );
         setTimeout(() => setCopiedShare(false), 2000);
       }
     } catch {

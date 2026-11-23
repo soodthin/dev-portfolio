@@ -85,7 +85,7 @@ function getSocialIcon(label: string) {
  * - Respects prefers-reduced-motion and automatically scales via ResizeObserver.
  */
 export function ContactSection() {
-  const { data, t, lang, theme } = usePortfolio();
+  const { data, t, lang, theme, showToast } = usePortfolio();
   const prefersReducedMotion = useReducedMotion();
   const [copiedEmail, setCopiedEmail] = useState(false);
 
@@ -375,6 +375,11 @@ export function ContactSection() {
         document.body.removeChild(textarea);
       }
       setCopiedEmail(true);
+      showToast(
+        lang === 'vi'
+          ? `Đã sao chép ${data.profile.email} vào bộ nhớ tạm`
+          : `Copied ${data.profile.email} to clipboard`
+      );
       if (copyTimerRef.current !== null) {
         window.clearTimeout(copyTimerRef.current);
       }

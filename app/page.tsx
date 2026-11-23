@@ -12,6 +12,7 @@ import { BackToTop } from '@/components/layout/BackToTop';
 import { Footer } from '@/components/layout/Footer';
 import { CommandPalette } from '@/components/ui/CommandPalette';
 import { ProjectLightbox } from '@/components/ui/ProjectLightbox';
+import { GlobalToast } from '@/components/ui/GlobalToast';
 import { ProjectImage } from '@/types/portfolio';
 
 import { HeroSection } from '@/components/sections/HeroSection';
@@ -80,6 +81,7 @@ function PortfolioApp() {
       />
 
       <CommandPalette />
+      <GlobalToast />
     </div>
   );
 }
