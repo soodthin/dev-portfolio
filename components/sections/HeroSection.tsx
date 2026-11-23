@@ -10,26 +10,321 @@ import { getAssetPath } from '@/lib/asset';
 import { RollingCounter } from '@/components/motion/RollingCounter';
 import { MagneticButton } from '@/components/motion/MagneticButton';
 
-interface SkyStar {
-  x: number;
-  y: number;
-  r: number;
-  depth: number;
-  teal: boolean;
-  alpha: number;
-}
-
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 /**
- * HeroSection — Open Horizon Edition
- * Drop-in replacement for Next.js 16 static export (Obsidian + Teal, EN/VI, Dark/Light).
- * Features:
- * - Unboxed open layout with strict design tokens (no rounded cards, no glassmorphism, no eyebrows).
- * - Chamfered portrait aligned precisely to the bottom of the CTA row.
- * - Ultra-subtle sky starfield canvas synced to ContactSection Deep Starfield (auto-paused off-screen).
- * - Progressive disclosure for full background paragraphs & clean 4-metric strip without subscripts.
+ * 3D Orbital Ellipses Canvas Effect split across 2 layers:
+ * - Back Canvas (z < 0): orbital segments & satellites moving behind the circular avatar.
+ * - Front Canvas (z >= 0): orbital segments & satellites cutting across in front of the avatar.
  */
+function OrbitalEllipses3D({
+  isDark,
+  pointerOffset,
+}: {
+  isDark: boolean;
+  pointerOffset: { x: number; y: number };
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const backCanvasRef = useRef<HTMLCanvasElement>(null);
+  const frontCanvasRef = useRef<HTMLCanvasElement>(null);
+  const pointerRef = useRef(pointerOffset);
+
+  useEffect(() => {
+    pointerRef.current = pointerOffset;
+  }, [pointerOffset]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const backCanvas = backCanvasRef.current;
+    const frontCanvas = frontCanvasRef.current;
+    if (!container || !backCanvas || !frontCanvas) return;
+
+    const backCtx = backCanvas.getContext('2d');
+    const frontCtx = frontCanvas.getContext('2d');
+    if (!backCtx || !frontCtx) return;
+
+    const reducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let rafId = 0;
+    let time = 0;
+    let smoothX = 0;
+    let smoothY = 0;
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let isInView = true;
+
+    const syncSize = () => {
+      const rect = container.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const nextW = Math.round(rect.width * dpr);
+      const nextH = Math.round(rect.height * dpr);
+      if (backCanvas.width !== nextW || backCanvas.height !== nextH) {
+        backCanvas.width = nextW;
+        backCanvas.height = nextH;
+        frontCanvas.width = nextW;
+        frontCanvas.height = nextH;
+      }
+      width = rect.width;
+      height = rect.height;
+    };
+
+    // 3D coordinate rotation: X -> Y -> Z order
+    const rotatePoint = (x: number, y: number, z: number, rx: number, ry: number, rz = 0) => {
+      const cy1 = Math.cos(rx);
+      const sy1 = Math.sin(rx);
+      const y1 = y * cy1 - z * sy1;
+      const z1 = y * sy1 + z * cy1;
+
+      const cx2 = Math.cos(ry);
+      const sx2 = Math.sin(ry);
+      const x2 = x * cx2 + z1 * sx2;
+      const z2 = -x * sx2 + z1 * cx2;
+
+      if (!rz) return { x: x2, y: y1, z: z2 };
+
+      const cz3 = Math.cos(rz);
+      const sz3 = Math.sin(rz);
+      return {
+        x: x2 * cz3 - y1 * sz3,
+        y: x2 * sz3 + y1 * cz3,
+        z: z2,
+      };
+    };
+
+    const rgbBase = isDark ? '243, 244, 246' : '17, 19, 24';
+    const rgbAccent = isDark ? '45, 212, 191' : '10, 108, 101';
+
+    const renderFrame = () => {
+      syncSize();
+      if (!width || !height) {
+        if (!reducedMotion && isInView) rafId = requestAnimationFrame(renderFrame);
+        return;
+      }
+
+      // Smooth pointer tilt interpolation
+      smoothX += (pointerRef.current.x - smoothX) * 0.065;
+      smoothY += (pointerRef.current.y - smoothY) * 0.065;
+
+      backCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      frontCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      backCtx.clearRect(0, 0, width, height);
+      frontCtx.clearRect(0, 0, width, height);
+
+      const cx = width / 2;
+      const cy = height / 2;
+      const baseR = Math.min(width, height) * 0.35;
+      const fov = baseR * 5.2;
+
+      // 3D to 2D perspective projection
+      const project = (p: { x: number; y: number; z: number }) => {
+        const scale = fov / Math.max(40, fov - p.z);
+        return {
+          x: cx + p.x * scale,
+          y: cy + p.y * scale,
+          z: p.z,
+          scale,
+        };
+      };
+
+      const drawDepthSegment = (
+        p1: { x: number; y: number; z: number },
+        p2: { x: number; y: number; z: number },
+        maxR: number,
+        minAlpha: number,
+        maxAlpha: number,
+        minWidth: number,
+        maxWidth: number,
+        isTeal = false
+      ) => {
+        const midZ = (p1.z + p2.z) * 0.5;
+        const depthNorm = Math.max(0, Math.min(1, (midZ + maxR) / (maxR * 2)));
+        const ctx = midZ >= 0 ? frontCtx : backCtx;
+        const alpha = minAlpha + depthNorm * (maxAlpha - minAlpha);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = isTeal
+          ? `rgba(${rgbAccent}, ${(alpha * 1.15).toFixed(3)})`
+          : `rgba(${rgbBase}, ${alpha.toFixed(3)})`;
+        ctx.lineWidth = minWidth + depthNorm * (maxWidth - minWidth);
+        ctx.stroke();
+      };
+
+      const drawDepthNode = (
+        proj: { x: number; y: number; z: number; scale: number },
+        maxR: number,
+        radius: number,
+        minAlpha = 0.35,
+        maxAlpha = 0.98,
+        isTeal = false
+      ) => {
+        const depthNorm = Math.max(0, Math.min(1, (proj.z + maxR) / (maxR * 2)));
+        const ctx = proj.z >= 0 ? frontCtx : backCtx;
+        ctx.beginPath();
+        ctx.arc(proj.x, proj.y, radius * proj.scale, 0, Math.PI * 2);
+        ctx.fillStyle = isTeal
+          ? `rgba(${rgbAccent}, ${(minAlpha + depthNorm * (maxAlpha - minAlpha)).toFixed(3)})`
+          : `rgba(${rgbBase}, ${(minAlpha + depthNorm * (maxAlpha - minAlpha)).toFixed(3)})`;
+        ctx.fill();
+      };
+
+      // Configuration of the 3 3D elliptical orbits
+      const orbits = [
+        {
+          rxR: baseR * 1.56,
+          ryR: baseR * 1.12,
+          rx: 1.16 + Math.sin(time * 0.4) * 0.08 + smoothY * 0.36,
+          ry: time * 0.18 + smoothX * 0.45,
+          rz: -0.22,
+          satSpeed: 0.95,
+          satOffset: 0.4,
+          maxA: 0.68,
+          isTeal: true,
+        },
+        {
+          rxR: baseR * 1.48,
+          ryR: baseR * 1.06,
+          rx: -1.04 + Math.cos(time * 0.34) * 0.09 + smoothY * 0.32,
+          ry: -time * 0.14 + 0.7 + smoothX * 0.38,
+          rz: 0.36,
+          satSpeed: -0.72,
+          satOffset: 2.6,
+          maxA: 0.48,
+          isTeal: false,
+        },
+        {
+          rxR: baseR * 1.32,
+          ryR: baseR * 1.32,
+          rx: 0.52 + smoothY * 0.28,
+          ry: time * 0.1 + 1.4 + smoothX * 0.35,
+          rz: -0.68,
+          satSpeed: 0.56,
+          satOffset: 4.5,
+          maxA: 0.34,
+          isTeal: false,
+        },
+      ];
+
+      const segments = 90;
+
+      orbits.forEach((orb, oIdx) => {
+        const maxR = Math.max(orb.rxR, orb.ryR);
+        const pts: Array<{ x: number; y: number; z: number; scale: number }> = [];
+
+        for (let i = 0; i <= segments; i++) {
+          const a = (i / segments) * Math.PI * 2;
+          const rot = rotatePoint(
+            Math.cos(a) * orb.rxR,
+            Math.sin(a) * orb.ryR,
+            0,
+            orb.rx,
+            orb.ry,
+            orb.rz
+          );
+          pts.push(project(rot));
+        }
+
+        for (let i = 0; i < segments; i++) {
+          drawDepthSegment(
+            pts[i],
+            pts[i + 1],
+            maxR,
+            0.06,
+            orb.maxA,
+            0.5,
+            oIdx === 0 ? 1.35 : 0.95,
+            orb.isTeal
+          );
+        }
+
+        // Satellite & light tail trail
+        const headAngle = time * orb.satSpeed + orb.satOffset;
+        const tailSteps = 14;
+        const tailSpan = 0.46;
+        const dir = orb.satSpeed >= 0 ? 1 : -1;
+
+        let prevP: { x: number; y: number; z: number; scale: number } | null = null;
+        for (let s = 0; s <= tailSteps; s++) {
+          const frac = s / tailSteps;
+          const a = headAngle - dir * frac * tailSpan;
+          const curP = project(
+            rotatePoint(
+              Math.cos(a) * orb.rxR,
+              Math.sin(a) * orb.ryR,
+              0,
+              orb.rx,
+              orb.ry,
+              orb.rz
+            )
+          );
+
+          if (prevP) {
+            const fade = Math.pow(1 - frac, 1.8);
+            const midZ = (prevP.z + curP.z) * 0.5;
+            const depthNorm = Math.max(0, Math.min(1, (midZ + maxR) / (maxR * 2)));
+            const ctx = midZ >= 0 ? frontCtx : backCtx;
+            ctx.beginPath();
+            ctx.moveTo(prevP.x, prevP.y);
+            ctx.lineTo(curP.x, curP.y);
+            ctx.strokeStyle = orb.isTeal
+              ? `rgba(${rgbAccent}, ${(fade * (0.22 + depthNorm * 0.72) * 1.15).toFixed(3)})`
+              : `rgba(${rgbBase}, ${(fade * (0.22 + depthNorm * 0.72)).toFixed(3)})`;
+            ctx.lineWidth = (0.7 + fade * 1.45) * curP.scale;
+            ctx.stroke();
+          }
+
+          if (s === 0) {
+            drawDepthNode(curP, maxR, 2.8, 0.35, 0.98, orb.isTeal);
+          }
+          prevP = curP;
+        }
+      });
+
+      if (!reducedMotion && isInView) {
+        time += 0.016;
+        rafId = requestAnimationFrame(renderFrame);
+      }
+    };
+
+    const handleResize = () => {
+      if (reducedMotion) renderFrame();
+    };
+
+    // IntersectionObserver to pause rendering when off-screen
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isInView = entries[0]?.isIntersecting ?? true;
+        if (isInView && !reducedMotion && !rafId) {
+          rafId = requestAnimationFrame(renderFrame);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
+    window.addEventListener('resize', handleResize);
+    renderFrame();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', handleResize);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [isDark]);
+
+  return (
+    <div ref={containerRef} aria-hidden="true" className="pointer-events-none absolute inset-0">
+      <canvas ref={backCanvasRef} className="absolute inset-0 z-0 w-full h-full" />
+      <canvas ref={frontCanvasRef} className="absolute inset-0 z-20 w-full h-full" />
+    </div>
+  );
+}
+
 export function HeroSection() {
   const { data, t, lang, theme, showToast } = usePortfolio();
   const { scrollTo } = useSmoothScroll();
@@ -37,22 +332,26 @@ export function HeroSection() {
 
   const [bioOpen, setBioOpen] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [avatarOverride, setAvatarOverride] = useState<string | null>(null);
+  const [pointerOffset, setPointerOffset] = useState({ x: 0, y: 0 });
 
   const sectionRef = useRef<HTMLElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const themeRef = useRef<'dark' | 'light'>(theme);
-  const redrawStaticRef = useRef<(() => void) | null>(null);
+  const avatarStageRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const copyTimerRef = useRef<number | null>(null);
 
-  // Keep canvas palette in sync with Dark/Light mode
-  useEffect(() => {
-    themeRef.current = theme;
-    if (prefersReducedMotion) {
-      redrawStaticRef.current?.();
-    }
-  }, [theme, prefersReducedMotion]);
+  const isDark = theme === 'dark';
 
-  // Clean up clipboard feedback timer on unmount
+  // Revoke object URL on unmount or override change
+  useEffect(() => {
+    return () => {
+      if (avatarOverride && avatarOverride.startsWith('blob:')) {
+        URL.revokeObjectURL(avatarOverride);
+      }
+    };
+  }, [avatarOverride]);
+
+  // Clean up clipboard feedback timer
   useEffect(() => {
     return () => {
       if (copyTimerRef.current !== null) {
@@ -69,134 +368,6 @@ export function HeroSection() {
   const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
   const contentOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 24]);
-
-  // Ultra-subtle upper sky starfield tying Hero softly to Contact Deep Starfield
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = sectionRef.current;
-    if (!canvas || !container) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let width = 0;
-    let height = 0;
-    let rafId: number | null = null;
-    let isInView = true;
-    let stars: SkyStar[] = [];
-
-    let targetNormX = 0;
-    let targetNormY = 0;
-    let smoothNormX = 0;
-    let smoothNormY = 0;
-
-    const initStars = () => {
-      const count = Math.min(48, Math.max(24, Math.floor((width * height) / 24000)));
-      stars = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height * 0.65,
-        r: Math.random() < 0.75 ? 0.8 : 1.3,
-        depth: Math.random() < 0.6 ? 6 : 16,
-        teal: Math.random() < 0.25,
-        alpha: 0.14 + Math.random() * 0.28,
-      }));
-    };
-
-    const drawFrame = () => {
-      ctx.clearRect(0, 0, width, height);
-      const isDark = themeRef.current === 'dark';
-      const baseRgb = isDark ? '226, 232, 240' : '13, 21, 29';
-      const accentRgb = isDark ? '45, 212, 191' : '10, 108, 101';
-
-      smoothNormX += (targetNormX - smoothNormX) * 0.05;
-      smoothNormY += (targetNormY - smoothNormY) * 0.05;
-
-      for (let i = 0; i < stars.length; i++) {
-        const s = stars[i];
-        const px = s.x - smoothNormX * s.depth;
-        const py = s.y - smoothNormY * s.depth;
-        // Fade softly toward lower half so typography remains unobstructed
-        const fade = Math.max(0, 1 - py / Math.max(1, height * 0.72));
-
-        ctx.beginPath();
-        ctx.arc(px, py, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = s.teal
-          ? `rgba(${accentRgb}, ${s.alpha * fade * 1.2})`
-          : `rgba(${baseRgb}, ${s.alpha * fade})`;
-        ctx.fill();
-      }
-    };
-
-    redrawStaticRef.current = drawFrame;
-
-    const resize = () => {
-      const rect = container.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = rect.width;
-      height = rect.height;
-      canvas.width = Math.max(1, Math.floor(width * dpr));
-      canvas.height = Math.max(1, Math.floor(height * dpr));
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      initStars();
-      if (prefersReducedMotion) {
-        drawFrame();
-      }
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-      targetNormX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-      targetNormY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    };
-
-    const onMouseLeave = () => {
-      targetNormX = 0;
-      targetNormY = 0;
-    };
-
-    const tick = () => {
-      if (!isInView) {
-        rafId = null;
-        return;
-      }
-      drawFrame();
-      rafId = requestAnimationFrame(tick);
-    };
-
-    resize();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        isInView = entries[0]?.isIntersecting ?? true;
-        if (isInView && !prefersReducedMotion && rafId === null) {
-          rafId = requestAnimationFrame(tick);
-        }
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(container);
-
-    if (prefersReducedMotion) {
-      drawFrame();
-    } else {
-      rafId = requestAnimationFrame(tick);
-    }
-
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(container);
-    container.addEventListener('mousemove', onMouseMove);
-    container.addEventListener('mouseleave', onMouseLeave);
-
-    return () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      redrawStaticRef.current = null;
-      observer.disconnect();
-      resizeObserver.disconnect();
-      container.removeEventListener('mousemove', onMouseMove);
-      container.removeEventListener('mouseleave', onMouseLeave);
-    };
-  }, [prefersReducedMotion]);
 
   const handleCopyEmail = async () => {
     try {
@@ -229,316 +400,296 @@ export function HeroSection() {
     }
   };
 
+  const handleSelectLocalImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const objectUrl = URL.createObjectURL(file);
+    setAvatarOverride(objectUrl);
+  };
+
+  const handleStagePointerMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = avatarStageRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    setPointerOffset({
+      x: Math.max(-1, Math.min(1, nx)),
+      y: Math.max(-1, Math.min(1, ny)),
+    });
+  };
+
+  const handleStagePointerLeave = () => {
+    setPointerOffset({ x: 0, y: 0 });
+  };
+
   const roleHeadline =
     lang === 'vi'
       ? 'Kỹ sư Phần mềm & Tự động hóa FinTech'
       : 'Software Engineer & FinTech Automation';
 
-  const readStoryLabel = lang === 'vi' ? 'Đọc thêm quá trình làm việc' : 'Read full background';
-  const hideStoryLabel = lang === 'vi' ? 'Thu gọn' : 'Collapse background';
+  const readStoryLabel = lang === 'vi' ? 'Tiểu sử' : 'Background';
+
+  const activeAvatarSrc = avatarOverride || getAssetPath(data.profile.avatarUrl);
 
   return (
     <section
       id="summary"
       ref={sectionRef}
-      className="relative bg-[var(--bg)] min-h-[92vh] lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center pt-24 pb-16 md:pt-32 md:pb-20 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg)] min-h-[92vh] lg:min-h-[calc(100svh-4rem)] flex flex-col justify-start pt-20 sm:pt-24 pb-16 md:pb-20 border-b border-[var(--hairline)] overflow-x-clip"
     >
-      {/* Subtle Starfield Echo */}
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="absolute inset-0 w-full h-full pointer-events-none no-print"
+      {/* Hidden local image upload input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleSelectLocalImage}
+        className="sr-only"
+        aria-label="Upload local avatar preview"
       />
 
       <motion.div
         style={prefersReducedMotion ? undefined : { scale: contentScale, opacity: contentOpacity, y: contentY }}
-        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform"
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 will-change-transform w-full"
       >
-        {/* Upper Open Composition */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          {/* Left Column (8 cols): Display Scale + Statement + Actions */}
-          <div className="lg:col-span-8 space-y-7">
-            <div className="space-y-3">
-              <div className="overflow-hidden">
-                <motion.h1
-                  initial={{ y: '100%', opacity: 0 }}
-                  animate={{ y: '0%', opacity: 1 }}
-                  transition={{ duration: 0.7, ease: EASE_OUT }}
-                  className="font-serif font-bold text-4xl sm:text-6xl lg:text-[5rem] tracking-[-0.025em] leading-[1.0] text-[var(--text)]"
-                >
-                  {data.profile.name}
-                </motion.h1>
-              </div>
+        {/* ================================================================= */}
+        {/* 1. ORBITAL 3D AVATAR + INTEGRATED DISPLAY NAME                    */}
+        {/* ================================================================= */}
+        <div
+          ref={avatarStageRef}
+          onMouseMove={handleStagePointerMove}
+          onMouseLeave={handleStagePointerLeave}
+          className="flex flex-col items-center overflow-x-clip pt-2 pb-6"
+        >
+          {/* Orbital Avatar Stage with Dual Canvas */}
+          <div className="group relative z-10 flex items-center justify-center w-full h-[310px] sm:h-[370px] md:h-[410px] max-w-[620px]">
+            <OrbitalEllipses3D isDark={isDark} pointerOffset={pointerOffset} />
 
-              <div className="overflow-hidden">
-                <motion.p
-                  initial={{ y: '100%', opacity: 0 }}
-                  animate={{ y: '0%', opacity: 1 }}
-                  transition={{ duration: 0.7, delay: 0.08, ease: EASE_OUT }}
-                  className="font-serif font-semibold text-2xl sm:text-3xl lg:text-[2.2rem] tracking-[-0.02em] text-[var(--accent)] leading-tight"
-                >
-                  {roleHeadline}
-                </motion.p>
-              </div>
-            </div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.16, ease: EASE_OUT }}
-              className="max-w-xl text-base sm:text-[17px] text-[var(--text-muted)] leading-[1.68]"
-            >
-              {data.profile.roleDescription}
-            </motion.p>
-
-            {/* Primary CTA + Direct Email Copy + Progressive Background Toggle */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.22, ease: EASE_OUT }}
-              className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-1 no-print"
-            >
-              <MagneticButton strength={0.18}>
-                <button
-                  type="button"
-                  onClick={() => scrollTo('#works', { offset: -64 })}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
-                >
-                  <span>{t.hero.viewWork}</span>
-                  <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
-                </button>
-              </MagneticButton>
-
-              <button
-                type="button"
-                onClick={handleCopyEmail}
-                className="group relative inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text)] hover:text-[var(--accent)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
-                aria-label={`Copy email ${data.profile.email}`}
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  {copiedEmail ? (
-                    <motion.span
-                      key="copied"
-                      initial={{ opacity: 0, y: 3 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -3 }}
-                      transition={{ duration: 0.15 }}
-                      className="inline-flex items-center gap-1.5 text-[var(--accent)] font-mono text-xs"
-                    >
-                      <Check size={14} strokeWidth={2} aria-hidden="true" />
-                      <span>{t.contact.emailCopied}</span>
-                    </motion.span>
-                  ) : (
-                    <motion.span
-                      key="email"
-                      initial={{ opacity: 0, y: 3 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -3 }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      {data.profile.email}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-                <span
-                  aria-hidden="true"
-                  className="absolute left-0 -bottom-1 h-px w-full origin-left scale-x-0 group-hover:scale-x-100 bg-[var(--accent)] transition-transform duration-200 ease-out"
-                />
-              </button>
-
-              {data.profile.aboutParagraphs.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setBioOpen((prev) => !prev)}
-                  aria-expanded={bioOpen}
-                  className="inline-flex items-center text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
-                >
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.span
-                      key={bioOpen ? 'hide' : 'read'}
-                      initial={{ opacity: 0, y: -2 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 2 }}
-                      transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      {bioOpen ? `${hideStoryLabel} −` : `${readStoryLabel} +`}
-                    </motion.span>
-                  </AnimatePresence>
-                </button>
-              )}
-            </motion.div>
-          </div>
-
-          {/* Right Column (4 cols): Chamfered Portrait Aligned with Left Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.12, ease: EASE_OUT }}
-            className="lg:col-span-4 flex flex-col lg:items-end lg:pt-1"
-          >
-            <div
-              className="group relative w-64 sm:w-72 lg:w-[280px] xl:w-[295px] h-[295px] sm:h-[315px] lg:h-[322px] overflow-hidden bg-[var(--surface-2)] shadow-xl"
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              title={lang === 'vi' ? 'Bấm để thử ảnh từ máy tính' : 'Click to test local portrait image'}
               style={{
-                clipPath:
-                  'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)',
+                transform: prefersReducedMotion
+                  ? undefined
+                  : `perspective(850px) rotateX(${-pointerOffset.y * 6}deg) rotateY(${pointerOffset.x * 6}deg)`,
+                boxShadow: isDark
+                  ? '0 22px 50px -16px rgba(0, 0, 0, 0.85)'
+                  : '0 22px 44px -18px rgba(17, 19, 24, 0.18)',
               }}
+              className="relative z-10 w-[220px] h-[220px] sm:w-[264px] sm:h-[264px] md:w-[294px] md:h-[294px] rounded-full overflow-hidden border border-[var(--hairline-strong)] bg-[var(--surface-1)] cursor-pointer transition-transform duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             >
-              <div className="relative w-full h-full scale-[1.16] origin-[50%_62%] transition-transform duration-300 ease-out group-hover:scale-[1.20]">
+              {/* Avatar Image */}
+              <div className="relative w-full h-full">
                 <Image
-                  src={getAssetPath(data.profile.avatarUrl)}
+                  src={activeAvatarSrc}
                   alt={data.profile.name}
                   fill
-                  sizes="(max-width: 640px) 260px, (max-width: 1024px) 280px, 300px"
+                  sizes="(max-width: 640px) 240px, (max-width: 1024px) 280px, 320px"
                   priority
                   unoptimized
-                  className="object-cover object-[50%_85%]"
+                  className="w-full h-full object-cover object-[50%_80%] scale-[1.20] origin-[50%_72%] grayscale-[6%] contrast-[1.04] transition-all duration-300 ease-out group-hover:grayscale-0 group-hover:scale-[1.24]"
                 />
               </div>
-            </div>
-          </motion.div>
+
+              {/* Bottom Gradient Fade blending with the background surface */}
+              <div
+                aria-hidden="true"
+                style={{
+                  background: 'linear-gradient(to top, var(--bg) 8%, transparent 52%)',
+                }}
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5"
+              />
+
+              {/* Inner Specular Rim Light */}
+              <div
+                aria-hidden="true"
+                style={{
+                  boxShadow: isDark
+                    ? 'inset 0 1px 0 rgba(255,255,255,0.22)'
+                    : 'inset 0 1px 0 rgba(255,255,255,0.8)',
+                }}
+                className="pointer-events-none absolute inset-0 rounded-full"
+              />
+            </button>
+          </div>
+
+          {/* 2. Display Name Overlapping the Avatar Base */}
+          <motion.h1
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, ease: EASE_OUT }}
+            className="relative z-30 -mt-[44px] sm:-mt-[58px] md:-mt-[70px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)]"
+          >
+            {data.profile.name}
+          </motion.h1>
+
+          {/* 3. Hairline Divider */}
+          <div
+            className="w-full h-px mt-6 bg-[var(--hairline)]"
+            role="separator"
+          />
+
+          {/* 4. Centered Role Headline */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08, ease: EASE_OUT }}
+            className="mt-4 sm:mt-5 text-center text-base sm:text-xl font-medium tracking-[-0.01em] text-[var(--text-muted)]"
+          >
+            {roleHeadline}
+          </motion.p>
         </div>
 
-        {/* Full-Width Expandable Background (Spans all 12 cols, fully utilizing the space below the avatar) */}
-        <AnimatePresence initial={false}>
-          {bioOpen && data.profile.aboutParagraphs.length > 0 && (
-            <motion.div
-              key="bio-expandable-wrapper"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{
-                height: 'auto',
-                opacity: 1,
-                transition: {
-                  height: {
-                    duration: prefersReducedMotion ? 0 : 0.52,
-                    ease: [0.16, 1, 0.3, 1],
-                  },
-                  opacity: {
-                    duration: prefersReducedMotion ? 0 : 0.38,
-                    delay: prefersReducedMotion ? 0 : 0.05,
-                    ease: 'easeOut',
-                  },
-                },
-              }}
-              exit={{
-                height: 0,
-                opacity: 0,
-                transition: {
-                  height: {
-                    duration: prefersReducedMotion ? 0 : 0.4,
-                    ease: [0.16, 1, 0.3, 1],
-                  },
-                  opacity: {
-                    duration: prefersReducedMotion ? 0 : 0.22,
-                    ease: 'easeIn',
-                  },
-                },
-              }}
-              className="overflow-hidden will-change-[height,opacity]"
+        {/* ================================================================= */}
+        {/* 2. EDITORIAL STATEMENT & ACTIONS (FULL WIDTH)                     */}
+        {/* ================================================================= */}
+        <div className="py-10 sm:py-12 border-t border-[var(--hairline)] space-y-7 w-full">
+          <p className="text-base sm:text-lg lg:text-[19px] text-[var(--text-muted)] leading-[1.75] max-w-4xl">
+            {lang === 'vi' ? (
+              <>
+                Kỹ sư Khoa học Máy tính năm cuối chuyên sâu về{' '}
+                <strong className="font-semibold text-[var(--text)]">hệ thống full-stack</strong>,{' '}
+                <strong className="font-semibold text-[var(--text)]">đường ống tự động hóa tài chính</strong> và{' '}
+                <strong className="font-semibold text-[var(--text)]">backend RESTful chịu tải cao</strong>.
+                Thành thạo Java, Python, TypeScript, Spring Boot, FastAPI và React.
+              </>
+            ) : (
+              <>
+                Final-year Computer Science engineer specializing in{' '}
+                <strong className="font-semibold text-[var(--text)]">full-stack systems</strong>,{' '}
+                <strong className="font-semibold text-[var(--text)]">automated financial pipelines</strong>, and{' '}
+                <strong className="font-semibold text-[var(--text)]">high-concurrency RESTful backends</strong>.
+                Experienced with Java, Python, TypeScript, Spring Boot, FastAPI, and React.
+              </>
+            )}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-1 no-print">
+            <MagneticButton strength={0.18}>
+              <button
+                type="button"
+                onClick={() => scrollTo('#experience', { offset: -64 })}
+                className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-md bg-[var(--text)] text-[var(--bg)] hover:opacity-90 text-sm font-semibold transition-opacity duration-150 cursor-pointer"
+              >
+                <span>{lang === 'vi' ? 'Kinh nghiệm làm việc' : 'Work Experience'}</span>
+                <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+              </button>
+            </MagneticButton>
+
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text)] underline decoration-transparent hover:decoration-current underline-offset-4 transition-colors duration-150 cursor-pointer"
+              title={lang === 'vi' ? 'Sao chép email' : 'Copy email address'}
             >
+              <span>{data.profile.email}</span>
+              {copiedEmail ? (
+                <span className="inline-flex items-center gap-1 text-[var(--accent)] font-mono text-xs">
+                  <Check size={13} strokeWidth={2} />
+                  <span>({t.contact.emailCopied})</span>
+                </span>
+              ) : (
+                <span className="font-mono text-xs text-[var(--text-muted)] opacity-70 hover:opacity-100">
+                  ({lang === 'vi' ? 'Sao chép' : 'Copy'})
+                </span>
+              )}
+            </button>
+
+            {data.profile.aboutParagraphs.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setBioOpen((prev) => !prev)}
+                aria-expanded={bioOpen}
+                className="inline-flex items-center gap-1 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150 cursor-pointer"
+              >
+                <span>{readStoryLabel}</span>
+                <span aria-hidden="true" className="font-mono">{bioOpen ? '−' : '+'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* Expandable Background Story */}
+          <AnimatePresence initial={false}>
+            {bioOpen && data.profile.aboutParagraphs.length > 0 && (
               <motion.div
-                initial={prefersReducedMotion ? false : { y: -16, opacity: 0.2 }}
+                key="bio-expandable-wrapper"
+                initial={{ height: 0, opacity: 0 }}
                 animate={{
-                  y: 0,
+                  height: 'auto',
                   opacity: 1,
                   transition: {
-                    duration: prefersReducedMotion ? 0 : 0.48,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: prefersReducedMotion ? 0 : 0.04,
+                    height: {
+                      duration: prefersReducedMotion ? 0 : 0.45,
+                      ease: [0.16, 1, 0.3, 1],
+                    },
+                    opacity: {
+                      duration: prefersReducedMotion ? 0 : 0.35,
+                      delay: prefersReducedMotion ? 0 : 0.05,
+                      ease: 'easeOut',
+                    },
                   },
                 }}
                 exit={{
-                  y: -12,
+                  height: 0,
                   opacity: 0,
                   transition: {
-                    duration: prefersReducedMotion ? 0 : 0.22,
-                    ease: 'easeIn',
+                    height: {
+                      duration: prefersReducedMotion ? 0 : 0.35,
+                      ease: [0.16, 1, 0.3, 1],
+                    },
+                    opacity: {
+                      duration: prefersReducedMotion ? 0 : 0.2,
+                      ease: 'easeIn',
+                    },
                   },
                 }}
-                className="pt-8 mt-8 border-t border-[var(--hairline)] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full will-change-transform"
+                className="overflow-hidden will-change-[height,opacity] pt-2"
               >
-                {/* Left (8 cols): Two Detailed Narrative Paragraphs */}
-                <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+                <div className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl">
                   {data.profile.aboutParagraphs.map((para, idx) => (
                     <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.75]">
                       {para}
                     </p>
                   ))}
                 </div>
-
-                {/* Right (4 cols): Utilizing the space directly beneath the avatar */}
-                <div className="lg:col-span-4 space-y-5 lg:pl-6 border-t lg:border-t-0 lg:border-l border-[var(--hairline)] pt-6 lg:pt-0">
-                  <div>
-                    <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--accent)] block mb-1">
-                      {lang === 'vi' ? 'Học vấn & Đào tạo' : 'Academic Foundation'}
-                    </span>
-                    <p className="text-sm font-medium text-[var(--text)]">
-                      {data.education.degree}
-                    </p>
-                    <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                      {data.education.school}
-                    </p>
-                    <p className="font-mono text-[11px] text-[var(--text-muted)] mt-1 opacity-70">
-                      {data.education.period}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-[var(--hairline)]">
-                    <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--accent)] block mb-2">
-                      {lang === 'vi' ? 'Trọng tâm kỹ thuật' : 'Core Focus & Stack'}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {[
-                        'FastAPI',
-                        'Spring Boot',
-                        'FinTech Automation',
-                        'AI OCR Pipelines',
-                        'PostgreSQL',
-                        'Redis',
-                      ].map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-0.5 rounded text-[11px] font-mono bg-[var(--surface-2)] text-[var(--text-muted)] border border-[var(--hairline)]"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </div>
 
-        {/* Bottom Open Typographic Metrics Strip (Clean Figures Only — Zero Subscripts) */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.55, ease: EASE_OUT }}
-          className="mt-14 md:mt-16 pt-8 border-t border-[var(--hairline)]"
+        {/* ================================================================= */}
+        {/* 3. KEY METRICS STRIP (SWISS GRID)                                 */}
+        {/* ================================================================= */}
+        <div
+          aria-label="Key metrics"
+          className="border-t border-[var(--hairline)] py-10 sm:py-12"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6">
-            {data.metrics.map((metric, idx) => {
-              const targetSection = idx < 2 ? '#experience' : '#works';
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8">
+            {data.metrics.map((item, index) => {
+              const targetSection = index < 2 ? '#experience' : '#works';
               return (
                 <button
-                  key={metric.label}
+                  key={item.label}
                   type="button"
                   onClick={() => scrollTo(targetSection, { offset: -64 })}
-                  className="group text-left pb-2 border-b border-transparent hover:border-[var(--accent)] transition-colors duration-150 ease-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+                  className={`text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)] ${
+                    index > 0 ? 'md:border-l md:pl-8 border-[var(--hairline)]' : ''
+                  } ${
+                    index % 2 === 1 ? 'border-l pl-6 md:pl-8 border-[var(--hairline)]' : 'pr-4'
+                  }`}
                 >
-                  <div className="font-mono text-3xl sm:text-4xl font-semibold tabular-nums text-[var(--text)] tracking-tight">
-                    <RollingCounter value={metric.value} suffix={metric.suffix} />
+                  <div className="font-mono text-3xl sm:text-4xl font-semibold tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+                    <RollingCounter value={item.value} suffix={item.suffix} />
                   </div>
-                  <div className="text-xs sm:text-sm text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors duration-150 ease-out mt-1.5">
-                    {metric.label}
+                  <div className="mt-1.5 text-xs sm:text-sm text-[var(--text-muted)] group-hover:text-[var(--text)] transition-colors">
+                    {item.label}
                   </div>
                 </button>
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   );
