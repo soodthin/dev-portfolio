@@ -44,5 +44,6 @@ next-env.d.ts
 AGENTS.md
 CLAUDE.md
 .taste-skill/
+.playwright-mcp/
 *.zip
 /dist/

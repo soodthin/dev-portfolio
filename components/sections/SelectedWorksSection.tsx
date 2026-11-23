@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useSyncExternalStore } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, Laptop, Tablet, Smartphone } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { ProjectImage } from '@/types/portfolio';
@@ -177,17 +177,20 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
   const p1RotateX = useTransform(p1Progress, [0, 1], [8, 0]);
   const p1Scale = useTransform(p1Progress, [0, 1], [0.96, 1]);
 
-  // Project 02: Scroll-driven 3-Phone Fan-Out on desktop
+  // Project 02: Scroll-driven multi-device assembly on desktop
   const p2StageRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: p2Progress } = useScroll({
     target: p2StageRef,
     offset: ['start end', 'center center'],
   });
-  const leftPhoneRotate = useTransform(p2Progress, [0, 1], [0, -7]);
-  const leftPhoneX = useTransform(p2Progress, [0, 1], [16, -10]);
-  const centerPhoneY = useTransform(p2Progress, [0, 1], [16, -14]);
-  const rightPhoneRotate = useTransform(p2Progress, [0, 1], [0, 7]);
-  const rightPhoneX = useTransform(p2Progress, [0, 1], [-16, 10]);
+  const p2LaptopY = useTransform(p2Progress, [0, 1], [24, 0]);
+  const p2LaptopScale = useTransform(p2Progress, [0, 1], [0.95, 1]);
+  const p2TabletX = useTransform(p2Progress, [0, 1], [-24, 0]);
+  const p2TabletRotate = useTransform(p2Progress, [0, 1], [-5, -2]);
+  const p2PhoneX = useTransform(p2Progress, [0, 1], [24, 0]);
+  const p2PhoneRotate = useTransform(p2Progress, [0, 1], [5, 2]);
+
+  const [p2FocusedDevice, setP2FocusedDevice] = useState<'none' | 'laptop' | 'tablet' | 'phone'>('none');
 
   const p2Images = proj2?.imagesList || [];
 
@@ -517,111 +520,272 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-                {/* Left (6 cols): 3-Phone Fan-Out on Desktop, Horizontal Snap Carousel on Mobile */}
-                <div className="lg:col-span-6">
-                  {isDesktop ? (
-                    <div className="relative flex items-center justify-center py-6">
-                      {p2Images[0] && (
-                        <motion.button
-                          type="button"
-                          onClick={() => onOpenLightbox(p2Images, 0, proj2.title)}
-                          style={
-                            prefersReducedMotion
-                              ? undefined
-                              : { rotate: leftPhoneRotate, x: leftPhoneX }
-                          }
-                          whileHover={prefersReducedMotion ? undefined : { y: -12, scale: 1.03 }}
-                          transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
-                          className="relative w-44 xl:w-48 aspect-[9/19] rounded-[1.75rem] p-1.5 border border-[var(--hairline)] hover:border-[var(--hairline-strong)] bg-[var(--surface-1)] shadow-2xl z-10 hover:z-30 cursor-pointer will-change-transform"
-                          aria-label={p2Images[0].title}
-                        >
-                          <div className="relative w-full h-full rounded-[1.35rem] overflow-hidden bg-black">
-                            <Image
-                              src={getAssetPath(p2Images[0].src)}
-                              alt={p2Images[0].title}
-                              fill
-                              sizes="192px"
-                              unoptimized
-                              className="object-cover"
-                            />
-                          </div>
-                        </motion.button>
-                      )}
+                {/* Left (6 cols): Multi-Device Composition (Laptop + Tablet + Phone) */}
+                <div className="lg:col-span-6 space-y-4">
+                  {/* Device Selector Pill Bar & Lightbox Trigger */}
+                  <div className="flex items-center justify-between gap-3 pb-1">
+                    <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 shrink">
+                      <button
+                        type="button"
+                        onClick={() => setP2FocusedDevice(p2FocusedDevice === 'laptop' ? 'none' : 'laptop')}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                          p2FocusedDevice === 'laptop'
+                            ? 'bg-[var(--accent)] text-white shadow-sm'
+                            : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                        }`}
+                      >
+                        <Laptop size={12} className={p2FocusedDevice === 'laptop' ? 'text-white' : 'text-[var(--accent)]'} />
+                        <span>{lang === 'vi' ? 'Laptop · Bếp' : 'Laptop · Kitchen'}</span>
+                      </button>
 
-                      {p2Images[1] && (
-                        <motion.button
-                          type="button"
-                          onClick={() => onOpenLightbox(p2Images, 1, proj2.title)}
-                          style={prefersReducedMotion ? undefined : { y: centerPhoneY }}
-                          whileHover={prefersReducedMotion ? undefined : { y: -22, scale: 1.04 }}
-                          transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
-                          className="relative w-48 xl:w-52 aspect-[9/19] rounded-[1.75rem] p-1.5 border border-[var(--hairline-strong)] bg-[var(--surface-1)] shadow-2xl -ml-8 z-20 hover:z-30 cursor-pointer will-change-transform"
-                          aria-label={p2Images[1].title}
-                        >
-                          <div className="relative w-full h-full rounded-[1.35rem] overflow-hidden bg-black">
-                            <Image
-                              src={getAssetPath(p2Images[1].src)}
-                              alt={p2Images[1].title}
-                              fill
-                              sizes="208px"
-                              unoptimized
-                              className="object-cover"
-                            />
-                          </div>
-                        </motion.button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => setP2FocusedDevice(p2FocusedDevice === 'tablet' ? 'none' : 'tablet')}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                          p2FocusedDevice === 'tablet'
+                            ? 'bg-[var(--accent)] text-white shadow-sm'
+                            : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                        }`}
+                      >
+                        <Tablet size={12} className={p2FocusedDevice === 'tablet' ? 'text-white' : 'text-[var(--accent)]'} />
+                        <span>{lang === 'vi' ? 'Tablet · Menu' : 'Tablet · Menu'}</span>
+                      </button>
 
-                      {p2Images[2] && (
-                        <motion.button
-                          type="button"
-                          onClick={() => onOpenLightbox(p2Images, 2, proj2.title)}
-                          style={
-                            prefersReducedMotion
-                              ? undefined
-                              : { rotate: rightPhoneRotate, x: rightPhoneX }
-                          }
-                          whileHover={prefersReducedMotion ? undefined : { y: -12, scale: 1.03 }}
-                          transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
-                          className="relative w-44 xl:w-48 aspect-[9/19] rounded-[1.75rem] p-1.5 border border-[var(--hairline)] hover:border-[var(--hairline-strong)] bg-[var(--surface-1)] shadow-2xl -ml-8 z-10 hover:z-30 cursor-pointer will-change-transform"
-                          aria-label={p2Images[2].title}
-                        >
-                          <div className="relative w-full h-full rounded-[1.35rem] overflow-hidden bg-black">
-                            <Image
-                              src={getAssetPath(p2Images[2].src)}
-                              alt={p2Images[2].title}
-                              fill
-                              sizes="192px"
-                              unoptimized
-                              className="object-cover"
-                            />
-                          </div>
-                        </motion.button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => setP2FocusedDevice(p2FocusedDevice === 'phone' ? 'none' : 'phone')}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                          p2FocusedDevice === 'phone'
+                            ? 'bg-[var(--accent)] text-white shadow-sm'
+                            : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                        }`}
+                      >
+                        <Smartphone size={12} className={p2FocusedDevice === 'phone' ? 'text-white' : 'text-[var(--accent)]'} />
+                        <span>{lang === 'vi' ? 'Điện thoại · App' : 'Phone · App'}</span>
+                      </button>
                     </div>
-                  ) : (
-                    <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-4 px-4 no-scrollbar">
-                      {p2Images.map((img, idx) => (
-                        <button
-                          key={img.src}
-                          type="button"
-                          onClick={() => onOpenLightbox(p2Images, idx, proj2.title)}
-                          className="snap-center shrink-0 w-52 aspect-[9/19] rounded-3xl p-1.5 border border-[var(--hairline)] bg-[var(--surface-1)] shadow-lg cursor-pointer"
-                          aria-label={img.title}
-                        >
-                          <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black">
-                            <Image
-                              src={getAssetPath(img.src)}
-                              alt={img.title}
-                              fill
-                              sizes="208px"
-                              unoptimized
-                              className="object-cover"
-                            />
+
+                    {/* Gallery Full View Trigger */}
+                    <button
+                      type="button"
+                      onClick={() => onOpenLightbox(p2Images, 0, proj2.title)}
+                      className="shrink-0 text-[11px] font-mono text-[var(--text-muted)] hover:text-[var(--accent)] whitespace-nowrap transition-colors underline underline-offset-2 cursor-pointer"
+                    >
+                      {lang === 'vi' ? `Tất cả ảnh (${p2Images.length})` : `All (${p2Images.length})`}
+                    </button>
+                  </div>
+
+                  {/* Multi-Device Stage Container */}
+                  <div className="relative w-full max-w-[560px] mx-auto h-[370px] sm:h-[430px] lg:h-[470px] flex items-center justify-center select-none">
+                    {/* DEVICE 1: LAPTOP (MacBook Pro Mockup - Kitchen Dispatch Portal) */}
+                    <motion.div
+                      style={
+                        prefersReducedMotion || !isDesktop
+                          ? undefined
+                          : { y: p2LaptopY, scale: p2LaptopScale }
+                      }
+                      animate={{
+                        scale: p2FocusedDevice === 'laptop' ? 1.03 : 1,
+                        y: p2FocusedDevice === 'laptop' ? -10 : 0,
+                        zIndex: p2FocusedDevice === 'laptop' ? 40 : 10,
+                      }}
+                      whileHover={prefersReducedMotion ? undefined : { y: -8, scale: 1.02, zIndex: 40 }}
+                      transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
+                      onClick={() => onOpenLightbox(p2Images, 2, proj2.title)}
+                      className="absolute top-1 sm:top-3 left-1/2 -translate-x-1/2 w-[88%] sm:w-[86%] cursor-pointer will-change-transform group/laptop"
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Saigon Savory Kitchen Dispatch Web Portal (Laptop)"
+                    >
+                      {/* Laptop Screen Bezel */}
+                      <div className="relative rounded-t-xl sm:rounded-t-2xl p-2 sm:p-2.5 pb-0 bg-[#0F141C] border border-[var(--hairline-strong)] shadow-2xl">
+                        {/* Top Camera Dot */}
+                        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#1C2533] border border-white/10" />
+
+                        {/* Display Inner Canvas */}
+                        <div className="relative aspect-[16/10] w-full rounded-t-md sm:rounded-t-lg overflow-hidden bg-[#0A0E14] flex flex-col border border-white/5">
+                          {/* macOS Title Bar */}
+                          <div className="h-6 sm:h-7 px-2.5 bg-[#121822] border-b border-white/10 flex items-center justify-between shrink-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-[#FF5F56]/80" />
+                              <span className="w-2 h-2 rounded-full bg-[#FFBD2E]/80" />
+                              <span className="w-2 h-2 rounded-full bg-[#27C93F]/80" />
+                            </div>
+                            <div className="px-2 py-0.5 rounded bg-[#0A0E14] border border-white/10 font-mono text-[9px] sm:text-[10px] text-slate-400 truncate max-w-[180px] sm:max-w-[220px]">
+                              saigonsavory.internal/kitchen-portal
+                            </div>
+                            <div className="flex items-center gap-1 text-[9px] font-mono text-emerald-400">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              <span className="hidden sm:inline">14 Tables</span>
+                            </div>
                           </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+
+                          {/* Kitchen Dashboard Content */}
+                          <div className="p-2 sm:p-3 flex-1 flex flex-col justify-between text-left font-sans overflow-hidden">
+                            <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                              <div>
+                                <div className="text-[10px] sm:text-[11px] font-bold text-white tracking-wide uppercase">
+                                  {lang === 'vi' ? 'ĐIỀU PHỐI BẾP & ĐƠN HÀNG' : 'KITCHEN DISPATCH CONSOLE'}
+                                </div>
+                                <div className="text-[8px] sm:text-[9px] font-mono text-slate-400">
+                                  Django REST · 26 APIs · WebSocket Live
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1 font-mono text-[9px]">
+                                <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                  18 Active
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* 3 Active Orders Row */}
+                            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 my-auto">
+                              {/* Order 1 */}
+                              <div className="rounded border border-amber-500/30 bg-amber-500/10 p-1.5">
+                                <div className="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-amber-300">
+                                  <span>#1048</span>
+                                  <span className="text-[7px] sm:text-[8px] px-1 rounded bg-amber-400/20">Bàn 03</span>
+                                </div>
+                                <div className="text-[9px] sm:text-[10px] font-semibold text-white truncate mt-0.5">
+                                  Cơm Tấm Sườn
+                                </div>
+                                <div className="text-[7px] sm:text-[8px] text-amber-200/80 font-mono mt-0.5">
+                                  Cooking · 8m
+                                </div>
+                              </div>
+
+                              {/* Order 2 */}
+                              <div className="rounded border border-teal-500/30 bg-teal-500/10 p-1.5">
+                                <div className="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-teal-300">
+                                  <span>#1049</span>
+                                  <span className="text-[7px] sm:text-[8px] px-1 rounded bg-teal-400/20">MoMo ✓</span>
+                                </div>
+                                <div className="text-[9px] sm:text-[10px] font-semibold text-white truncate mt-0.5">
+                                  Phở Bò Tái
+                                </div>
+                                <div className="text-[7px] sm:text-[8px] text-teal-200/80 font-mono mt-0.5">
+                                  Ready · Pack
+                                </div>
+                              </div>
+
+                              {/* Order 3 */}
+                              <div className="rounded border border-slate-700 bg-slate-800/60 p-1.5">
+                                <div className="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-slate-300">
+                                  <span>#1050</span>
+                                  <span className="text-[7px] sm:text-[8px] px-1 rounded bg-slate-700">Bàn 07</span>
+                                </div>
+                                <div className="text-[9px] sm:text-[10px] font-semibold text-slate-200 truncate mt-0.5">
+                                  Gỏi Cuốn Tôm
+                                </div>
+                                <div className="text-[7px] sm:text-[8px] text-emerald-400 font-mono mt-0.5">
+                                  Served
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Bottom Telemetry Ticker */}
+                            <div className="pt-1 border-t border-white/5 flex items-center justify-between text-[7px] sm:text-[8px] font-mono text-slate-400">
+                              <span className="truncate">✓ MoMo & Stripe Webhooks Online (0 errors)</span>
+                              <span className="text-[var(--accent)] font-semibold shrink-0">90d Rev +28.4%</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Laptop Base (MacBook Chassis Notch) */}
+                      <div className="relative -mt-px w-[104%] -left-[2%] h-3 sm:h-3.5 rounded-b-lg sm:rounded-b-xl bg-gradient-to-b from-[#252E3B] to-[#121822] border-t border-white/20 shadow-xl flex items-start justify-center">
+                        <div className="w-14 sm:w-16 h-1 sm:h-1.5 rounded-b-md bg-[#374454]" />
+                      </div>
+                    </motion.div>
+
+                    {/* DEVICE 2: TABLET (iPad Mockup - In-Restaurant Menu Catalog) */}
+                    {p2Images[0] && (
+                      <motion.button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenLightbox(p2Images, 0, proj2.title);
+                        }}
+                        style={
+                          prefersReducedMotion || !isDesktop
+                            ? undefined
+                            : { x: p2TabletX, rotate: p2TabletRotate }
+                        }
+                        animate={{
+                          scale: p2FocusedDevice === 'tablet' ? 1.05 : 1,
+                          y: p2FocusedDevice === 'tablet' ? -12 : 0,
+                          zIndex: p2FocusedDevice === 'tablet' ? 40 : 20,
+                        }}
+                        whileHover={prefersReducedMotion ? undefined : { y: -10, scale: 1.03, zIndex: 40 }}
+                        transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
+                        className="absolute bottom-2 sm:bottom-4 left-0 sm:left-2 w-[41%] sm:w-[42%] aspect-[3/4] rounded-2xl sm:rounded-3xl p-1.5 sm:p-2 bg-[#1A222D] border border-[var(--hairline-strong)] shadow-2xl shadow-black/60 cursor-pointer will-change-transform group/tablet"
+                        aria-label="Digital Menu & Table Booking (Tablet)"
+                      >
+                        <div className="relative w-full h-full rounded-[0.9rem] sm:rounded-[1.2rem] overflow-hidden bg-black">
+                          {/* Tablet Front Camera */}
+                          <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-black/60 border border-white/20 z-10" />
+                          <Image
+                            src={getAssetPath(p2Images[0].src)}
+                            alt={p2Images[0].title}
+                            fill
+                            sizes="240px"
+                            unoptimized
+                            className="object-cover object-top"
+                          />
+                          {/* Subtle Device Badge */}
+                          <div className="absolute bottom-1.5 inset-x-1.5 px-2 py-0.5 rounded bg-black/75 backdrop-blur-sm border border-white/10 flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-white opacity-0 group-hover/tablet:opacity-100 transition-opacity">
+                            <span className="truncate">Tablet · {lang === 'vi' ? 'Thực đơn số' : 'Digital Menu'}</span>
+                            <ExternalLink size={10} className="shrink-0 text-[var(--accent)]" />
+                          </div>
+                        </div>
+                      </motion.button>
+                    )}
+
+                    {/* DEVICE 3: SMARTPHONE (iPhone Mockup - Customer App) */}
+                    {p2Images[1] && (
+                      <motion.button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenLightbox(p2Images, 1, proj2.title);
+                        }}
+                        style={
+                          prefersReducedMotion || !isDesktop
+                            ? undefined
+                            : { x: p2PhoneX, rotate: p2PhoneRotate }
+                        }
+                        animate={{
+                          scale: p2FocusedDevice === 'phone' ? 1.06 : 1,
+                          y: p2FocusedDevice === 'phone' ? -14 : 0,
+                          zIndex: p2FocusedDevice === 'phone' ? 40 : 30,
+                        }}
+                        whileHover={prefersReducedMotion ? undefined : { y: -12, scale: 1.04, zIndex: 40 }}
+                        transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
+                        className="absolute bottom-0 sm:bottom-2 right-0 sm:right-2 w-[31%] sm:w-[32%] aspect-[9/19] rounded-[1.5rem] sm:rounded-[1.75rem] p-1.5 bg-[#1A222D] border border-[var(--hairline-strong)] shadow-2xl shadow-black/70 cursor-pointer will-change-transform group/phone"
+                        aria-label="Customer Mobile App (Smartphone)"
+                      >
+                        <div className="relative w-full h-full rounded-[1.2rem] sm:rounded-[1.4rem] overflow-hidden bg-black">
+                          {/* Dynamic Island */}
+                          <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-8 sm:w-10 h-2.5 rounded-full bg-black border border-white/10 z-20" />
+                          <Image
+                            src={getAssetPath(p2Images[1].src)}
+                            alt={p2Images[1].title}
+                            fill
+                            sizes="192px"
+                            unoptimized
+                            className="object-cover object-top"
+                          />
+                          {/* Home Indicator Bar */}
+                          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-white/40 z-20" />
+                          {/* Subtle Device Badge */}
+                          <div className="absolute bottom-3 inset-x-1 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-sm border border-white/10 flex items-center justify-between text-[7px] sm:text-[8px] font-mono text-white opacity-0 group-hover/phone:opacity-100 transition-opacity z-20">
+                            <span className="truncate">Phone · {lang === 'vi' ? 'Đặt món' : 'Order App'}</span>
+                            <ExternalLink size={9} className="shrink-0 text-[var(--accent)]" />
+                          </div>
+                        </div>
+                      </motion.button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Right (6 cols): Metrics + Interactive Highlights + Tech Stack */}
