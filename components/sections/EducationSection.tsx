@@ -15,14 +15,14 @@ export function EducationSection() {
   return (
     <section
       id="education"
-      className="relative bg-[var(--bg)] chapter-divider-sheen lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center py-16 md:py-24 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg)] chapter-divider-sheen lg:min-h-[calc(100svh-4rem)] flex flex-col justify-center py-10 md:py-14 lg:py-10 xl:py-12 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <ScrollDepthWrapper sectionId="education" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <SectionHeading
           index="05"
           eyebrow={t.education.eyebrow}
           title={t.education.title}
-          className="mb-14"
+          className="mb-8 lg:mb-10"
         />
 
         {/* 2-Column Editorial Spread */}

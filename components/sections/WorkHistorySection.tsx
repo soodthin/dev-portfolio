@@ -27,7 +27,7 @@ export function WorkHistorySection() {
   return (
     <section
       id="experience"
-      className="relative bg-[var(--bg-alt)] chapter-divider-sheen py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg-alt)] chapter-divider-sheen py-12 md:py-16 lg:py-16 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <ScrollDepthWrapper stickySafe sectionId="experience" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading

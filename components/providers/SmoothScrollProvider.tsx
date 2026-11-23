@@ -21,9 +21,8 @@ const SNAP_ANCHORS: { selector: string; offset: number }[] = [
   { selector: '#summary', offset: 0 },
   { selector: '#experience', offset: -64 },
   { selector: '#works', offset: -64 },
-  { selector: '#project-01', offset: -84 },
-  { selector: '#project-02', offset: -84 },
-  { selector: '#project-03', offset: -84 },
+  { selector: '#project-02', offset: -72 },
+  { selector: '#project-03', offset: -72 },
   { selector: '#skills', offset: -64 },
   { selector: '#education', offset: -64 },
   { selector: '#contact', offset: -64 },
@@ -100,7 +99,10 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
         const docH = document.documentElement.scrollHeight;
         if (scrollY + windowH >= docH - 80) return;
 
-        // Find closest anchor within capture zone (4px < Math.abs(diff) <= 120px)
+        // Find closest anchor within directional capture zone:
+        // - Approaching anchor from above: 4 < diff <= 80px (gently pulls into frame)
+        // - Micro-overshoot: -24 <= diff < -4px (tiny soft settling)
+        // - Never snap backwards when user scrolled into the section (diff < -24), which prevents clipping lower content
         let closestTargetY: number | null = null;
         let minDiff = Infinity;
 
@@ -112,7 +114,11 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
           const diff = targetY - scrollY;
           const absDiff = Math.abs(diff);
 
-          if (absDiff > 4 && absDiff <= 120 && absDiff < minDiff) {
+          // Asymmetric capture zone: allows forward settling, but prevents pulling backwards into tall cards
+          const isApproaching = diff > 4 && diff <= 80;
+          const isMicroOvershoot = diff >= -24 && diff < -4;
+
+          if ((isApproaching || isMicroOvershoot) && absDiff < minDiff) {
             minDiff = absDiff;
             closestTargetY = targetY;
           }

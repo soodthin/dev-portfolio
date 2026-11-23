@@ -197,7 +197,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
   return (
     <section
       id="works"
-      className="relative bg-[var(--bg)] chapter-divider-sheen py-24 md:py-36 border-b border-[var(--hairline)] overflow-x-clip"
+      className="relative bg-[var(--bg)] chapter-divider-sheen py-12 md:py-16 lg:py-14 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollDepthWrapper sectionId="works">
@@ -206,20 +206,20 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
             eyebrow={t.works.eyebrow}
             title={t.works.title}
             subtitle={t.works.subtitle}
-            className="mb-16 md:mb-24"
+            className="mb-8 md:mb-10 lg:mb-12"
           />
         </ScrollDepthWrapper>
 
-        <div className="space-y-28 md:space-y-36">
+        <div className="space-y-16 md:space-y-20 lg:space-y-24">
           {/* ================================================================= */}
           {/* PROJECT 01: FlexiConnect Web                                      */}
           {/* ================================================================= */}
           {proj1 && (
             <ScrollDepthWrapper sectionId={proj1.id}>
-              <article id={proj1.id} className="scroll-mt-24 space-y-8">
+              <article id={proj1.id} className="scroll-mt-24 space-y-5 lg:space-y-6">
               {/* Full-Width Project Header Bar */}
-              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[var(--hairline)]">
-                <div className="space-y-2.5 max-w-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
+                <div className="space-y-1.5 max-w-2xl">
                   <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                     <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                       {proj1.number}
@@ -227,24 +227,24 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     <span>·</span>
                     <span>{proj1.subtitle}</span>
                   </div>
-                  <h3 className="font-serif font-semibold text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] text-[var(--text)]">
+                  <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)]">
                     {proj1.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl">
                     {proj1.description}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
                   {proj1.demoUrl && (
                     <a
                       href={proj1.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
                     >
                       <span>{t.works.liveDemoBtn}</span>
-                      <ExternalLink size={13} />
+                      <ExternalLink size={12} />
                     </a>
                   )}
 
@@ -254,9 +254,9 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                         href={proj1.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] hover:border-[var(--hairline-strong)] text-[var(--text)] text-xs font-medium transition-colors"
                       >
-                        <GithubIcon size={14} />
+                        <GithubIcon size={13} />
                         <span>{t.works.sourceCodeBtn}</span>
                       </a>
                     </MagneticButton>
@@ -265,9 +265,9 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                   <button
                     type="button"
                     onClick={() => onOpenLightbox(p1Images, p1Index, proj1.title)}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold transition-all cursor-pointer"
                   >
-                    <Maximize2 size={13} strokeWidth={2} />
+                    <Maximize2 size={12} strokeWidth={2} />
                     <span>
                       {t.works.viewGallery} ({p1Images.length})
                     </span>
@@ -276,17 +276,17 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               </div>
 
               {/* Balanced 12-Col Showcase Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
                 {/* Left (5 cols): Metrics + Interactive All-Highlights Switcher + Tech Stack */}
-                <div className="lg:col-span-5 space-y-7">
+                <div className="lg:col-span-5 space-y-5 lg:space-y-6">
                   {proj1.metricsList && (
                     <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-px rounded-xl overflow-hidden border border-[var(--hairline)] bg-[var(--hairline)]">
                       {proj1.metricsList.map((m, i) => (
-                        <div key={i} className="bg-[var(--surface-1)] px-4 py-3.5">
-                          <div className="font-mono text-2xl font-bold tabular-nums text-[var(--text)]">
+                        <div key={i} className="bg-[var(--surface-1)] px-3 py-2 sm:py-2.5">
+                          <div className="font-mono text-xl font-bold tabular-nums text-[var(--text)]">
                             {m.value}
                           </div>
-                          <div className="text-xs text-[var(--text-muted)] mt-0.5">{m.label}</div>
+                          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{m.label}</div>
                         </div>
                       ))}
                     </div>
@@ -314,7 +314,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                 {/* Right (7 cols): Perspective Browser Stage + Synced Caption + Thumbnails */}
                 <div
                   ref={p1StageRef}
-                  className="lg:col-span-7 space-y-3"
+                  className="lg:col-span-7 space-y-2.5"
                   style={isDesktop && !prefersReducedMotion ? { perspective: '1200px' } : undefined}
                 >
                   <motion.div
@@ -326,7 +326,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] overflow-hidden shadow-xl will-change-transform"
                   >
                     {/* Browser Chrome */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--hairline)] bg-[var(--surface-2)]">
+                    <div className="flex items-center justify-between px-3.5 py-2 border-b border-[var(--hairline)] bg-[var(--surface-2)]">
                       <div className="flex items-center gap-1.5">
                         <span className="w-2.5 h-2.5 rounded-full bg-[var(--text-muted)]/30" />
                         <span className="w-2.5 h-2.5 rounded-full bg-[var(--text-muted)]/30" />
@@ -342,7 +342,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     </div>
 
                     {/* Directional Slide Viewport */}
-                    <div className="relative aspect-[16/10] bg-[var(--bg)] overflow-hidden group">
+                    <div className="relative aspect-[16/9.5] bg-[var(--bg)] overflow-hidden group">
                       <AnimatePresence initial={false} custom={p1Direction} mode="wait">
                         <motion.div
                           key={p1Index}
@@ -450,11 +450,11 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               <article
                 id={proj2.id}
                 ref={p2StageRef}
-                className="scroll-mt-24 pt-12 border-t border-[var(--hairline)] space-y-8"
+                className="scroll-mt-24 pt-8 lg:pt-10 border-t border-[var(--hairline)] space-y-5 lg:space-y-6"
               >
               {/* Full-Width Project Header Bar */}
-              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[var(--hairline)]">
-                <div className="space-y-2.5 max-w-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
+                <div className="space-y-1.5 max-w-2xl">
                   <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                     <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                       {proj2.number}
@@ -462,15 +462,15 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                     <span>·</span>
                     <span>{proj2.subtitle}</span>
                   </div>
-                  <h3 className="font-serif font-semibold text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] text-[var(--text)]">
+                  <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.02em] text-[var(--text)]">
                     {proj2.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl">
                     {proj2.description}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
                   {proj2.demoUrl && (
                     <a
                       href={proj2.demoUrl}
@@ -661,10 +661,10 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
           {/* ================================================================= */}
           {proj3 && (
             <ScrollDepthWrapper sectionId={proj3.id}>
-              <article id={proj3.id} className="scroll-mt-24 pt-12 border-t border-[var(--hairline)]">
-                <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-6 sm:p-10">
-                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-[var(--hairline)]">
-                  <div className="space-y-2.5 max-w-2xl">
+              <article id={proj3.id} className="scroll-mt-24 pt-8 lg:pt-10 border-t border-[var(--hairline)]">
+                <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 sm:p-7 lg:p-8">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
+                  <div className="space-y-1.5 max-w-2xl">
                     <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                       <span className="font-mono tabular-nums font-semibold text-[var(--accent)]">
                         {proj3.number}
@@ -673,16 +673,16 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
                       <span>{proj3.subtitle}</span>
                     </div>
 
-                    <h3 className="font-serif font-semibold text-3xl sm:text-4xl tracking-[-0.02em] text-[var(--text)]">
+                    <h3 className="font-serif font-semibold text-2xl sm:text-3xl md:text-4xl tracking-[-0.02em] text-[var(--text)]">
                       {proj3.title}
                     </h3>
 
-                    <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl">
                       {proj3.description}
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  <div className="flex flex-wrap items-center gap-2.5 shrink-0">
                     {proj3.demoUrl && (
                       <a
                         href={proj3.demoUrl}
