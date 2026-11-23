@@ -290,7 +290,7 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
             <span>{t.commandPalette.selectHint}</span>
             <span>{t.commandPalette.escHint}</span>
           </div>
-          <div>Thai Do Thinh · 2026</div>
+          <div>Thai Do Thinh · 2026 · v3.0</div>
         </div>
       </div>
     </div>

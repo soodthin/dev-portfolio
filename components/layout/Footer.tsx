@@ -13,6 +13,8 @@ export function Footer() {
           <span className="text-[var(--text)] font-medium">{data.profile.name}</span>
           <span className="opacity-40">·</span>
           <span className="font-mono tabular-nums">© 2026</span>
+          <span className="opacity-40">·</span>
+          <span className="font-mono tabular-nums text-[var(--accent)] font-medium">v3.0</span>
         </div>
 
         <div className="text-center md:text-right text-[var(--text-muted)]">
