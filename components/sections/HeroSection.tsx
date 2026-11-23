@@ -549,14 +549,10 @@ export function HeroSection() {
               title={lang === 'vi' ? 'Sao chép email' : 'Copy email address'}
             >
               <span>{data.profile.email}</span>
-              {copiedEmail ? (
+              {copiedEmail && (
                 <span className="inline-flex items-center gap-1 text-[var(--accent)] font-mono text-xs">
                   <Check size={13} strokeWidth={2} />
                   <span>({t.contact.emailCopied})</span>
-                </span>
-              ) : (
-                <span className="font-mono text-xs text-[var(--text-muted)] opacity-70 hover:opacity-100">
-                  ({lang === 'vi' ? 'Sao chép' : 'Copy'})
                 </span>
               )}
             </button>
