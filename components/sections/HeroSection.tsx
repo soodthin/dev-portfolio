@@ -479,12 +479,17 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* 2. Display Name Overlapping the Avatar Base */}
+          {/* 2. Display Name Overlapping the Avatar Base for Depth Effect */}
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: EASE_OUT }}
-            className="relative z-30 -mt-[44px] sm:-mt-[58px] md:-mt-[70px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)]"
+            style={{
+              textShadow: isDark
+                ? '0 4px 24px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.9)'
+                : '0 4px 20px rgba(234, 239, 244, 0.9), 0 1px 3px rgba(255, 255, 255, 0.8)',
+            }}
+            className="relative z-30 -mt-[68px] sm:-mt-[90px] md:-mt-[110px] lg:-mt-[120px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
           >
             {data.profile.name}
           </motion.h1>
