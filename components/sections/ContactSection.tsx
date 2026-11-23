@@ -64,9 +64,11 @@ export function ContactSection() {
           {/* Left Column (7 cols): Email with Sweeping Teal Underline + Copy & Print */}
           <div className="lg:col-span-7 space-y-8">
             <div className="space-y-4">
-              <p className="text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-                {t.contact.subtitle}
-              </p>
+              {t.contact.subtitle && (
+                <p className="text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+                  {t.contact.subtitle}
+                </p>
+              )}
 
               <div className="relative group inline-block max-w-full">
                 <a

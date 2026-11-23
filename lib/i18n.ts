@@ -175,8 +175,7 @@ export const translations: Record<Locale, Translations> = {
     contact: {
       eyebrow: 'Contact',
       title: 'Start a Conversation',
-      subtitle:
-        'Open to Software Engineering, Backend, and FinTech Automation roles in Ho Chi Minh City or remote.',
+      subtitle: '',
       copyEmail: 'Copy',
       emailCopied: 'Copied ✓',
       printResume: 'Print / Save Resume',
@@ -276,8 +275,7 @@ export const translations: Record<Locale, Translations> = {
     contact: {
       eyebrow: 'Liên hệ',
       title: 'Kết nối Trực tiếp',
-      subtitle:
-        'Sẵn sàng cho các vị trí Kỹ sư Phần mềm, Backend và Tự động hóa FinTech tại TP.HCM hoặc làm việc từ xa.',
+      subtitle: '',
       copyEmail: 'Sao chép',
       emailCopied: 'Đã chép ✓',
       printResume: 'In / Lưu CV (PDF)',
