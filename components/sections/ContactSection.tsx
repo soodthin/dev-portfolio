@@ -81,8 +81,8 @@ function getSocialIcon(label: string) {
  * - Edge-to-edge full width and viewport height deep starfield canvas.
  * - 60FPS GPU-friendly Canvas 2D 3-layer Z-depth starfield with cursor parallax inertia.
  * - Ambient shooting stars + dual Teal meteor launch on email copy/click.
- * - Authentic SVG and vector brand icons for all direct social channels.
- * - Respects prefers-reduced-motion and automatically scales via ResizeObserver.
+ * - Unified inline action & channel dock: Copy Email + Print Resume | LinkedIn + GitHub + Email + Phone.
+ * - Live Ho Chi Minh City / GMT+7 clock in the top bar.
  */
 export function ContactSection() {
   const { data, t, lang, theme, showToast } = usePortfolio();
@@ -410,7 +410,7 @@ export function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-[80vh] lg:min-h-screen w-full flex flex-col justify-between pt-20 pb-16 md:pt-28 md:pb-20 border-t border-[var(--hairline)] overflow-hidden"
+      className="relative min-h-[75vh] lg:min-h-[85vh] w-full flex flex-col justify-between pt-20 pb-16 md:pt-28 md:pb-24 border-t border-[var(--hairline)] overflow-hidden"
     >
       {/* Full-Width Deep Starfield (3-Layer Z-Parallax & Meteors) Canvas Background */}
       <canvas
@@ -420,7 +420,7 @@ export function ContactSection() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-between gap-12 md:gap-16">
-        {/* Top Bar: Chapter Index & Live Saigon Clock */}
+        {/* Top Bar: Chapter Index & Live Ho Chi Minh City Clock */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--hairline)]">
           <div className="flex items-center gap-2.5 text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
             <span className="font-mono tabular-nums">06</span>
@@ -433,7 +433,7 @@ export function ContactSection() {
           </div>
         </div>
 
-        {/* Center: Scroll-Kinetic Poster Headline & Action Buttons */}
+        {/* Center: Scroll-Kinetic Poster Headline & Unified Actions/Channels Row */}
         <div className="space-y-8 my-auto py-8">
           <div className="py-1">
             <motion.h2
@@ -450,13 +450,14 @@ export function ContactSection() {
             </p>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-4 pt-2 no-print">
+          {/* Unified Horizontal Action Bar: Copy Email + Print Resume | LinkedIn + GitHub + Email + Phone */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2 no-print">
+            {/* Primary Action: Copy Email */}
             <MagneticButton strength={0.2}>
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer shadow-lg shadow-[var(--accent)]/10 min-w-[150px]"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-sm font-semibold transition-all cursor-pointer shadow-lg shadow-[var(--accent)]/10 min-w-[136px]"
               >
                 <AnimatePresence mode="wait" initial={false}>
                   {copiedEmail ? (
@@ -466,9 +467,9 @@ export function ContactSection() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.15 }}
-                      className="inline-flex items-center gap-2"
+                      className="inline-flex items-center gap-1.5"
                     >
-                      <Check size={16} strokeWidth={2.5} />
+                      <Check size={15} strokeWidth={2.5} />
                       <span>{t.contact.emailCopied}</span>
                     </motion.span>
                   ) : (
@@ -478,9 +479,9 @@ export function ContactSection() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.15 }}
-                      className="inline-flex items-center gap-2"
+                      className="inline-flex items-center gap-1.5"
                     >
-                      <Copy size={16} strokeWidth={1.75} />
+                      <Copy size={15} strokeWidth={1.75} />
                       <span>{t.contact.copyEmail}</span>
                     </motion.span>
                   )}
@@ -488,55 +489,56 @@ export function ContactSection() {
               </button>
             </MagneticButton>
 
+            {/* Secondary Action: Print / Save Resume */}
             <MagneticButton strength={0.2}>
               <button
                 type="button"
                 onClick={handlePrintResume}
                 title={t.contact.printHint}
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/90 hover:border-[var(--hairline-strong)] text-[var(--text)] text-sm font-medium transition-colors cursor-pointer"
               >
-                <Printer size={16} strokeWidth={1.75} className="text-[var(--accent)]" />
+                <Printer size={15} strokeWidth={1.75} className="text-[var(--accent)]" />
                 <span>{t.contact.printResume}</span>
               </button>
             </MagneticButton>
-          </div>
-        </div>
 
-        {/* Bottom Bar: Icon-Enhanced Social Channels + Location */}
-        <div className="pt-8 border-t border-[var(--hairline)] flex flex-wrap items-center justify-between gap-6 no-print">
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-            {data.socials.map((soc) => {
-              const isExternal = soc.url.startsWith('http');
-              return (
-                <a
-                  key={soc.label}
-                  href={soc.url}
-                  target={isExternal ? '_blank' : undefined}
-                  rel={isExternal ? 'noopener noreferrer' : undefined}
-                  className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/75 hover:bg-[var(--surface-2)] hover:border-[var(--accent)] text-[var(--text)] transition-all duration-200"
-                  title={`${soc.label}: ${soc.handle}`}
-                >
-                  <span className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:scale-110 transition-all">
-                    {getSocialIcon(soc.label)}
-                  </span>
-                  <span className="font-serif font-semibold text-sm sm:text-base group-hover:text-[var(--accent)] transition-colors">
-                    {soc.label}
-                  </span>
-                  {isExternal && (
-                    <ArrowUpRight
-                      size={13}
-                      strokeWidth={1.75}
-                      className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-                    />
-                  )}
-                </a>
-              );
-            })}
-          </div>
+            {/* Vertical Divider "|" */}
+            <span
+              className="hidden sm:inline-block h-6 w-px bg-[var(--hairline-strong)] opacity-60 mx-1"
+              aria-hidden="true"
+            />
 
-          <span className="text-xs text-[var(--text-muted)] font-mono">
-            {t.contact.saigonTime} · GMT+7
-          </span>
+            {/* Direct Social Channels (LinkedIn, GitHub, Email, Phone) */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              {data.socials.map((soc) => {
+                const isExternal = soc.url.startsWith('http');
+                return (
+                  <a
+                    key={soc.label}
+                    href={soc.url}
+                    target={isExternal ? '_blank' : undefined}
+                    rel={isExternal ? 'noopener noreferrer' : undefined}
+                    className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)]/75 hover:bg-[var(--surface-2)] hover:border-[var(--accent)] text-[var(--text)] text-sm transition-all duration-200"
+                    title={`${soc.label}: ${soc.handle}`}
+                  >
+                    <span className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:scale-110 transition-all">
+                      {getSocialIcon(soc.label)}
+                    </span>
+                    <span className="font-serif font-semibold text-xs sm:text-sm group-hover:text-[var(--accent)] transition-colors">
+                      {soc.label}
+                    </span>
+                    {isExternal && (
+                      <ArrowUpRight
+                        size={12}
+                        strokeWidth={1.75}
+                        className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                      />
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -43,7 +43,7 @@ export function SaigonLiveClock({ className = '', showDate = false }: SaigonLive
     <div className={`inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] ${className}`}>
       {/* Calm solid status dot, strictly no animate-ping or animate-pulse */}
       <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-      <span className="tracking-wider uppercase">Saigon / GMT+7</span>
+      <span className="tracking-wider uppercase">Ho Chi Minh City / GMT+7</span>
       <span className="text-[var(--text)] font-semibold tabular-nums tracking-widest">{timeStr}</span>
       {showDate && <span className="opacity-60 hidden sm:inline">({dateStr})</span>}
     </div>

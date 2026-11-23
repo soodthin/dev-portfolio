@@ -88,8 +88,8 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
         title: lang === 'vi' ? 'Liên hệ Trực tiếp' : 'Direct Contact',
         subtitle:
           lang === 'vi'
-            ? 'thinhthai963@gmail.com · In CV · Giờ Sài Gòn'
-            : 'thinhthai963@gmail.com · Print Resume · Saigon Live Clock',
+            ? 'thinhthai963@gmail.com · In CV · Giờ TP. Hồ Chí Minh'
+            : 'thinhthai963@gmail.com · Print Resume · Ho Chi Minh City Live Clock',
         group: t.commandPalette.navigationGroup,
         action: () => jumpTo('#contact'),
       },
