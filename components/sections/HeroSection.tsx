@@ -97,7 +97,7 @@ function FramelessOrbitEclipseAvatar({
         if (e.touches[0]) updateAperture(e.touches[0].clientX, e.touches[0].clientY, false);
       }}
       onTouchEnd={closeAperture}
-      className="relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] overflow-visible bg-transparent border-0 rounded-full cursor-crosshair select-none"
+      className="relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] overflow-visible bg-transparent border-0 rounded-full cursor-default select-none"
     >
       {/* 1. Lớp chân dung gốc hòa biên elip mềm mại */}
       <div
@@ -148,7 +148,7 @@ function FramelessOrbitEclipseAvatar({
         </div>
       )}
 
-      {/* 3. Vành kính lúp trong suốt quang học (Translucent Optical Glass Loupe) */}
+      {/* 3. Vành kính lúp trong suốt quang học (Translucent Optical Glass Loupe - Không tâm/crosshair) */}
       {!reducedMotion && (
         <div
           aria-hidden="true"
@@ -161,18 +161,17 @@ function FramelessOrbitEclipseAvatar({
             transform: 'translate(-50%, -50%)',
             willChange: 'left, top, width, height, opacity',
             boxShadow:
-              '0 10px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.4), inset 0 -1.5px 2px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.16)',
-            background:
-              'radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.18) 100%)',
+              '0 10px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.15)',
+            background: 'rgba(255, 255, 255, 0.03)',
           }}
-          className="pointer-events-none absolute z-20 rounded-full border border-white/25 transition-[width,height,opacity] duration-150 ease-out overflow-hidden"
+          className="pointer-events-none absolute z-20 rounded-full border border-white/20 transition-[width,height,opacity] duration-150 ease-out overflow-hidden"
         >
           {/* Vệt phản quang ánh sáng tự nhiên trên mặt kính cong */}
           <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
               background:
-                'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 45%)',
+                'linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 45%)',
             }}
           />
         </div>
