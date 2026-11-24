@@ -123,7 +123,7 @@ export function WorkHistorySection() {
 
           {/* Description on Left & Core Stack on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start pt-1">
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 pt-1.5 sm:pt-2">
               <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
                 {experience.description}
               </p>
@@ -131,14 +131,9 @@ export function WorkHistorySection() {
 
             {experience.technologies && experience.technologies.length > 0 && (
               <div className="lg:col-span-5 lg:border-l lg:border-[var(--hairline)] lg:pl-6 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold">
-                    Core Stack
-                  </h4>
-                  <span className="text-[11px] font-mono text-[var(--text-muted)] tabular-nums">
-                    {experience.technologies.length} Technologies
-                  </span>
-                </div>
+                <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold">
+                  Core Stack
+                </h4>
                 <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {experience.technologies.map((tech) => (
                     <span
