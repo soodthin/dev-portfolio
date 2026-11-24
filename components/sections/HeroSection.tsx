@@ -12,15 +12,15 @@ import { MagneticButton } from '@/components/motion/MagneticButton';
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-// Radial alpha mask oval mềm mại hòa biên mượt vào nền [var(--bg)], triệt tiêu hoàn toàn góc vuông
+// Radial alpha mask oval mềm mại hòa biên mượt vào nền [var(--bg)], mở rộng không gian và triệt tiêu hoàn toàn góc vuông
 const SOFT_EDGE_MASK_STYLE: React.CSSProperties = {
   WebkitMaskImage:
-    'radial-gradient(ellipse 48% 48% at 50% 46%, #000 58%, rgba(0, 0, 0, 0.45) 80%, transparent 98%)',
+    'radial-gradient(ellipse 49% 49% at 50% 45%, #000 64%, rgba(0, 0, 0, 0.45) 86%, transparent 100%)',
   maskImage:
-    'radial-gradient(ellipse 48% 48% at 50% 46%, #000 58%, rgba(0, 0, 0, 0.45) 80%, transparent 98%)',
+    'radial-gradient(ellipse 49% 49% at 50% 45%, #000 64%, rgba(0, 0, 0, 0.45) 86%, transparent 100%)',
 };
 
-const LOUPE_RADIUS_PX = 68;
+const LOUPE_RADIUS_PX = 74;
 
 function FramelessOrbitEclipseAvatar({
   avatarSrc,
@@ -97,7 +97,7 @@ function FramelessOrbitEclipseAvatar({
         if (e.touches[0]) updateAperture(e.touches[0].clientX, e.touches[0].clientY, false);
       }}
       onTouchEnd={closeAperture}
-      className="relative z-10 w-[290px] h-[330px] sm:w-[340px] sm:h-[380px] md:w-[360px] md:h-[400px] overflow-visible bg-transparent border-0 rounded-full cursor-crosshair select-none"
+      className="relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] overflow-visible bg-transparent border-0 rounded-full cursor-crosshair select-none"
     >
       {/* 1. Lớp chân dung gốc hòa biên elip mềm mại */}
       <div
