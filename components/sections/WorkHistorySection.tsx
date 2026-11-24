@@ -204,16 +204,23 @@ export function WorkHistorySection() {
                   <text
                     y="3.5"
                     textAnchor="middle"
-                    className="font-mono text-[10px] font-semibold select-none pointer-events-none"
+                    className="font-mono text-[11px] font-bold select-none pointer-events-none"
                     fill={isAct ? 'var(--bg)' : 'var(--text)'}
                   >
                     {stg.step}
                   </text>
                   <text
-                    y={idx % 2 === 0 ? 36 : -26}
+                    y={idx % 2 === 0 ? 38 : -26}
                     textAnchor="middle"
-                    className="font-mono text-[11px] font-medium select-none pointer-events-none transition-colors duration-150"
-                    fill={isAct ? 'var(--text)' : 'var(--text-muted)'}
+                    stroke="var(--bg)"
+                    strokeWidth="3.5"
+                    paintOrder="stroke fill"
+                    strokeLinejoin="round"
+                    className={`font-sans text-xs sm:text-[13px] select-none pointer-events-none transition-all duration-150 ${
+                      isAct
+                        ? 'font-bold fill-[var(--text)]'
+                        : 'font-medium fill-[var(--text)] opacity-90 group-hover:opacity-100 group-hover:fill-[var(--accent)]'
+                    }`}
                   >
                     {stg.name}
                   </text>
@@ -224,20 +231,20 @@ export function WorkHistorySection() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center pt-1">
-          <div className="lg:col-span-3 flex items-center justify-center lg:justify-start">
-            <div className="w-full sm:w-48 lg:w-44 rounded-2xl bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center p-4 sm:p-5 transition-all duration-300 shrink-0">
+          <div className="lg:col-span-4 flex items-center justify-center lg:justify-start">
+            <div className="w-full sm:w-60 lg:w-56 rounded-2xl bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center px-6 py-5 transition-all duration-300 shrink-0">
               <span className="font-mono text-[11px] text-[var(--accent)] font-semibold tracking-wider">
                 {cur.step} / 0{stages.length}
               </span>
-              <span className="font-mono text-2xl sm:text-3xl font-bold text-[var(--text)] mt-1.5 tabular-nums">
+              <span className="font-mono text-xl sm:text-2xl font-bold text-[var(--text)] mt-1.5 tabular-nums tracking-tight">
                 {cur.metric}
               </span>
-              <span className="text-xs text-[var(--text-muted)] mt-1.5 text-center leading-normal">
+              <span className="text-xs text-[var(--text-muted)] mt-1 text-center leading-snug">
                 {cur.name}
               </span>
             </div>
           </div>
-          <div className="lg:col-span-9 space-y-2.5">
+          <div className="lg:col-span-8 space-y-2.5">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium text-[var(--accent)] bg-[var(--surface-2)] border border-[var(--hairline)]">
                 {cur.step} · {cur.name}
