@@ -106,16 +106,16 @@ export function FlexiConnectShowcase({
                 href={project.demoUrl || 'https://flexiconnectweb.onrender.com/'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2.5 text-[var(--text)] hover:text-[var(--accent)] transition-colors cursor-pointer"
+                className="group inline-flex items-center gap-2 text-[var(--text)] hover:text-[var(--accent)] transition-colors cursor-pointer"
                 title="FlexiConnect Web - Open Live System"
               >
                 <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.025em] transition-colors">
                   {project.title}
                 </h3>
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold shadow-[var(--surface-shadow)] transition-all shrink-0">
-                  <span>Live System</span>
-                  <ArrowUpRight size={13} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
+                <ArrowUpRight
+                  size={24}
+                  className="text-[var(--accent)] opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                />
               </a>
 
               <a

@@ -123,7 +123,7 @@ export function WorkHistorySection() {
 
           {/* Description on Left & Core Stack on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start pt-1">
-            <div className="lg:col-span-7 pt-1.5 sm:pt-2">
+            <div className="lg:col-span-7 pt-3.5 sm:pt-4.5">
               <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
                 {experience.description}
               </p>
@@ -225,14 +225,14 @@ export function WorkHistorySection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center pt-1">
           <div className="lg:col-span-3 flex items-center justify-center lg:justify-start">
-            <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-full bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center p-4 transition-all duration-300 shrink-0">
+            <div className="w-full sm:w-48 lg:w-44 rounded-2xl bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center p-4 sm:p-5 transition-all duration-300 shrink-0">
               <span className="font-mono text-[11px] text-[var(--accent)] font-semibold tracking-wider">
                 {cur.step} / 0{stages.length}
               </span>
-              <span className="font-mono text-2xl sm:text-3xl font-bold text-[var(--text)] mt-1 tabular-nums">
+              <span className="font-mono text-2xl sm:text-3xl font-bold text-[var(--text)] mt-1.5 tabular-nums">
                 {cur.metric}
               </span>
-              <span className="text-xs text-[var(--text-muted)] mt-1 max-w-[130px] text-center leading-tight">
+              <span className="text-xs text-[var(--text-muted)] mt-1.5 text-center leading-normal">
                 {cur.name}
               </span>
             </div>

@@ -64,6 +64,43 @@ interface HighlightExplorerProps {
 }
 
 /**
+ * Architectural separator between featured projects.
+ * Features a dual gradient hairline beam with a glowing junction node and index badge.
+ */
+function ProjectDivider({ number, label }: { number: string; label: string }) {
+  return (
+    <div
+      className="relative w-full py-4 flex items-center justify-center select-none"
+      role="separator"
+      aria-label={`Divider to project ${number}`}
+    >
+      {/* Left beam with gradient fade */}
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[var(--hairline-strong)] to-[var(--accent)]/50" />
+
+      {/* Center architectural badge */}
+      <div className="relative mx-3 sm:mx-6 shrink-0 flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[var(--hairline-strong)] bg-[var(--surface-1)] shadow-[0_2px_12px_-2px_rgba(0,0,0,0.12)]">
+        {/* Soft background ambient glow */}
+        <div className="absolute -inset-1 rounded-full bg-[var(--accent)]/10 blur-sm pointer-events-none" />
+
+        {/* Left rotated diamond */}
+        <span className="relative w-1.5 h-1.5 rotate-45 bg-[var(--accent)] shadow-[0_0_6px_var(--accent)]" />
+
+        {/* Project number + label */}
+        <span className="relative font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[var(--text-muted)]">
+          <span className="text-[var(--accent)] mr-1.5">{number}</span>· {label}
+        </span>
+
+        {/* Right rotated diamond */}
+        <span className="relative w-1.5 h-1.5 rotate-45 bg-[var(--accent)] shadow-[0_0_6px_var(--accent)]" />
+      </div>
+
+      {/* Right beam with gradient fade */}
+      <div className="flex-1 h-px bg-gradient-to-l from-transparent via-[var(--hairline-strong)] to-[var(--accent)]/50" />
+    </div>
+  );
+}
+
+/**
  * Displays ALL project highlights cleanly via interactive pill tabs + animated detail surface.
  * Uses GPU-only transform & opacity transitions — zero content omitted, zero vertical text wall.
  */
@@ -204,12 +241,14 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
           {/* PROJECT 02: Saigon Savory App (Media Left, Text Right)            */}
           {/* ================================================================= */}
           {proj2 && (
-            <ScrollDepthWrapper sectionId={proj2.id}>
-              <article
-                id={proj2.id}
-                ref={p2StageRef}
-                className="scroll-mt-24 pt-8 lg:pt-10 border-t border-[var(--hairline)] space-y-5 lg:space-y-6"
-              >
+            <>
+              <ProjectDivider number={proj2.number} label={proj2.title} />
+              <ScrollDepthWrapper sectionId={proj2.id}>
+                <article
+                  id={proj2.id}
+                  ref={p2StageRef}
+                  className="scroll-mt-24 space-y-5 lg:space-y-6"
+                >
               {/* Full-Width Project Header Bar */}
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
                 <div className="space-y-2 max-w-2xl">
@@ -559,14 +598,17 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               </div>
             </article>
           </ScrollDepthWrapper>
+          </>
           )}
 
           {/* ================================================================= */}
           {/* PROJECT 03: Dev Portfolio Engine (Open Horizontal Strip, No Nest) */}
           {/* ================================================================= */}
           {proj3 && (
-            <ScrollDepthWrapper sectionId={proj3.id}>
-              <article id={proj3.id} className="scroll-mt-24 pt-8 lg:pt-10 border-t border-[var(--hairline)]">
+            <>
+              <ProjectDivider number={proj3.number} label={proj3.title} />
+              <ScrollDepthWrapper sectionId={proj3.id}>
+                <article id={proj3.id} className="scroll-mt-24">
                 <SpotlightSurface className="rounded-2xl border border-[var(--hairline)] bg-[var(--surface-1)] p-5 sm:p-7 lg:p-8 shadow-[var(--surface-shadow)]">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 lg:pb-5 border-b border-[var(--hairline)]">
                   <div className="space-y-2 max-w-2xl">
@@ -682,6 +724,7 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               </SpotlightSurface>
             </article>
           </ScrollDepthWrapper>
+          </>
           )}
         </div>
       </div>
