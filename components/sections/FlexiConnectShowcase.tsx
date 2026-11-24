@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { Maximize2, ArrowUpRight } from 'lucide-react';
+import { ExternalLink, Maximize2, ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { getAssetPath } from '@/lib/asset';
@@ -52,7 +52,7 @@ export function FlexiConnectShowcase({
 }: {
   onOpenLightbox?: (images: ProjectImage[], index: number, title: string) => void;
 }) {
-  const { data, lang } = usePortfolio();
+  const { data, t, lang } = usePortfolio();
   const prefersReducedMotion = useReducedMotion();
   const project = data.projects.find((p) => p.id === 'project-01') || data.projects[0];
   const images = project?.imagesList || [];
