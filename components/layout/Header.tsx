@@ -43,13 +43,13 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-40 h-16 bg-[var(--bg)]/95 border-b border-[var(--hairline)] transition-colors">
       <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
         {/* Left: Clean Brand Identity + Interactive Rolling Chapter Pill */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => scrollTo('#summary')}
-            className="group text-left cursor-pointer"
+            className="group text-left cursor-pointer flex items-center"
             aria-label="Scroll to top"
           >
-            <span className="font-serif font-semibold text-lg sm:text-xl tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+            <span className="font-serif font-semibold text-lg sm:text-xl tracking-[-0.02em] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors leading-none">
               {data.profile.name}
             </span>
           </button>
@@ -57,16 +57,24 @@ export function Header() {
           <div className="hidden sm:inline-flex items-center overflow-hidden h-6">
             <AnimatePresence mode="wait" initial={false}>
               {activeSection === 'summary' ? (
-                <motion.span
+                <motion.div
                   key="role"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="text-xs text-[var(--text-muted)]"
+                  className="inline-flex items-center gap-2 text-xs text-[var(--text-muted)]"
                 >
-                  · {t.header.role}
-                </motion.span>
+                  <span
+                    className="text-[var(--text-muted)]/50 select-none text-xs leading-none"
+                    aria-hidden="true"
+                  >
+                    ·
+                  </span>
+                  <span className="leading-none text-[var(--text-muted)] font-normal">
+                    {t.header.role}
+                  </span>
+                </motion.div>
               ) : (
                 <motion.button
                   key={activeSection}
@@ -76,7 +84,7 @@ export function Header() {
                   transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                   type="button"
                   onClick={() => setIsCommandOpen(true)}
-                  className="inline-flex items-center gap-2 pl-3 border-l border-[var(--hairline)] text-xs text-left cursor-pointer group/pill"
+                  className="inline-flex items-center gap-2 pl-2.5 border-l border-[var(--hairline)] text-xs text-left cursor-pointer group/pill"
                   title={lang === 'vi' ? 'Chuyển chương nhanh (⌘K)' : 'Quick chapter jump (⌘K)'}
                 >
                   <span className="font-mono text-[11px] font-semibold text-[var(--accent)] tabular-nums">

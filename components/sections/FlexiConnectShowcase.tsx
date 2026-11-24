@@ -140,15 +140,7 @@ export function FlexiConnectShowcase({
             </div>
 
             {project.tags && project.tags.length > 0 && (
-              <div className="lg:col-span-5 lg:border-l lg:border-[var(--hairline)] lg:pl-6 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold">
-                    Tech Stack
-                  </h4>
-                  <span className="text-[11px] font-mono text-[var(--text-muted)] tabular-nums">
-                    {project.tags.length} Technologies
-                  </span>
-                </div>
+              <div className="lg:col-span-5 lg:border-l lg:border-[var(--hairline)] lg:pl-6">
                 <div className="flex flex-wrap items-center gap-1.5">
                   {project.tags.map((tag) => (
                     <span
