@@ -23,7 +23,7 @@ const INITIAL_PATH_LEN = 1139.7;
  * Variant 01 — Classic Sinuous River (2 hạt dữ liệu chạy 60fps trên đường cong Bezier)
  */
 export function WorkHistorySection() {
-  const { data } = usePortfolio();
+  const { data, lang } = usePortfolio();
   const experience = data.experiences[0];
   const stages = experience?.pipelineStages || [];
 
@@ -249,7 +249,7 @@ export function WorkHistorySection() {
           <div className="flex-1 min-w-0 space-y-2.5">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium text-[var(--accent)] bg-[var(--surface-2)] border border-[var(--hairline)]">
-                {cur.step} · {cur.name}
+                {lang === 'vi' ? `Giai đoạn ${cur.step}` : `Stage ${cur.step}`} · {cur.metric}
               </span>
             </div>
             <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[var(--text)] tracking-[-0.01em]">
