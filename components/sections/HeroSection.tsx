@@ -148,7 +148,7 @@ function FramelessOrbitEclipseAvatar({
         </div>
       )}
 
-      {/* 3. Một đường quỹ đạo 1px + 1 chấm vệ tinh phẳng tràn tự do */}
+      {/* 3. Vành kính lúp trong suốt quang học (Translucent Optical Glass Loupe) */}
       {!reducedMotion && (
         <div
           aria-hidden="true"
@@ -160,12 +160,21 @@ function FramelessOrbitEclipseAvatar({
             opacity: 'var(--lo)',
             transform: 'translate(-50%, -50%)',
             willChange: 'left, top, width, height, opacity',
+            boxShadow:
+              '0 10px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.4), inset 0 -1.5px 2px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.16)',
+            background:
+              'radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.18) 100%)',
           }}
-          className="pointer-events-none absolute z-20 rounded-full border border-[var(--accent)] transition-[width,height,opacity] duration-150 ease-out"
+          className="pointer-events-none absolute z-20 rounded-full border border-white/25 transition-[width,height,opacity] duration-150 ease-out overflow-hidden"
         >
-          <div className="absolute inset-0 rounded-full animate-[spin_7.5s_linear_infinite] will-change-transform">
-            <span className="absolute -top-[3px] left-1/2 -translate-x-1/2 w-[5px] h-[5px] rounded-full bg-[var(--accent)]" />
-          </div>
+          {/* Vệt phản quang ánh sáng tự nhiên trên mặt kính cong */}
+          <div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 45%)',
+            }}
+          />
         </div>
       )}
 
