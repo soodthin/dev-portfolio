@@ -102,7 +102,7 @@ export function WorkHistorySection() {
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-baseline gap-2.5 sm:gap-3">
               <a
                 href={experience.projectUrl || 'https://bwid-automation.onrender.com/'}
                 target="_blank"
@@ -119,9 +119,9 @@ export function WorkHistorySection() {
                 />
               </a>
 
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline-strong)] bg-[var(--surface-1)] text-xs font-mono text-[var(--text)] shadow-sm shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-                <span>{experience.role}</span>
+              <span className="text-[var(--hairline-strong)] select-none hidden sm:inline">―</span>
+              <span className="text-sm sm:text-base text-[var(--text-muted)] font-serif italic">
+                {experience.role}
               </span>
             </div>
           </div>
