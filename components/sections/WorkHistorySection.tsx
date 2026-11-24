@@ -123,17 +123,14 @@ export function WorkHistorySection() {
 
           {/* Description on Left & Core Stack on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start pt-1">
-            <div className="lg:col-span-7 pt-3.5 sm:pt-4.5">
+            <div className="lg:col-span-7">
               <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
                 {experience.description}
               </p>
             </div>
 
             {experience.technologies && experience.technologies.length > 0 && (
-              <div className="lg:col-span-5 lg:border-l lg:border-[var(--hairline)] lg:pl-6 space-y-2.5">
-                <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold">
-                  Core Stack
-                </h4>
+              <div className="lg:col-span-5 lg:border-l lg:border-[var(--hairline)] lg:pl-6">
                 <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {experience.technologies.map((tech) => (
                     <span
@@ -230,9 +227,9 @@ export function WorkHistorySection() {
           </svg>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center pt-1">
-          <div className="lg:col-span-4 flex items-center justify-center lg:justify-start">
-            <div className="w-full sm:w-60 lg:w-56 rounded-2xl bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center px-6 py-5 transition-all duration-300 shrink-0">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start pt-1 min-h-[175px] sm:min-h-[165px]">
+          <div className="w-full sm:w-60 lg:w-56 shrink-0 flex items-center justify-center lg:justify-start">
+            <div className="w-full rounded-2xl bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center px-6 py-5 transition-all duration-300">
               <span className="font-mono text-[11px] text-[var(--accent)] font-semibold tracking-wider">
                 {cur.step} / 0{stages.length}
               </span>
@@ -244,7 +241,7 @@ export function WorkHistorySection() {
               </span>
             </div>
           </div>
-          <div className="lg:col-span-8 space-y-2.5">
+          <div className="flex-1 min-w-0 space-y-2.5">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium text-[var(--accent)] bg-[var(--surface-2)] border border-[var(--hairline)]">
                 {cur.step} · {cur.name}
