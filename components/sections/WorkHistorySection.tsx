@@ -123,17 +123,6 @@ export function WorkHistorySection() {
               {experience.description}
             </p>
           </div>
-          {experience.projectUrl && (
-            <a
-              href={experience.projectUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold shrink-0 transition-all shadow-[var(--surface-shadow)] self-start md:self-end"
-            >
-              <span>{t.experience.liveAppBtn}</span>
-              <ArrowUpRight size={14} />
-            </a>
-          )}
         </div>
 
         <div className="relative w-full overflow-x-auto py-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">

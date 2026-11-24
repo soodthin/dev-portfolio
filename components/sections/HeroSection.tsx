@@ -20,6 +20,14 @@ const SOFT_EDGE_MASK_STYLE: React.CSSProperties = {
     'radial-gradient(ellipse 49% 49% at 50% 45%, #000 64%, rgba(0, 0, 0, 0.45) 86%, transparent 100%)',
 };
 
+// Mask mép dưới hòa tan mượt mà vào nền sáng, giữ viền trên và 2 bên sắc nét, triệt tiêu hoàn toàn viền dưới
+const LIGHT_BOTTOM_MASK_STYLE: React.CSSProperties = {
+  WebkitMaskImage:
+    'linear-gradient(to top, transparent 0%, transparent 14%, rgba(0, 0, 0, 0.4) 30%, #000 52%)',
+  maskImage:
+    'linear-gradient(to top, transparent 0%, transparent 14%, rgba(0, 0, 0, 0.4) 30%, #000 52%)',
+};
+
 const LOUPE_RADIUS_PX = 66;
 
 function FramelessOrbitEclipseAvatar({
@@ -83,12 +91,6 @@ function FramelessOrbitEclipseAvatar({
     '--ly': '45%',
     '--lr': '0px',
     '--lo': '0',
-    ...(isDark
-      ? {}
-      : {
-          boxShadow:
-            '0 24px 60px -12px rgba(13, 21, 29, 0.12), 0 2px 6px rgba(13, 21, 29, 0.04)',
-        }),
   } as React.CSSProperties;
 
   return (
@@ -105,15 +107,11 @@ function FramelessOrbitEclipseAvatar({
         if (e.touches[0]) updateAperture(e.touches[0].clientX, e.touches[0].clientY, false);
       }}
       onTouchEnd={closeAperture}
-      className={`relative z-10 w-[280px] h-[300px] sm:w-[330px] sm:h-[345px] md:w-[370px] md:h-[370px] lg:w-[390px] lg:h-[380px] rounded-full cursor-default select-none transition-shadow duration-200 ${
-        isDark
-          ? 'overflow-visible bg-transparent border-0'
-          : 'overflow-hidden bg-transparent border-0'
-      }`}
+      className={`relative z-10 w-[280px] h-[300px] sm:w-[330px] sm:h-[345px] md:w-[370px] md:h-[370px] lg:w-[390px] lg:h-[380px] rounded-full cursor-default select-none transition-shadow duration-200 overflow-hidden bg-transparent border-0`}
     >
-      {/* 1. Lớp chân dung gốc: Dark Mode hòa biên mềm, Light Mode sắc nét chuẩn khung oval */}
+      {/* 1. Lớp chân dung gốc: Dark Mode hòa biên mềm obsidian, Light Mode hòa tan mép dưới mượt mà triệt tiêu viền */}
       <div
-        style={isDark ? SOFT_EDGE_MASK_STYLE : undefined}
+        style={isDark ? SOFT_EDGE_MASK_STYLE : LIGHT_BOTTOM_MASK_STYLE}
         className={`relative w-full h-full rounded-full overflow-hidden pointer-events-none ${
           reducedMotion
             ? ''
@@ -133,7 +131,7 @@ function FramelessOrbitEclipseAvatar({
         />
       </div>
 
-      {/* 2. Lớp trong khẩu độ: Lấy nét sáng & phóng nhẹ 1.04x đúng tâm con trỏ */}
+      {/* 2. Lớp trong khẩu độ: Lấy nét sáng & phóng nhẹ 1.025x đúng tâm con trỏ */}
       {!reducedMotion && (
         <div
           ref={focusLayerRef}
@@ -146,7 +144,7 @@ function FramelessOrbitEclipseAvatar({
         >
           <div
             style={{
-              ...(isDark ? SOFT_EDGE_MASK_STYLE : {}),
+              ...(isDark ? SOFT_EDGE_MASK_STYLE : LIGHT_BOTTOM_MASK_STYLE),
               transformOrigin: 'var(--lx) var(--ly)',
               transform: 'scale(1.025)',
             }}
@@ -178,9 +176,9 @@ function FramelessOrbitEclipseAvatar({
             willChange: 'left, top, width, height, opacity',
             boxShadow: isDark
               ? '0 6px 20px -4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.1)'
-              : '0 4px 16px -2px rgba(13, 21, 29, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.22)',
-            background: isDark ? 'rgba(255, 255, 255, 0.015)' : 'rgba(255, 255, 255, 0.04)',
-            border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
+              : '0 6px 20px -4px rgba(13, 21, 29, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.4)',
+            background: isDark ? 'rgba(255, 255, 255, 0.015)' : 'rgba(255, 255, 255, 0.08)',
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(13, 21, 29, 0.1)',
           }}
           className="pointer-events-none absolute z-20 rounded-full transition-[width,height,opacity] duration-150 ease-out overflow-hidden"
         >
@@ -190,20 +188,20 @@ function FramelessOrbitEclipseAvatar({
             style={{
               background: isDark
                 ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 45%)'
-                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%)',
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%)',
             }}
           />
         </div>
       )}
 
-      {/* 4. Hòa tan mép dưới vào nền trang (chỉ dùng cho Dark Mode để hòa vào nền obsidian) */}
+      {/* 4. Hòa tan mép dưới vào nền obsidian trong Dark Mode */}
       {isDark && (
         <div
           aria-hidden="true"
           style={{
             background: 'linear-gradient(to top, var(--bg) 14%, transparent 56%)',
           }}
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 rounded-b-full"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 rounded-b-full z-10"
         />
       )}
     </div>
@@ -298,7 +296,7 @@ export function HeroSection() {
             style={{
               textShadow: isDark
                 ? '0 4px 24px rgba(0, 0, 0, 0.72), 0 1px 3px rgba(0, 0, 0, 0.85)'
-                : '0 0 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(234, 239, 244, 0.9)',
+                : undefined,
             }}
             className="relative z-30 -mt-[52px] sm:-mt-[70px] md:-mt-[82px] lg:-mt-[92px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
           >
