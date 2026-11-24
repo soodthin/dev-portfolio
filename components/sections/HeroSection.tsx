@@ -20,7 +20,7 @@ const SOFT_EDGE_MASK_STYLE: React.CSSProperties = {
     'radial-gradient(ellipse 49% 49% at 50% 45%, #000 64%, rgba(0, 0, 0, 0.45) 86%, transparent 100%)',
 };
 
-const LOUPE_RADIUS_PX = 74;
+const LOUPE_RADIUS_PX = 66;
 
 function FramelessOrbitEclipseAvatar({
   avatarSrc,
@@ -105,7 +105,7 @@ function FramelessOrbitEclipseAvatar({
         if (e.touches[0]) updateAperture(e.touches[0].clientX, e.touches[0].clientY, false);
       }}
       onTouchEnd={closeAperture}
-      className={`relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] rounded-full cursor-default select-none transition-shadow duration-200 ${
+      className={`relative z-10 w-[280px] h-[300px] sm:w-[330px] sm:h-[345px] md:w-[370px] md:h-[370px] lg:w-[390px] lg:h-[380px] rounded-full cursor-default select-none transition-shadow duration-200 ${
         isDark
           ? 'overflow-visible bg-transparent border-0'
           : 'overflow-hidden bg-transparent border-0'
@@ -300,7 +300,7 @@ export function HeroSection() {
                 ? '0 4px 24px rgba(0, 0, 0, 0.72), 0 1px 3px rgba(0, 0, 0, 0.85)'
                 : '0 0 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(234, 239, 244, 0.9)',
             }}
-            className="relative z-30 -mt-[62px] sm:-mt-[82px] md:-mt-[96px] lg:-mt-[106px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
+            className="relative z-30 -mt-[52px] sm:-mt-[70px] md:-mt-[82px] lg:-mt-[92px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
           >
             {data.profile.name}
           </motion.h1>
