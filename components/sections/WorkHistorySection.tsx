@@ -86,8 +86,8 @@ export function WorkHistorySection() {
         sectionId="experience"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12"
       >
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-2.5 flex-1">
+        <div className="space-y-6">
+          <div className="space-y-2.5">
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-mono text-xs text-[var(--accent)] tabular-nums">
                 02 · {t.experience.eyebrow} · {experience.period}
@@ -119,9 +119,39 @@ export function WorkHistorySection() {
                 />
               </a>
             </div>
-            <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-4xl pt-1">
-              {experience.description}
-            </p>
+          </div>
+
+          {/* Description on Left & Core Stack on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start pt-1">
+            <div className="lg:col-span-7">
+              <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+                {experience.description}
+              </p>
+            </div>
+
+            {experience.technologies && experience.technologies.length > 0 && (
+              <div className="lg:col-span-5 lg:border-l lg:border-[var(--hairline)] lg:pl-6 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold">
+                    Core Stack
+                  </h4>
+                  <span className="text-[11px] font-mono text-[var(--text-muted)] tabular-nums">
+                    {experience.technologies.length} Technologies
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                  {experience.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:bg-[var(--surface-2)]"
+                    >
+                      <TechIcon name={tech} size={13} className="text-[var(--accent)]" />
+                      <span>{tech}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -229,26 +259,6 @@ export function WorkHistorySection() {
             </p>
           </div>
         </div>
-
-        {/* Core Stack Applied */}
-        {experience.technologies && experience.technologies.length > 0 && (
-          <div className="pt-8 border-t border-[var(--hairline)]">
-            <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--text-muted)] mb-3">
-              {t.experience.techStackTitle}
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {experience.technologies.map((tech) => (
-                <span
-                  key={tech}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text)]"
-                >
-                  <TechIcon name={tech} size={13} className="text-[var(--accent)]" />
-                  <span>{tech}</span>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </ScrollDepthWrapper>
     </section>
   );

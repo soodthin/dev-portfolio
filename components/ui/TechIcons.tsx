@@ -28,6 +28,8 @@ import {
   siRender,
   siClaude,
   siGithub,
+  siGoogle,
+  siGooglegemini,
 } from 'simple-icons';
 import { Database, FlaskConical, Terminal } from 'lucide-react';
 
@@ -70,6 +72,10 @@ const SIMPLE_ICON_MAP: Record<string, SimpleIcon> = {
   Render: siRender,
   'Claude Code': siClaude,
   GitHub: siGithub,
+  'Google OAuth2': siGoogle,
+  'Gemini AI': siGooglegemini,
+  Google: siGoogle,
+  Gemini: siGooglegemini,
 };
 
 /**
