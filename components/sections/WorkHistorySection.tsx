@@ -119,8 +119,8 @@ export function WorkHistorySection() {
                 />
               </a>
 
-              <span className="text-[var(--hairline-strong)] select-none hidden sm:inline">―</span>
-              <span className="text-sm sm:text-base text-[var(--text-muted)] font-serif italic">
+              <span className="text-[var(--hairline-strong)] select-none hidden sm:inline text-base sm:text-lg lg:text-xl">―</span>
+              <span className="text-base sm:text-lg lg:text-xl text-[var(--text-muted)] font-serif italic">
                 {experience.role}
               </span>
             </div>
