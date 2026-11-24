@@ -86,38 +86,43 @@ export function WorkHistorySection() {
         sectionId="experience"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10"
       >
-        <div className="space-y-5">
+        <div className="space-y-4">
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-xs text-[var(--accent)] tabular-nums">
-                02 · {t.experience.eyebrow} · {experience.period}
+            <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+              <span className="text-[var(--accent)] font-semibold tracking-wider">
+                02 · {experience.company}
               </span>
               <span className="text-[var(--hairline-strong)]">·</span>
-              <span className="text-xs text-[var(--text-muted)] font-mono">
+              <span className="text-[var(--text-muted)]">
+                {experience.period}
+              </span>
+              <span className="text-[var(--hairline-strong)]">·</span>
+              <span className="text-[var(--text-muted)]">
                 {experience.location} · {experience.teamSize}
               </span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.025em] text-[var(--text)]">
-              {experience.company}
-            </h2>
-            <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
-              <span className="text-sm sm:text-base text-[var(--text-muted)] font-serif italic">
-                {experience.role}
-              </span>
-              <span className="text-[var(--hairline-strong)]">―</span>
+
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <a
                 href={experience.projectUrl || 'https://bwid-automation.onrender.com/'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold text-[var(--accent)] bg-[var(--surface-1)] border border-[var(--hairline-strong)] hover:border-[var(--accent)] hover:bg-[var(--surface-2)] transition-all group cursor-pointer"
-                title="Finance Data Processing Web"
+                className="group inline-flex items-center gap-2 text-[var(--text)] hover:text-[var(--accent)] transition-colors cursor-pointer"
+                title="Finance Data Processing Web - Open Live System"
               >
-                <span>Finance Data Processing Web</span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.025em] transition-colors">
+                  Finance Data Processing Web
+                </h2>
                 <ArrowUpRight
-                  size={13}
-                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  size={24}
+                  className="text-[var(--accent)] opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
                 />
               </a>
+
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline-strong)] bg-[var(--surface-1)] text-xs font-mono text-[var(--text)] shadow-sm shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+                <span>{experience.role}</span>
+              </span>
             </div>
           </div>
 
