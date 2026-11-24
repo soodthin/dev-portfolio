@@ -96,54 +96,73 @@ export function FlexiConnectShowcase({
   return (
     <ScrollDepthWrapper sectionId={project.id}>
       <article id={project.id} className="scroll-mt-24 w-full space-y-8 lg:space-y-10">
-        <div className="space-y-3.5">
-          <span className="font-mono text-xs text-[var(--accent)] font-semibold tracking-wider">
-            {project.number} · {project.subtitle}
-          </span>
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-            <a
-              href={project.demoUrl || 'https://flexiconnectweb.onrender.com/'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2.5 text-[var(--text)] hover:text-[var(--accent)] transition-colors cursor-pointer"
-              title="FlexiConnect Web - Open Live System"
-            >
-              <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.025em] transition-colors">
-                {project.title}
-              </h3>
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold shadow-[var(--surface-shadow)] transition-all shrink-0">
-                <span>Live System</span>
-                <ArrowUpRight size={13} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
-            </a>
-
-            <a
-              href="https://github.com/soodthin/FlexiConnect"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline-strong)] hover:border-[var(--accent)] hover:text-[var(--accent)] bg-[var(--surface-1)] text-xs font-mono text-[var(--text)] transition-all cursor-pointer shadow-sm shrink-0"
-              title="FlexiConnect Source Code on GitHub"
-            >
-              <GithubIcon size={14} />
-              <span>Source Code</span>
-            </a>
-          </div>
-          <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-4xl pt-0.5">
-            {project.description}
-          </p>
-          {project.tags && project.tags.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)]"
-                >
-                  <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
-                  <span>{tag}</span>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <span className="font-mono text-xs text-[var(--accent)] font-semibold tracking-wider">
+              {project.number} · {project.subtitle}
+            </span>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <a
+                href={project.demoUrl || 'https://flexiconnectweb.onrender.com/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2.5 text-[var(--text)] hover:text-[var(--accent)] transition-colors cursor-pointer"
+                title="FlexiConnect Web - Open Live System"
+              >
+                <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.025em] transition-colors">
+                  {project.title}
+                </h3>
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold shadow-[var(--surface-shadow)] transition-all shrink-0">
+                  <span>Live System</span>
+                  <ArrowUpRight size={13} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
-              ))}
+              </a>
+
+              <a
+                href="https://github.com/soodthin/FlexiConnect"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[var(--hairline-strong)] hover:border-[var(--accent)] hover:text-[var(--accent)] bg-[var(--surface-1)] text-xs font-mono text-[var(--text)] transition-all cursor-pointer shadow-sm shrink-0"
+                title="FlexiConnect Source Code on GitHub"
+              >
+                <GithubIcon size={14} />
+                <span>Source Code</span>
+              </a>
             </div>
-          )}
+          </div>
+
+          {/* Description on Left & Core Tech Stack on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start pt-1">
+            <div className="lg:col-span-7">
+              <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+                {project.description}
+              </p>
+            </div>
+
+            {project.tags && project.tags.length > 0 && (
+              <div className="lg:col-span-5 lg:border-l lg:border-[var(--hairline)] lg:pl-6 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-[var(--accent)] font-semibold">
+                    Tech Stack
+                  </h4>
+                  <span className="text-[11px] font-mono text-[var(--text-muted)] tabular-nums">
+                    {project.tags.length} Technologies
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:border-[var(--hairline-strong)] hover:text-[var(--text)] transition-colors"
+                    >
+                      <TechIcon name={tag} size={12} className="text-[var(--accent)]" />
+                      <span>{tag}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Sân khấu Orbital Horizon toàn màn hình + trượt mượt 60fps */}
