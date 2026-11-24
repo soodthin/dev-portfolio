@@ -26,10 +26,12 @@ function FramelessOrbitEclipseAvatar({
   avatarSrc,
   name,
   reducedMotion,
+  isDark,
 }: {
   avatarSrc: string;
   name: string;
   reducedMotion: boolean;
+  isDark: boolean;
 }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const focusLayerRef = useRef<HTMLDivElement>(null);
@@ -81,6 +83,12 @@ function FramelessOrbitEclipseAvatar({
     '--ly': '45%',
     '--lr': '0px',
     '--lo': '0',
+    ...(isDark
+      ? {}
+      : {
+          boxShadow:
+            '0 1px 3px rgba(13, 21, 29, 0.05), 0 20px 48px -12px rgba(13, 21, 29, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.95)',
+        }),
   } as React.CSSProperties;
 
   return (
@@ -97,13 +105,21 @@ function FramelessOrbitEclipseAvatar({
         if (e.touches[0]) updateAperture(e.touches[0].clientX, e.touches[0].clientY, false);
       }}
       onTouchEnd={closeAperture}
-      className="relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] overflow-visible bg-transparent border-0 rounded-full cursor-default select-none"
+      className={`relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] rounded-full cursor-default select-none transition-[box-shadow,border-color] duration-200 ${
+        isDark
+          ? 'overflow-visible bg-transparent border-0'
+          : 'overflow-hidden bg-[var(--surface-1)] border border-[var(--hairline-strong)]'
+      }`}
     >
-      {/* 1. Lớp chân dung gốc hòa biên elip mềm mại */}
+      {/* 1. Lớp chân dung gốc: Dark Mode hòa biên mềm, Light Mode sắc nét chuẩn khung oval */}
       <div
-        style={SOFT_EDGE_MASK_STYLE}
+        style={isDark ? SOFT_EDGE_MASK_STYLE : undefined}
         className={`relative w-full h-full rounded-full overflow-hidden pointer-events-none ${
-          reducedMotion ? '' : 'brightness-[0.86] saturate-[0.92] transition-[filter] duration-150 ease-out'
+          reducedMotion
+            ? ''
+            : isDark
+            ? 'brightness-[0.86] saturate-[0.92] transition-[filter] duration-150 ease-out'
+            : 'brightness-[0.98] saturate-[1.0] transition-[filter] duration-150 ease-out'
         }`}
       >
         <Image
@@ -130,7 +146,7 @@ function FramelessOrbitEclipseAvatar({
         >
           <div
             style={{
-              ...SOFT_EDGE_MASK_STYLE,
+              ...(isDark ? SOFT_EDGE_MASK_STYLE : {}),
               transformOrigin: 'var(--lx) var(--ly)',
               transform: 'scale(1.04)',
             }}
@@ -148,7 +164,7 @@ function FramelessOrbitEclipseAvatar({
         </div>
       )}
 
-      {/* 3. Vành kính lúp trong suốt quang học (Translucent Optical Glass Loupe - Không tâm/crosshair) */}
+      {/* 3. Vành kính lúp trong suốt quang học */}
       {!reducedMotion && (
         <div
           aria-hidden="true"
@@ -160,29 +176,45 @@ function FramelessOrbitEclipseAvatar({
             opacity: 'var(--lo)',
             transform: 'translate(-50%, -50%)',
             willChange: 'left, top, width, height, opacity',
-            boxShadow:
-              '0 10px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.15)',
-            background: 'rgba(255, 255, 255, 0.03)',
+            boxShadow: isDark
+              ? '0 10px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.15)'
+              : '0 8px 24px -4px rgba(13, 21, 29, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -1.5px 2px rgba(13, 21, 29, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.7)',
+            background: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.18)',
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(255, 255, 255, 0.65)',
           }}
-          className="pointer-events-none absolute z-20 rounded-full border border-white/20 transition-[width,height,opacity] duration-150 ease-out overflow-hidden"
+          className="pointer-events-none absolute z-20 rounded-full transition-[width,height,opacity] duration-150 ease-out overflow-hidden"
         >
           {/* Vệt phản quang ánh sáng tự nhiên trên mặt kính cong */}
           <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
-              background:
-                'linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 45%)',
+              background: isDark
+                ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 45%)'
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%)',
             }}
           />
         </div>
       )}
 
-      {/* 4. Hòa tan mép dưới vào nền trang */}
-      <div
-        aria-hidden="true"
-        style={{ background: 'linear-gradient(to top, var(--bg) 14%, transparent 56%)' }}
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 rounded-b-full"
-      />
+      {/* 4. Mép phản quang lòng viền ở Light Mode */}
+      {!isDark && (
+        <div
+          aria-hidden="true"
+          style={{ boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.95)' }}
+          className="pointer-events-none absolute inset-0 rounded-full z-10"
+        />
+      )}
+
+      {/* 5. Hòa tan mép dưới vào nền trang (chỉ dùng cho Dark Mode để hòa vào nền obsidian) */}
+      {isDark && (
+        <div
+          aria-hidden="true"
+          style={{
+            background: 'linear-gradient(to top, var(--bg) 14%, transparent 56%)',
+          }}
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 rounded-b-full"
+        />
+      )}
     </div>
   );
 }
@@ -265,6 +297,7 @@ export function HeroSection() {
             avatarSrc={getAssetPath(data.profile.avatarUrl)}
             name={data.profile.name}
             reducedMotion={Boolean(prefersReducedMotion)}
+            isDark={isDark}
           />
 
           <motion.h1
@@ -274,9 +307,9 @@ export function HeroSection() {
             style={{
               textShadow: isDark
                 ? '0 4px 24px rgba(0, 0, 0, 0.72), 0 1px 3px rgba(0, 0, 0, 0.85)'
-                : '0 4px 20px rgba(234, 239, 244, 0.9), 0 1px 3px rgba(255, 255, 255, 0.85)',
+                : '0 1px 2px rgba(255, 255, 255, 0.9), 0 4px 16px rgba(255, 255, 255, 0.5)',
             }}
-            className="relative z-30 -mt-[62px] sm:-mt-[82px] md:-mt-[96px] lg:-mt-[106px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
+            className="relative z-30 -mt-4 sm:-mt-5 md:-mt-6 lg:-mt-7 text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
           >
             {data.profile.name}
           </motion.h1>
