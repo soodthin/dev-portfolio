@@ -514,7 +514,7 @@ export function HeroSection() {
         {/* ================================================================= */}
         {/* 2. EDITORIAL STATEMENT & ACTIONS (FULL WIDTH)                     */}
         {/* ================================================================= */}
-        <div className="py-10 sm:py-12 border-t border-[var(--hairline)] space-y-7 w-full">
+        <div className="py-10 sm:py-12 border-t border-[var(--hairline)] w-full">
           <p className="text-base sm:text-lg lg:text-[19px] text-[var(--text-muted)] leading-[1.75] w-full">
             {lang === 'vi' ? (
               <>
@@ -535,7 +535,7 @@ export function HeroSection() {
             )}
           </p>
 
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-1 no-print">
+          <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4 pt-1 no-print">
             <MagneticButton strength={0.18}>
               <button
                 type="button"
@@ -586,12 +586,12 @@ export function HeroSection() {
                   opacity: 1,
                   transition: {
                     height: {
-                      duration: prefersReducedMotion ? 0 : 0.45,
+                      duration: prefersReducedMotion ? 0 : 0.4,
                       ease: [0.16, 1, 0.3, 1],
                     },
                     opacity: {
-                      duration: prefersReducedMotion ? 0 : 0.35,
-                      delay: prefersReducedMotion ? 0 : 0.05,
+                      duration: prefersReducedMotion ? 0 : 0.28,
+                      delay: prefersReducedMotion ? 0 : 0.04,
                       ease: 'easeOut',
                     },
                   },
@@ -601,23 +601,25 @@ export function HeroSection() {
                   opacity: 0,
                   transition: {
                     height: {
-                      duration: prefersReducedMotion ? 0 : 0.35,
-                      ease: [0.16, 1, 0.3, 1],
+                      duration: prefersReducedMotion ? 0 : 0.32,
+                      ease: [0.4, 0, 0.2, 1],
                     },
                     opacity: {
                       duration: prefersReducedMotion ? 0 : 0.2,
-                      ease: 'easeIn',
+                      ease: 'easeOut',
                     },
                   },
                 }}
-                className="overflow-hidden will-change-[height,opacity] pt-2"
+                className="overflow-hidden"
               >
-                <div className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 w-full">
-                  {data.profile.aboutParagraphs.map((para, idx) => (
-                    <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.75]">
-                      {para}
-                    </p>
-                  ))}
+                <div className="pt-8">
+                  <div className="pt-6 border-t border-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 w-full">
+                    {data.profile.aboutParagraphs.map((para, idx) => (
+                      <p key={idx} className="text-sm text-[var(--text-muted)] leading-[1.75]">
+                        {para}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             )}
