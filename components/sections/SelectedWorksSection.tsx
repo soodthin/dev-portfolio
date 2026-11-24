@@ -280,56 +280,45 @@ export function SelectedWorksSection({ onOpenLightbox }: SelectedWorksSectionPro
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                 {/* Left (6 cols): Multi-Device Composition (Laptop + Tablet + Phone) */}
                 <div className="lg:col-span-6 space-y-4">
-                  {/* Device Selector Pill Bar & Lightbox Trigger */}
-                  <div className="flex items-center justify-between gap-3 pb-1">
-                    <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 shrink">
-                      <button
-                        type="button"
-                        onClick={() => setP2FocusedDevice(p2FocusedDevice === 'laptop' ? 'none' : 'laptop')}
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
-                          p2FocusedDevice === 'laptop'
-                            ? 'bg-[var(--accent)] text-white shadow-sm'
-                            : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
-                        }`}
-                      >
-                        <Laptop size={12} className={p2FocusedDevice === 'laptop' ? 'text-white' : 'text-[var(--accent)]'} />
-                        <span>{lang === 'vi' ? 'Laptop · Bếp' : 'Laptop · Kitchen'}</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setP2FocusedDevice(p2FocusedDevice === 'tablet' ? 'none' : 'tablet')}
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
-                          p2FocusedDevice === 'tablet'
-                            ? 'bg-[var(--accent)] text-white shadow-sm'
-                            : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
-                        }`}
-                      >
-                        <Tablet size={12} className={p2FocusedDevice === 'tablet' ? 'text-white' : 'text-[var(--accent)]'} />
-                        <span>{lang === 'vi' ? 'Tablet · Menu' : 'Tablet · Menu'}</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setP2FocusedDevice(p2FocusedDevice === 'phone' ? 'none' : 'phone')}
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
-                          p2FocusedDevice === 'phone'
-                            ? 'bg-[var(--accent)] text-white shadow-sm'
-                            : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
-                        }`}
-                      >
-                        <Smartphone size={12} className={p2FocusedDevice === 'phone' ? 'text-white' : 'text-[var(--accent)]'} />
-                        <span>{lang === 'vi' ? 'Điện thoại · App' : 'Phone · App'}</span>
-                      </button>
-                    </div>
-
-                    {/* Gallery Full View Trigger */}
+                  {/* Device Selector Pill Bar */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 pb-1">
                     <button
                       type="button"
-                      onClick={() => onOpenLightbox(p2Images, 0, proj2.title)}
-                      className="shrink-0 text-[11px] font-mono text-[var(--text-muted)] hover:text-[var(--accent)] whitespace-nowrap transition-colors underline underline-offset-2 cursor-pointer"
+                      onClick={() => setP2FocusedDevice(p2FocusedDevice === 'laptop' ? 'none' : 'laptop')}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                        p2FocusedDevice === 'laptop'
+                          ? 'bg-[var(--accent)] text-white shadow-sm'
+                          : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                      }`}
                     >
-                      {lang === 'vi' ? `Tất cả ảnh (${p2Images.length})` : `All (${p2Images.length})`}
+                      <Laptop size={12} className={p2FocusedDevice === 'laptop' ? 'text-white' : 'text-[var(--accent)]'} />
+                      <span>{lang === 'vi' ? 'Laptop · Bếp' : 'Laptop · Kitchen'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setP2FocusedDevice(p2FocusedDevice === 'tablet' ? 'none' : 'tablet')}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                        p2FocusedDevice === 'tablet'
+                          ? 'bg-[var(--accent)] text-white shadow-sm'
+                          : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                      }`}
+                    >
+                      <Tablet size={12} className={p2FocusedDevice === 'tablet' ? 'text-white' : 'text-[var(--accent)]'} />
+                      <span>{lang === 'vi' ? 'Tablet · Menu' : 'Tablet · Menu'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setP2FocusedDevice(p2FocusedDevice === 'phone' ? 'none' : 'phone')}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                        p2FocusedDevice === 'phone'
+                          ? 'bg-[var(--accent)] text-white shadow-sm'
+                          : 'border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                      }`}
+                    >
+                      <Smartphone size={12} className={p2FocusedDevice === 'phone' ? 'text-white' : 'text-[var(--accent)]'} />
+                      <span>{lang === 'vi' ? 'Điện thoại · App' : 'Phone · App'}</span>
                     </button>
                   </div>
 
