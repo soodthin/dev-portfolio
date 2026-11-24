@@ -23,7 +23,7 @@ const INITIAL_PATH_LEN = 1139.7;
  * Variant 01 — Classic Sinuous River (2 hạt dữ liệu chạy 60fps trên đường cong Bezier)
  */
 export function WorkHistorySection() {
-  const { data, t } = usePortfolio();
+  const { data } = usePortfolio();
   const experience = data.experiences[0];
   const stages = experience?.pipelineStages || [];
 
