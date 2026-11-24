@@ -234,7 +234,9 @@ export function FlexiConnectShowcase({
                         ? 'border-color 180ms ease-out'
                         : 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 340ms ease-out, border-color 220ms ease-out',
                   }}
-                  className={`absolute inset-0 m-auto w-[76%] sm:w-[68%] md:w-[62%] max-w-[640px] h-[82%] rounded-[14px] overflow-hidden border bg-[var(--surface-1)] cursor-pointer will-change-transform shadow-[var(--surface-shadow)] ${
+                  className={`absolute inset-0 m-auto w-[76%] sm:w-[68%] md:w-[62%] max-w-[640px] h-[82%] rounded-[14px] overflow-hidden border bg-[var(--surface-1)] cursor-pointer shadow-[var(--surface-shadow)] ${
+                    isDragging ? 'will-change-transform' : ''
+                  } ${
                     isFront ? 'border-[var(--accent)] ring-1 ring-[var(--accent)]/30' : 'border-[var(--hairline-strong)]'
                   }`}
                 >
@@ -242,9 +244,11 @@ export function FlexiConnectShowcase({
                     src={getAssetPath(img.src)}
                     alt={img.title}
                     fill
-                    sizes="(max-width:1024px) 80vw, 640px"
+                    sizes="(max-width:1024px) 90vw, 1200px"
                     unoptimized
-                    className="object-cover object-top"
+                    priority={idx === 0}
+                    className="object-cover object-top select-none pointer-events-none"
+                    style={{ imageRendering: '-webkit-optimize-contrast' }}
                   />
                 </div>
               );
