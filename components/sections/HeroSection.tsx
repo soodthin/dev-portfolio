@@ -87,7 +87,7 @@ function FramelessOrbitEclipseAvatar({
       ? {}
       : {
           boxShadow:
-            '0 1px 3px rgba(13, 21, 29, 0.05), 0 20px 48px -12px rgba(13, 21, 29, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.95)',
+            '0 24px 60px -12px rgba(13, 21, 29, 0.12), 0 2px 6px rgba(13, 21, 29, 0.04)',
         }),
   } as React.CSSProperties;
 
@@ -105,10 +105,10 @@ function FramelessOrbitEclipseAvatar({
         if (e.touches[0]) updateAperture(e.touches[0].clientX, e.touches[0].clientY, false);
       }}
       onTouchEnd={closeAperture}
-      className={`relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] rounded-full cursor-default select-none transition-[box-shadow,border-color] duration-200 ${
+      className={`relative z-10 w-[330px] h-[350px] sm:w-[390px] sm:h-[400px] md:w-[440px] md:h-[430px] lg:w-[460px] lg:h-[440px] rounded-full cursor-default select-none transition-shadow duration-200 ${
         isDark
           ? 'overflow-visible bg-transparent border-0'
-          : 'overflow-hidden bg-[var(--surface-1)] border border-[var(--hairline-strong)]'
+          : 'overflow-hidden bg-transparent border-0'
       }`}
     >
       {/* 1. Lớp chân dung gốc: Dark Mode hòa biên mềm, Light Mode sắc nét chuẩn khung oval */}
@@ -196,16 +196,7 @@ function FramelessOrbitEclipseAvatar({
         </div>
       )}
 
-      {/* 4. Mép phản quang lòng viền ở Light Mode */}
-      {!isDark && (
-        <div
-          aria-hidden="true"
-          style={{ boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.95)' }}
-          className="pointer-events-none absolute inset-0 rounded-full z-10"
-        />
-      )}
-
-      {/* 5. Hòa tan mép dưới vào nền trang (chỉ dùng cho Dark Mode để hòa vào nền obsidian) */}
+      {/* 4. Hòa tan mép dưới vào nền trang (chỉ dùng cho Dark Mode để hòa vào nền obsidian) */}
       {isDark && (
         <div
           aria-hidden="true"
@@ -307,9 +298,9 @@ export function HeroSection() {
             style={{
               textShadow: isDark
                 ? '0 4px 24px rgba(0, 0, 0, 0.72), 0 1px 3px rgba(0, 0, 0, 0.85)'
-                : '0 1px 2px rgba(255, 255, 255, 0.9), 0 4px 16px rgba(255, 255, 255, 0.5)',
+                : '0 0 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(234, 239, 244, 0.9)',
             }}
-            className="relative z-30 -mt-4 sm:-mt-5 md:-mt-6 lg:-mt-7 text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
+            className="relative z-30 -mt-[62px] sm:-mt-[82px] md:-mt-[96px] lg:-mt-[106px] text-center font-serif font-bold text-[40px] sm:text-[64px] md:text-[80px] lg:text-[86px] leading-[0.98] tracking-[-0.03em] px-2 text-[var(--text)] select-none"
           >
             {data.profile.name}
           </motion.h1>
