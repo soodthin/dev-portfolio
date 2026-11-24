@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { ExternalLink, Maximize2, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 import { getAssetPath } from '@/lib/asset';
@@ -23,7 +23,7 @@ function computeArcStyle(effectiveOff: number) {
 
   if (a <= 1) {
     return {
-      transform: `translate3d(${(effectiveOff * 28.5).toFixed(2)}%, ${(-12 + a * 26).toFixed(1)}px, ${(42 - a * 115).toFixed(1)}px) rotateY(${(-effectiveOff * 16).toFixed(2)}deg) rotateZ(${(effectiveOff * 2.5).toFixed(2)}deg) scale(${(1 - a * 0.14).toFixed(3)})`,
+      transform: `translate3d(${(effectiveOff * 29).toFixed(2)}%, ${(-10 + a * 24).toFixed(1)}px, ${(38 - a * 110).toFixed(1)}px) rotateY(${(-effectiveOff * 16).toFixed(2)}deg) rotateZ(${(effectiveOff * 2.5).toFixed(2)}deg) scale(${(1 - a * 0.14).toFixed(3)})`,
       opacity: Number((1 - a * 0.35).toFixed(3)),
       zIndex: a < 0.5 ? 30 : 22,
       interactive: true,
@@ -32,7 +32,7 @@ function computeArcStyle(effectiveOff: number) {
   if (a <= 2) {
     const k = a - 1;
     return {
-      transform: `translate3d(${(s * (28.5 + k * 18.5)).toFixed(2)}%, ${(14 + k * 26).toFixed(1)}px, ${(-73 - k * 90).toFixed(1)}px) rotateY(${(-s * (16 + k * 8)).toFixed(2)}deg) rotateZ(${(s * (2.5 + k * 2.5)).toFixed(2)}deg) scale(${(0.86 - k * 0.14).toFixed(3)})`,
+      transform: `translate3d(${(s * (29 + k * 18)).toFixed(2)}%, ${(14 + k * 24).toFixed(1)}px, ${(-72 - k * 88).toFixed(1)}px) rotateY(${(-s * (16 + k * 8)).toFixed(2)}deg) rotateZ(${(s * (2.5 + k * 2.5)).toFixed(2)}deg) scale(${(0.86 - k * 0.14).toFixed(3)})`,
       opacity: Number((0.65 - k * 0.38).toFixed(3)),
       zIndex: k < 0.5 ? 18 : 10,
       interactive: true,
@@ -40,7 +40,7 @@ function computeArcStyle(effectiveOff: number) {
   }
   const k = Math.min(1, a - 2);
   return {
-    transform: `translate3d(${(s * (47 + k * 12)).toFixed(2)}%, ${(40 + k * 22).toFixed(1)}px, ${(-163 - k * 64).toFixed(1)}px) rotateY(${(-s * (24 + k * 6)).toFixed(2)}deg) rotateZ(${(s * (5 + k * 2)).toFixed(2)}deg) scale(${(0.72 - k * 0.12).toFixed(3)})`,
+    transform: `translate3d(${(s * (47 + k * 12)).toFixed(2)}%, ${(38 + k * 20).toFixed(1)}px, ${(-160 - k * 62).toFixed(1)}px) rotateY(${(-s * (24 + k * 6)).toFixed(2)}deg) rotateZ(${(s * (5 + k * 2)).toFixed(2)}deg) scale(${(0.72 - k * 0.12).toFixed(3)})`,
     opacity: Number(Math.max(0, 0.27 * (1 - k)).toFixed(3)),
     zIndex: 2,
     interactive: false,
@@ -52,7 +52,7 @@ export function FlexiConnectShowcase({
 }: {
   onOpenLightbox?: (images: ProjectImage[], index: number, title: string) => void;
 }) {
-  const { data, t, lang } = usePortfolio();
+  const { data, lang } = usePortfolio();
   const prefersReducedMotion = useReducedMotion();
   const project = data.projects.find((p) => p.id === 'project-01') || data.projects[0];
   const images = project?.imagesList || [];
@@ -195,7 +195,7 @@ export function FlexiConnectShowcase({
               setIsDragging(false);
               setDragRatio(0);
             }}
-            className="relative h-[340px] sm:h-[440px] md:h-[500px] lg:h-[540px] overflow-hidden select-none cursor-grab active:cursor-grabbing"
+            className="relative h-[300px] sm:h-[390px] md:h-[440px] lg:h-[470px] overflow-hidden select-none cursor-grab active:cursor-grabbing"
           >
             {images.map((img, idx) => {
               let off = idx - activeIndex;
@@ -223,7 +223,7 @@ export function FlexiConnectShowcase({
                         ? 'border-color 180ms ease-out'
                         : 'transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 340ms ease-out, border-color 220ms ease-out',
                   }}
-                  className={`absolute inset-0 m-auto w-[82%] sm:w-[74%] md:w-[68%] max-w-[760px] h-[86%] rounded-[14px] overflow-hidden border bg-[var(--surface-1)] cursor-pointer will-change-transform shadow-[var(--surface-shadow)] ${
+                  className={`absolute inset-0 m-auto w-[76%] sm:w-[68%] md:w-[62%] max-w-[640px] h-[82%] rounded-[14px] overflow-hidden border bg-[var(--surface-1)] cursor-pointer will-change-transform shadow-[var(--surface-shadow)] ${
                     isFront ? 'border-[var(--accent)] ring-1 ring-[var(--accent)]/30' : 'border-[var(--hairline-strong)]'
                   }`}
                 >
@@ -231,7 +231,7 @@ export function FlexiConnectShowcase({
                     src={getAssetPath(img.src)}
                     alt={img.title}
                     fill
-                    sizes="(max-width:1024px) 85vw, 760px"
+                    sizes="(max-width:1024px) 80vw, 640px"
                     unoptimized
                     className="object-cover object-top"
                   />
@@ -240,55 +240,22 @@ export function FlexiConnectShowcase({
             })}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-1.5 overflow-x-auto max-w-full scrollbar-none pt-2 py-1">
+            {images.map((img, i) => (
               <button
+                key={img.src}
                 type="button"
-                onClick={() => step(-1)}
-                className="w-8 h-8 rounded-full border border-[var(--hairline)] hover:border-[var(--hairline-strong)] bg-[var(--surface-1)] font-mono text-xs cursor-pointer text-[var(--text)] transition-colors flex items-center justify-center"
-                aria-label="Previous image"
+                onClick={() => setActiveIndex(i)}
+                className={`px-3 py-1.5 rounded-full font-mono text-xs whitespace-nowrap border cursor-pointer transition-all ${
+                  i === activeIndex
+                    ? 'border-[var(--accent)] bg-[var(--surface-1)] text-[var(--text)] shadow-sm font-semibold'
+                    : 'border-[var(--hairline)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--hairline-strong)]'
+                }`}
               >
-                ←
+                {String(i + 1).padStart(2, '0')}
+                {i === activeIndex ? ` · ${img.title}` : ''}
               </button>
-              <button
-                type="button"
-                onClick={() => step(1)}
-                className="w-8 h-8 rounded-full border border-[var(--hairline)] hover:border-[var(--hairline-strong)] bg-[var(--surface-1)] font-mono text-xs cursor-pointer text-[var(--text)] transition-colors flex items-center justify-center"
-                aria-label="Next image"
-              >
-                →
-              </button>
-              <span className="font-mono text-xs text-[var(--accent)] tabular-nums ml-1">
-                {String(activeIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-x-auto max-w-full scrollbar-none py-1">
-              {images.map((img, i) => (
-                <button
-                  key={img.src}
-                  type="button"
-                  onClick={() => setActiveIndex(i)}
-                  className={`px-2.5 py-1 rounded-full font-mono text-[10px] whitespace-nowrap border cursor-pointer transition-colors ${
-                    i === activeIndex
-                      ? 'border-[var(--accent)] bg-[var(--surface-1)] text-[var(--text)] shadow-sm'
-                      : 'border-[var(--hairline)] text-[var(--text-muted)] hover:text-[var(--text)]'
-                  }`}
-                >
-                  {String(i + 1).padStart(2, '0')}
-                  {i === activeIndex ? ` · ${img.title}` : ''}
-                </button>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={() => onOpenLightbox?.(images, activeIndex, project.title)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--hairline)] hover:border-[var(--hairline-strong)] bg-[var(--surface-1)] font-mono text-[11px] text-[var(--text)] cursor-pointer transition-colors"
-              aria-label="Expand image fullscreen"
-            >
-              <Maximize2 size={12} />
-            </button>
+            ))}
           </div>
         </div>
 
