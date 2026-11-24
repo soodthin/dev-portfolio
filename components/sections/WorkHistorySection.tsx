@@ -79,15 +79,15 @@ export function WorkHistorySection() {
   return (
     <section
       id="experience"
-      className="relative bg-[var(--bg-alt)] chapter-divider-sheen py-20 md:py-28 border-b border-[var(--hairline)] overflow-x-clip"
+      className="scroll-mt-16 sm:scroll-mt-20 relative bg-[var(--bg-alt)] chapter-divider-sheen py-14 sm:py-16 md:py-20 border-b border-[var(--hairline)] overflow-x-clip"
     >
       <ScrollDepthWrapper
         stickySafe
         sectionId="experience"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10"
       >
-        <div className="space-y-6">
-          <div className="space-y-2.5">
+        <div className="space-y-5">
+          <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-mono text-xs text-[var(--accent)] tabular-nums">
                 02 · {t.experience.eyebrow} · {experience.period}
@@ -145,7 +145,7 @@ export function WorkHistorySection() {
                       key={tech}
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border border-[var(--hairline)] bg-[var(--surface-1)] text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:bg-[var(--surface-2)]"
                     >
-                      <TechIcon name={tech} size={13} className="text-[var(--accent)]" />
+                      <TechIcon name={tech} size={12} className="text-[var(--accent)]" />
                       <span>{tech}</span>
                     </span>
                   ))}
@@ -155,8 +155,8 @@ export function WorkHistorySection() {
           </div>
         </div>
 
-        <div className="relative w-full overflow-x-auto py-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
-          <svg viewBox="0 0 1040 270" className="w-full min-w-[760px] h-auto overflow-visible select-none">
+        <div className="relative w-full overflow-x-auto py-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none flex justify-center">
+          <svg viewBox="0 0 1040 270" className="w-full max-w-[900px] h-auto overflow-visible select-none">
             <path
               ref={curveRef}
               d={RIVER_PATH}
@@ -228,33 +228,33 @@ export function WorkHistorySection() {
           </svg>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-          <div className="lg:col-span-4 flex items-center justify-center lg:justify-start">
-            <div className="w-44 h-44 rounded-full bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center p-4 transition-all duration-300">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center pt-1">
+          <div className="lg:col-span-3 flex items-center justify-center lg:justify-start">
+            <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-full bg-[var(--surface-1)] border border-[var(--hairline-strong)] shadow-[var(--surface-shadow)] flex flex-col items-center justify-center text-center p-4 transition-all duration-300 shrink-0">
               <span className="font-mono text-[11px] text-[var(--accent)] font-semibold tracking-wider">
                 {cur.step} / 0{stages.length}
               </span>
-              <span className="font-mono text-3xl font-bold text-[var(--text)] mt-1.5 tabular-nums">
+              <span className="font-mono text-2xl sm:text-3xl font-bold text-[var(--text)] mt-1 tabular-nums">
                 {cur.metric}
               </span>
-              <span className="text-xs text-[var(--text-muted)] mt-1.5 max-w-[130px] line-clamp-2">
+              <span className="text-xs text-[var(--text-muted)] mt-1 max-w-[130px] text-center leading-tight">
                 {cur.name}
               </span>
             </div>
           </div>
-          <div className="lg:col-span-8 space-y-4">
-            <div className="flex items-center gap-3">
+          <div className="lg:col-span-9 space-y-2.5">
+            <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium text-[var(--accent)] bg-[var(--surface-2)] border border-[var(--hairline)]">
                 {cur.step} · {cur.name}
               </span>
             </div>
-            <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--text)] tracking-[-0.01em]">
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[var(--text)] tracking-[-0.01em]">
               {title}
             </h3>
-            <p className="text-sm sm:text-base text-[var(--text-muted)] leading-[1.75]">
+            <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
               {body}
             </p>
-            <p className="font-mono text-xs text-[var(--accent)] pt-1">
+            <p className="font-mono text-xs text-[var(--accent)] pt-0.5">
               {cur.title} — {cur.detail}
             </p>
           </div>
