@@ -87,22 +87,39 @@ export function WorkHistorySection() {
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12"
       >
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-2">
-            <span className="font-mono text-xs text-[var(--accent)] tabular-nums">
-              02 · {t.experience.eyebrow} · {experience.period}
-            </span>
-            <div className="flex flex-wrap items-baseline gap-3">
-              <h2 className="font-serif text-4xl sm:text-5xl font-bold tracking-[-0.025em] text-[var(--text)]">
-                {experience.company}
-              </h2>
-              <span className="text-lg sm:text-xl text-[var(--text-muted)] font-serif italic">
-                {experience.role}
+          <div className="space-y-2.5 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-mono text-xs text-[var(--accent)] tabular-nums">
+                02 · {t.experience.eyebrow} · {experience.period}
+              </span>
+              <span className="text-[var(--hairline-strong)]">·</span>
+              <span className="text-xs text-[var(--text-muted)] font-mono">
+                {experience.location} · {experience.teamSize}
               </span>
             </div>
-            <p className="text-xs text-[var(--text-muted)] font-mono">
-              {experience.location} · {experience.teamSize}
-            </p>
-            <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-2xl pt-1">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.025em] text-[var(--text)]">
+              {experience.company}
+            </h2>
+            <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
+              <span className="text-sm sm:text-base text-[var(--text-muted)] font-serif italic">
+                {experience.role}
+              </span>
+              <span className="text-[var(--hairline-strong)]">―</span>
+              <a
+                href={experience.projectUrl || 'https://bwid-automation.onrender.com/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold text-[var(--accent)] bg-[var(--surface-1)] border border-[var(--hairline-strong)] hover:border-[var(--accent)] hover:bg-[var(--surface-2)] transition-all group cursor-pointer"
+                title="Finance Data Processing Web"
+              >
+                <span>Finance Data Processing Web</span>
+                <ArrowUpRight
+                  size={13}
+                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </a>
+            </div>
+            <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-4xl pt-1">
               {experience.description}
             </p>
           </div>
@@ -111,7 +128,7 @@ export function WorkHistorySection() {
               href={experience.projectUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold shrink-0 transition-all shadow-[var(--surface-shadow)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent-deep)] text-[var(--accent-cta-text)] hover:brightness-110 text-xs font-semibold shrink-0 transition-all shadow-[var(--surface-shadow)] self-start md:self-end"
             >
               <span>{t.experience.liveAppBtn}</span>
               <ArrowUpRight size={14} />
