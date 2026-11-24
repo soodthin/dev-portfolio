@@ -6,72 +6,64 @@ import { ArrowUp } from 'lucide-react';
 import { useSmoothScroll } from '@/components/providers/SmoothScrollProvider';
 import { usePortfolio } from '@/components/providers/PortfolioProvider';
 
-/**
- * BackToTop — Modern Liquid Glass Capsule Edition
- * Compact 42px height, frosted glass backdrop blur, specular glass rim light,
- * and smooth liquid sheen sweep on hover.
- */
 export function BackToTop() {
   const { scrollTo } = useSmoothScroll();
   const { lang } = usePortfolio();
   const [visible, setVisible] = useState(false);
+  const [pct, setPct] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setVisible(window.scrollY > 400);
+    const onScroll = () => {
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setVisible(y > 400);
+      setPct(max > 0 ? Math.min(100, Math.round((y / max) * 100)) : 0);
     };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleClick = () => {
-    if (typeof window !== 'undefined') {
-      scrollTo('#summary', { offset: 0 });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    scrollTo('#summary', { offset: 0 });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const label = lang === 'vi' ? 'LÊN ĐẦU TRANG' : 'BACK TO TOP';
+  const label = lang === 'vi' ? 'ĐẦU TRANG' : 'TOP';
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: 14 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.85, y: 14 }}
-          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-6 right-6 z-40 no-print"
+          initial={{ opacity: 0, x: 8 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 8 }}
+          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed bottom-8 right-5 sm:right-6 z-40 no-print"
         >
           <button
             type="button"
             onClick={handleClick}
-            className="group relative inline-flex items-center justify-center h-[42px] w-[42px] hover:w-[142px] rounded-full p-0 overflow-hidden cursor-pointer transition-[width,box-shadow,border-color] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)] backdrop-blur-xl bg-[var(--surface-1)]/80 dark:bg-[#0c131a]/85 border border-[var(--hairline-strong)] hover:border-[var(--accent)] shadow-[0_8px_24px_rgba(0,0,0,0.28),inset_0_1px_1px_rgba(255,255,255,0.12)] hover:shadow-[0_10px_28px_-4px_rgba(45,212,191,0.35),inset_0_1px_1px_rgba(255,255,255,0.22)]"
             aria-label={label}
+            className="group inline-flex flex-col items-center gap-2 p-2 text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer transition-colors duration-200"
           >
-            {/* Liquid Glass Ambient Gradient */}
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-[var(--accent)]/[0.06] pointer-events-none"
+            <ArrowUp
+              size={13}
+              strokeWidth={2.2}
+              className="transition-all duration-200 ease-out group-hover:-translate-y-1 group-hover:text-[var(--accent)]"
             />
-
-            {/* Liquid Glass Sheen Sweep on Hover */}
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none"
-            />
-
-            {/* Content: Arrow Icon + Expandable Label */}
-            <span className="relative z-10 flex items-center justify-center whitespace-nowrap text-[var(--accent)] px-3">
-              <ArrowUp
-                size={16}
-                strokeWidth={2.25}
-                className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5"
+            {/* Sợi tóc đo tiến độ co rút nhẹ về phía mũi tên khi hover */}
+            <span className="relative w-[1.5px] h-14 group-hover:h-9 bg-[var(--hairline-strong)] overflow-hidden transition-[height] duration-200 ease-out">
+              <span
+                className="absolute top-0 left-0 w-full bg-[var(--accent)] transition-[height] duration-150 ease-out"
+                style={{ height: `${pct}%` }}
               />
-              <span className="max-w-0 opacity-0 overflow-hidden ml-0 group-hover:max-w-[92px] group-hover:opacity-100 group-hover:ml-2 font-mono text-[11px] font-bold tracking-wider text-[var(--text)] group-hover:text-[var(--accent)] transition-all duration-350 ease-[cubic-bezier(0.22,1,0.36,1)] select-none">
-                {label}
-              </span>
+            </span>
+            <span
+              className="font-mono text-[10px] tracking-[0.18em] uppercase select-none"
+              style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+            >
+              {label}
             </span>
           </button>
         </motion.div>
