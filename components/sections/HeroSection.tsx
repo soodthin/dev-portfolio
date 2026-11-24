@@ -148,9 +148,9 @@ function FramelessOrbitEclipseAvatar({
             style={{
               ...(isDark ? SOFT_EDGE_MASK_STYLE : {}),
               transformOrigin: 'var(--lx) var(--ly)',
-              transform: 'scale(1.04)',
+              transform: 'scale(1.025)',
             }}
-            className="relative w-full h-full rounded-full brightness-[1.06] saturate-[1.06] contrast-[1.04]"
+            className="relative w-full h-full rounded-full brightness-[1.03] saturate-[1.02] contrast-[1.02]"
           >
             <Image
               src={avatarSrc}
@@ -164,7 +164,7 @@ function FramelessOrbitEclipseAvatar({
         </div>
       )}
 
-      {/* 3. Vành kính lúp trong suốt quang học */}
+      {/* 3. Vành kính lúp trong suốt mờ mờ quang học */}
       {!reducedMotion && (
         <div
           aria-hidden="true"
@@ -177,20 +177,20 @@ function FramelessOrbitEclipseAvatar({
             transform: 'translate(-50%, -50%)',
             willChange: 'left, top, width, height, opacity',
             boxShadow: isDark
-              ? '0 10px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.15)'
-              : '0 8px 24px -4px rgba(13, 21, 29, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -1.5px 2px rgba(13, 21, 29, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.7)',
-            background: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.18)',
-            border: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(255, 255, 255, 0.65)',
+              ? '0 6px 20px -4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.1)'
+              : '0 4px 16px -2px rgba(13, 21, 29, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.22)',
+            background: isDark ? 'rgba(255, 255, 255, 0.015)' : 'rgba(255, 255, 255, 0.04)',
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
           }}
           className="pointer-events-none absolute z-20 rounded-full transition-[width,height,opacity] duration-150 ease-out overflow-hidden"
         >
-          {/* Vệt phản quang ánh sáng tự nhiên trên mặt kính cong */}
+          {/* Vệt phản quang ánh sáng tự nhiên mờ nhẹ trên mặt kính cong */}
           <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
               background: isDark
-                ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 45%)'
-                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%)',
+                ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 45%)'
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%)',
             }}
           />
         </div>
